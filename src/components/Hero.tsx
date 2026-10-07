@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, CheckCircle2, ChevronDown, Sparkles } from 'lucide-react';
 import { CLIENT_LOGOS } from '../data/siteData';
+import heroStudioImg from '../assets/images/hero_studio_tokyo_1791348311087.jpg';
 
 interface HeroProps {
   onOpenContact: (note?: string) => void;
@@ -12,7 +13,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenContact }) => {
       {/* Background visual asset with atmospheric scrim */}
       <div className="absolute inset-0 z-0 opacity-30 select-none pointer-events-none">
         <img
-          src="/src/assets/images/hero_studio_tokyo_1791348311087.jpg"
+          src={heroStudioImg}
           alt="KOUBOU Design Studio Tokyo"
           className="w-full h-full object-cover object-center filter grayscale contrast-125"
           referrerPolicy="no-referrer"

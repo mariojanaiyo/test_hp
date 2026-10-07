@@ -1,3 +1,7 @@
+import workFintechImg from '../assets/images/work_fintech_1791348328255.jpg';
+import workBrandingImg from '../assets/images/work_branding_1791348342140.jpg';
+import workCommerceImg from '../assets/images/work_commerce_1791348355105.jpg';
+
 export interface ServiceItem {
   id: string;
   number: string;
@@ -115,7 +119,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     description: '複雑な投資ポートフォリオ管理を直感的なカードUIで再構築。モバイルファーストでの使いやすさを徹底追求し、大幅な成約率改善を実現。',
     challenge: '専門用語が多く複雑な投資設定画面により、初回登録ユーザーの約62%が途中で離脱していた。',
     solution: '3ステップで完了するウィザード形式のオンボーディングと、リアルタイム損益シミュレーションUIを導入。',
-    image: '/src/assets/images/work_fintech_1791348328255.jpg',
+    image: workFintechImg,
     stack: ['React', 'TypeScript', 'Tailwind CSS', 'Figma'],
     duration: '約 3.5 ヶ月',
   },
@@ -131,7 +135,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     description: '日本の伝統素材を生かしたライフスタイルブランドのCI策定から、多言語対応のオンラインストア設計までを一貫して担当。',
     challenge: '国内のみに依存していた販路を北米・欧州へ展開するため、普遍的で洗練された英語圏向けブランド構築が急務だった。',
     solution: '余白の美を重視したミニマルなタイポグラフィと高品質なテクスチャ撮影をディレクション。Shopify Headlessで超高速なストアを構築。',
-    image: '/src/assets/images/work_branding_1791348342140.jpg',
+    image: workBrandingImg,
     stack: ['Brand Identity', 'Shopify Storefront API', 'Next.js', 'Contentful'],
     duration: '約 4 ヶ月',
   },
@@ -147,7 +151,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     description: '高価格帯北欧家具のサブスクリプション型コマースサイト。3DプレビューとAR空間配置機能を組み合わせ、購買の不安を解消。',
     challenge: '大型家具の購入・レンタル検討において、部屋のサイズ感やインテリアとの調和への不安からカート落ちが多発していた。',
     solution: '寸法ガイド付きのインタラクティブシミュレータと、シンプルなプラン比較UIを実装。即時見積もり機能を提供。',
-    image: '/src/assets/images/work_commerce_1791348355105.jpg',
+    image: workCommerceImg,
     stack: ['React', 'Next.js', 'Tailwind CSS', 'Stripe Connect'],
     duration: '約 5 ヶ月',
   },

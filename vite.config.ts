@@ -3,8 +3,13 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
+  // Use repository subpath for GitHub Pages in production/CI builds, and root path for local dev
+  const isProductionOrCI = process.env.GITHUB_ACTIONS === 'true' || process.env.NODE_ENV === 'production';
+  const base = process.env.BASE_PATH || (isProductionOrCI ? '/Ry0xxx/' : '/');
+
   return {
+    base,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
