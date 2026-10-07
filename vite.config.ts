@@ -4,9 +4,10 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(({ command }) => {
-  // Use repository subpath for GitHub Pages in production/CI builds, and root path for local dev
-  const isProductionOrCI = process.env.GITHUB_ACTIONS === 'true' || process.env.NODE_ENV === 'production';
-  const base = process.env.BASE_PATH || (isProductionOrCI ? '/Ry0xxx/' : '/');
+  // Production builds use a relative base so the site works on GitHub Pages
+  // under any repository name (https://<user>.github.io/<repo>/).
+  // Override with BASE_PATH if needed (e.g. BASE_PATH=/ for a custom domain).
+  const base = process.env.BASE_PATH || (command === 'build' ? './' : '/');
 
   return {
     base,
