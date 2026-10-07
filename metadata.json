@@ -1,0 +1,6 @@
+{
+  "name": "KOUBOU - クリエイティブ＆テクノロジースタジオ",
+  "description": "東京を拠点とするWeb制作・プロダクト開発・ブランド戦略スタジオ「KOUBOU」のオフィシャルサンプルWebサイト。確かなデザインと高い技術力で事業成長を支援します。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
