@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CONCEPT_MD = ROOT / "MBTI_CONCEPT.md"
 RESULTS = ROOT / "output" / "results.json"
 MAX_LEN = 140
-HASHTAG = " #MBTI"
+HASHTAG = ""
 LAYER_RE = re.compile(r"^###\s*([①②③④⑤])\s*(.+)$")
 NOISE = "│├└─┌┐┘┬┴┼↓→←✓⚠※*`>|"
 
@@ -67,6 +67,14 @@ def rank_concepts(text, concepts):
     return scored
 
 
+FILLER = re.compile(r"^(?:(?:うん|はい|ああ|あ|ま|まあ|いや|でも|だから|そう|そうそう|えっと|なんか|で|じゃあ|じゃ)[、。]?\s*)+")
+
+
+def clean(sentence):
+    s = FILLER.sub("", sentence.strip())
+    return re.sub(r"\s+", "", s)
+
+
 def fit(body, tag=HASHTAG, limit=MAX_LEN):
     room = limit - len(tag)
     if len(body) > room:
@@ -74,19 +82,30 @@ def fit(body, tag=HASHTAG, limit=MAX_LEN):
     return body + tag
 
 
+def pick_sentences(text, concepts, used):
+    """フレームワークのコンセプトに近い発言を、関連度の高い順に返す。"""
+    cands = []
+    for raw in split_sentences(text):
+        s = clean(raw)
+        if not 12 <= len(s) <= MAX_LEN or s in used:
+            continue
+        score, layer, line = rank_concepts(s, concepts)[0]
+        cands.append((score, s, layer, line))
+    cands.sort(key=lambda x: -x[0])
+    return cands
+
+
 def rule_based(text, concepts, used):
-    ranked = [r for r in rank_concepts(text, concepts) if r[2] not in used]
-    if len(ranked) < 2:
+    cands = pick_sentences(text, concepts, used)
+    if not cands:
         used.clear()
-        ranked = rank_concepts(text, concepts)
-    _, layer, line = ranked[0]
-    used.add(line)
-    body = f"【{layer}】{line}"
-    for _, l2, line2 in ranked[1:]:
-        if l2 != layer and len(body) + len(line2) + 2 <= MAX_LEN - len(HASHTAG):
-            body += f"。【{l2}】{line2}"
-            used.add(line2)
-            line += " / " + line2
+        cands = pick_sentences(text, concepts, used)
+    _, body, layer, line = cands[0]
+    used.add(body)
+    for _, s2, _, _ in cands[1:]:
+        if len(body) < 60 and len(body) + len(s2) + 1 <= MAX_LEN:
+            body += "。" + s2
+            used.add(s2)
             break
     return fit(body), layer, line
 
@@ -94,19 +113,21 @@ def rule_based(text, concepts, used):
 def with_claude(text, concepts, used):
     import anthropic
 
-    ranked = [r for r in rank_concepts(text, concepts) if r[2] not in used] or rank_concepts(text, concepts)
-    _, layer, line = ranked[0]
-    used.add(line)
+    cands = pick_sentences(text, concepts, used)
+    _, hint, layer, line = cands[0] if cands else (0, "", "", "")
+    used.add(hint)
     framework = CONCEPT_MD.read_text(encoding="utf-8")
     client = anthropic.Anthropic()
     msg = client.messages.create(
         model=os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5"),
         max_tokens=400,
-        system=f"以下のフレームワークで入力テキストを解釈し、ツイートを書く。\n\n{framework}",
+        system="次のフレームワークは、物事を抽象化して捉えるための思考の道具として使う。"
+               "ツイート本文にフレームワークの用語・層の名前・番号は出さない。\n\n" + framework,
         messages=[{
             "role": "user",
-            "content": f"注目する層: {layer}\n注目する概念: {line}\n\n入力テキスト:\n{text[:12000]}\n\n"
-                       f"この層・概念の観点から{MAX_LEN - len(HASHTAG)}字以内の日本語ツイート本文だけを出力。",
+            "content": f"入力テキスト:\n{text[:12000]}\n\n特に拾いたい発言: {hint}\n\n"
+                       f"抽象化して見えた本質を、友達に話すようなカジュアルな口調で{MAX_LEN}字以内の"
+                       "ツイート1本にする。ツイート本文だけを出力。",
         }],
     )
     return fit(msg.content[0].text.strip().replace("\n", " ")), layer, line
