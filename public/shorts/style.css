@@ -55,3 +55,11 @@ body{display:flex;justify-content:center;background:radial-gradient(1200px 600px
 .card.hooking .dim{opacity:1}
 .card.hooking .cap{opacity:0}
 .cap{transition:opacity .4s}
+
+.flash{position:absolute;inset:0;z-index:5;background:#fff;opacity:0;pointer-events:none}
+.pin{position:absolute;z-index:5;left:0;right:0;top:36%;display:grid;place-items:center;pointer-events:none;opacity:0}
+.pin span{font-size:44px;font-weight:900;padding:6px 20px;background:var(--acc);color:#03140c;border-radius:6px;transform:rotate(-4deg);box-shadow:0 0 40px rgba(125,255,196,.8),0 0 0 3px #fff inset;white-space:nowrap}
+.card.pinned .pin{animation:pinpop 1.9s cubic-bezier(.2,.9,.2,1) both}
+.card.pinned .flash{animation:flash .5s ease-out both}
+@keyframes pinpop{0%{opacity:0;transform:scale(2.4)}12%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(1.04)}100%{opacity:0;transform:scale(1.1)}}
+@keyframes flash{0%{opacity:.75}100%{opacity:0}}

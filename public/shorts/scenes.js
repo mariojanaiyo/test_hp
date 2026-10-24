@@ -71,7 +71,7 @@ const S=[];
 
 // 1 ─────────── オオカミと川 ───────────
 S.push({
-  id:'wolf',hook:['オオカミが帰ると、','川が曲がりはじめた'],tag:'栄養カスケード',dur:26,
+  id:'wolf',pin:{t:17,text:'川が曲がった！'},hook:['オオカミが帰ると、','川が曲がりはじめた'],tag:'栄養カスケード',dur:26,
   title:'オオカミが戻ると、川の形まで変わった？',
   beats:[
     {t:0,text:'1995年、<b>オオカミ</b>を森に戻した'},
@@ -149,7 +149,7 @@ S.push({
 
 // 2 ─────────── クマ・サケ・森 ───────────
 S.push({
-  id:'bear',hook:['森は、海のサケで','できている'],tag:'海と森のつながり',dur:26,
+  id:'bear',pin:{t:14,text:'海が森になる！'},hook:['森は、海のサケで','できている'],tag:'海と森のつながり',dur:26,
   title:'森の木は、海のサケを食べている？',
   beats:[
     {t:0,text:'森の栄養は<b>海から来る</b>'},
@@ -230,7 +230,7 @@ S.push({
 
 // 3 ─────────── 菌根ネットワーク ───────────
 S.push({
-  id:'myco',hook:['木は地下で、','会話しているのか？'],tag:'地下のネットワーク',dur:26,
+  id:'myco',pin:{t:16,text:'助けてる！？'},hook:['木は地下で、','会話しているのか？'],tag:'地下のネットワーク',dur:26,
   title:'森の地下には、木々をつなぐ網がある',
   beats:[
     {t:0,text:'地面の下は<b>菌のネット</b>'},
@@ -340,7 +340,7 @@ function antStep(s,W,dt){
   s.simT+=dt;
 }
 S.push({
-  id:'ant',hook:['アリ1匹はバカ。','なのに群れは天才。'],tag:'超個体 / 社会生物学',dur:30,
+  id:'ant',pin:{t:14,text:'道ができた！'},hook:['アリ1匹はバカ。','なのに群れは天才。'],tag:'超個体 / 社会生物学',dur:30,
   title:'アリの群れは、ひとつの生きものみたい',
   beats:[
     {t:0,text:'アリ1匹は<b>ほぼ無知</b>'},
@@ -394,7 +394,7 @@ S.push({
 
 // 5 ─────────── 腸と脳 ───────────
 S.push({
-  id:'gut',hook:['あなたの気分は、','お腹の菌が握ってる？'],tag:'腸内細菌と脳',dur:26,
+  id:'gut',pin:{t:12,text:'腸 → 脳！'},hook:['あなたの気分は、','お腹の菌が握ってる？'],tag:'腸内細菌と脳',dur:26,
   title:'お腹の細菌は、気分に口を出す？',
   beats:[
     {t:0,text:'腸には<b>38兆</b>の細菌'},
@@ -462,7 +462,7 @@ S.push({
 
 // 6 ─────────── 色覚 ───────────
 S.push({
-  id:'color',hook:['赤が見えるのは、','果物のおかげ？'],tag:'目の進化',dur:24,
+  id:'color',pin:{t:10,text:'見つけた！'},hook:['赤が見えるのは、','果物のおかげ？'],tag:'目の進化',dur:24,
   title:'赤が見えるのは、果物を探すためだった？',
   beats:[
     {t:0,text:'熟した実は<b>どれ？</b>'},
@@ -513,7 +513,7 @@ S.push({
 
 // 7 ─────────── 笑いの起源 ───────────
 S.push({
-  id:'laugh',hook:['笑いの正体は、','サルのくすぐり遊び'],tag:'人間も動物',dur:24,
+  id:'laugh',pin:{t:15,text:'ここが違う！'},hook:['笑いの正体は、','サルのくすぐり遊び'],tag:'人間も動物',dur:24,
   title:'笑いは、サルの遊びから始まった？',
   beats:[
     {t:0,text:'笑うのは<b>人だけ？</b>'},
@@ -596,7 +596,7 @@ S.push({
 
 // 8 ─────────── マメ科と根粒菌 ───────────
 S.push({
-  id:'legume',hook:['空気から肉の材料を','つくる豆の裏ワザ'],tag:'マメ科 × 微生物',dur:26,
+  id:'legume',pin:{t:11,text:'空気が肥料に！'},hook:['空気から肉の材料を','つくる豆の裏ワザ'],tag:'マメ科 × 微生物',dur:26,
   title:'空気からタンパク質をつくる、小さな工場',
   beats:[
     {t:0,text:'空気の<b>78%</b>は窒素'},
@@ -685,7 +685,7 @@ S.push({
 
 // 9 ─────────── 大陸移動と動物 ───────────
 S.push({
-  id:'gondwana',hook:['大陸が割れた日、','動物の運命が分かれた'],tag:'地球のうごき × 進化',dur:28,
+  id:'gondwana',pin:{t:12,text:'離ればなれ！'},hook:['大陸が割れた日、','動物の運命が分かれた'],tag:'地球のうごき × 進化',dur:28,
   title:'大陸が割れて、動物たちの運命も分かれた',
   beats:[
     {t:0,text:'南の大陸は<b>ひとつだった</b>'},
@@ -744,7 +744,7 @@ S.push({
 
 // 10 ─────────── 大酸化イベント ───────────
 S.push({
-  id:'goe',hook:['地球最初の公害は、','「酸素」だった'],tag:'地球史 × 生命',dur:28,
+  id:'goe',pin:{t:9,text:'錆びた！'},hook:['地球最初の公害は、','「酸素」だった'],tag:'地球史 × 生命',dur:28,
   title:'最初の公害は、酸素だった',
   beats:[
     {t:0,text:'24億年前、<b>酸素ほぼゼロ</b>'},
@@ -835,7 +835,7 @@ function vole(c,x,y,a,col,sc){
   c.restore();
 }
 S.push({
-  id:'vole',hook:['浮気ネズミが、','遺伝子1つで一途に'],tag:'愛の科学',dur:22,
+  id:'vole',pin:{t:10.6,text:'遺伝子 +1！'},hook:['浮気ネズミが、','遺伝子1つで一途に'],tag:'愛の科学',dur:22,
   title:'浮気ネズミが、遺伝子1つで一途になった',
   beats:[
     {t:0,text:'ふつうのオスは<b>気ままに渡り歩く</b>'},
@@ -899,5 +899,71 @@ S.push({
   }
 });
 
-window.SCENES=[S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[9]];
+// 12 ─────────── アメリカ大交差 ───────────
+S.push({
+  id:'interchange',pin:{t:12.5,text:'ぶつかった！'},hook:['大陸がぶつかると、','動物が入れ替わる'],tag:'地球のうごき × 進化',dur:24,
+  title:'陸がつながった日、南北アメリカの動物が入れ替わった',
+  beats:[
+    {t:0,text:'南米は、長いあいだ<b>孤島</b>だった'},
+    {t:5,text:'独自の動物が<b>勝手に進化</b>していた'},
+    {t:10,text:'そこへ北米と<b>陸がつながる</b>'},
+    {t:14,text:'南北で<b>動物が大移動</b>'},
+    {t:19,text:'<b>ぶつかった場所</b>で、生態系が作り直された'}
+  ],
+  more:'南アメリカは約6000万年前から長く他の大陸から離れ、アルマジロやナマケモノの仲間、巨大なグリプトドンなど独自の哺乳類が進化しました。中央アメリカで陸橋が完成して南北がつながると、北からネコ科・イヌ科・ウマ・シカなどが南下し、南からはオポッサム、アルマジロ、ヤマアラシなどが北上しました(アメリカ大陸間大交差)。',
+  caveat:'陸橋の完成時期は約300万年前が定説でしたが、近年は1000万年以上前から部分的にあったとする研究もあり、議論が続いています。南米の固有動物の絶滅が、北からの動物のせいかどうかも単純には言えません。図は模式図です。',
+  source:{short:'Marshall et al. 1982, Science / Montes et al. 2015',cite:'Marshall, L.G. et al. (1982). Mammalian evolution and the Great American Interchange. Science, 215, 1351–1357. / Montes, C. et al. (2015). Middle Miocene closure of the Central American Seaway. Science, 348, 226–229.',query:'Mammalian evolution and the Great American Interchange'},
+  init(W,H){const r=rng(97);
+    const ny=H*0.2,sy=H*0.44;
+    const N=[[-85,-55],[85,-60],[62,-5],[24,38],[9,70],[-9,70],[-24,34],[-72,0]].map(p=>[180+p[0],ny+p[1]]);
+    const So=[[-10,-62],[10,-62],[56,-40],[60,-8],[36,42],[14,86],[0,92],[-16,52],[-46,-6],[-42,-38]].map(p=>[180+p[0],sy+p[1]]);
+    const inN=()=>[180+(r()-.5)*110,ny+(r()-.5)*70-8],inS=()=>[180+(r()-.5)*60,sy+(r()-.2)*100-10];
+    const an=Array.from({length:9},(_,i)=>({n:true,h:inN(),d:inS(),tk:12.5+i*.9,p:r()*6}));
+    const as=Array.from({length:9},(_,i)=>({n:false,h:inS(),d:inN(),tk:12.8+i*.9,p:r()*6}));
+    return{ny,sy,N,So,an:an.concat(as),st:mkStars(70,W,H,22)}},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H,[[0,'#04101f'],[1,'#06182c']]);
+    stars(c,W,H,s.st,t,H);
+    c.strokeStyle='rgba(120,180,255,.06)';c.lineWidth=1;
+    for(let i=0;i<10;i++){c.beginPath();c.moveTo(0,H*0.05+i*38);c.lineTo(W,H*0.05+i*38);c.stroke()}
+    const br=sm(t,9.5,12.5);
+    const poly=(P,col,a)=>{c.beginPath();P.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath();
+      c.fillStyle='rgba('+col+','+a+')';c.fill();c.strokeStyle='rgba('+col+',.9)';c.lineWidth=1.4;c.shadowColor='rgb('+col+')';c.shadowBlur=7;c.stroke();c.shadowBlur=0};
+    // 近づく(模式)
+    const gap=mix(6,0,sm(t,6,11));
+    c.save();c.translate(0,-gap);poly(s.N,'255,190,100',.28);c.restore();
+    c.save();c.translate(0,gap);poly(s.So,'110,230,150',.28);c.restore();
+    // 陸橋
+    const by0=s.ny+70-gap,by1=s.sy-62+gap;
+    c.globalCompositeOperation='lighter';
+    if(br>0){const h=(by1-by0)*br;c.fillStyle='rgba(255,230,160,'+(0.55*br)+')';c.fillRect(176,by0,8,h);glow(c,180,by0+h/2,46,'255,220,140',0.3*br)}
+    // 衝突の衝撃波
+    c.globalCompositeOperation='source-over';
+    txt(c,'北米',300,s.ny-10,12,'rgba(255,210,150,.9)','center');
+    txt(c,'南米',90,s.sy+10,12,'rgba(150,240,180,.9)','center');
+    // 動物
+    s.an.forEach(a=>{
+      const u=clamp((t-a.tk)/3.4),e=u*u*(3-2*u);
+      let x,y;
+      if(u<=0){x=a.h[0]+Math.sin(t*1.3+a.p)*5;y=a.h[1]+Math.cos(t*1.1+a.p)*4}
+      else if(u>=1){x=a.d[0]+Math.sin(t*1.3+a.p)*5;y=a.d[1]+Math.cos(t*1.1+a.p)*4}
+      else{
+        const way=[[a.h[0],a.h[1]],[180,a.n?by0-4:by1+4],[180,a.n?by1+4:by0-4],[a.d[0],a.d[1]]];
+        const pt=polyAt(way,e);x=pt[0];y=pt[1];
+      }
+      const col=a.n?'255,170,70':'90,230,140';
+      c.globalCompositeOperation='lighter';glow(c,x,y,10,col,0.5);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgb('+col+')';
+      if(a.n){c.beginPath();c.ellipse(x,y,4.5,3,0,0,TAU);c.fill();c.beginPath();c.moveTo(x+2,y-2);c.lineTo(x+3.5,y-6);c.lineTo(x+5,y-2);c.fill()}
+      else{c.beginPath();c.ellipse(x,y,5.5,3.6,0,0,TAU);c.fill();c.strokeStyle='rgba(0,40,20,.55)';c.lineWidth=.8;c.beginPath();c.moveTo(x-2,y-3);c.lineTo(x-2,y+3);c.moveTo(x+1,y-3);c.lineTo(x+1,y+3);c.stroke()}
+    });
+    // ラベル/凡例
+    const ly=H*0.585;
+    c.fillStyle='#ffaa46';c.beginPath();c.arc(30,ly,4,0,TAU);c.fill();txt(c,'北の動物(ネコ・ウマ・シカなど)',40,ly,10,'rgba(255,215,160,.9)','left');
+    c.fillStyle='#5ae68c';c.beginPath();c.arc(30,ly+18,4,0,TAU);c.fill();txt(c,'南の動物(アルマジロ・ナマケモノなど)',40,ly+18,10,'rgba(170,250,200,.9)','left');
+    if(t>10.5)txt(c,'パナマの陸橋',204,(by0+by1)/2,10,'rgba(255,235,180,'+sm(t,10.5,12)+')','left');
+  }
+});
+
+window.SCENES=[S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();

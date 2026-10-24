@@ -26,7 +26,7 @@ const cards=window.SCENES.map((sc,i)=>{
     '<div class="cap"><p class="line"></p><div class="dots">'+sc.beats.map(()=>'<i></i>').join('')+'</div></div>'+
     '<div class="src">'+sc.source.short+'</div>'+
     '<div class="rail"><button class="like" aria-label="好き">♡</button><button class="info" aria-label="くわしく">i<small>論文</small></button></div>'+
-    '<div class="pausemark">❚❚</div>';
+    '<div class="flash"></div><div class="pin"><span>'+(sc.pin?sc.pin.text:'')+'</span></div><div class="pausemark">❚❚</div>';
   feed.appendChild(el);
   const cv=el.querySelector('canvas');
   const card={sc,el,cv,c:cv.getContext('2d'),t:0,loops:0,beat:-1,state:null,k:1,W:LW,H:640,
@@ -58,8 +58,16 @@ function render(card){
   if(!card.state)return;
   const c=card.c,s=card.k*card.dpr;
   c.setTransform(s,0,0,s,0,0);
+  const pt=card.sc.pin?card.t-card.sc.pin.t:-1;
+  if(pt>=0&&pt<0.5){const a=(1-pt/0.5)*5;c.translate((Math.random()-.5)*a,(Math.random()-.5)*a)} // センターピンで画面が揺れる
   c.globalCompositeOperation='source-over';c.globalAlpha=1;c.shadowBlur=0;
   card.sc.draw(c,card.t,card.W,card.H,card.state);
+}
+function setPin(card){
+  const p=card.sc.pin;if(!p)return;
+  const on=card.t>=p.t&&card.t<p.t+2.2*SPEED;
+  if(on!==card.pinOn){card.pinOn=on;card.el.classList.toggle('pinned',on);
+    if(on){try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}}}
 }
 function setBeat(card){
   let b=0;
@@ -80,7 +88,7 @@ function activate(i){
   card.t=0;card.loops=0;card.beat=-1;
   card.state=card.sc.init(card.W,card.H);
   paused=false;syncPause();
-  setBeat(card);
+  setBeat(card);card.pinOn=false;card.el.classList.remove('pinned');
   if(i>0)hint.classList.add('gone');
 }
 const io=new IntersectionObserver(es=>{
@@ -101,11 +109,12 @@ function frame(now){
     if(!paused&&!sheetOpen){
       card.t+=dt*SPEED;
       if(card.t>=card.sc.dur){
-        card.t-=card.sc.dur;card.loops++;card.beat=-1;
+        card.t-=card.sc.dur;card.loops++;card.beat=-1;card.pinOn=false;card.el.classList.remove('pinned');
         if(auto&&card.loops>=1)next(1);
       }
     }
     card.el.classList.toggle('hooking',card.t<HOOK_T);
+    setPin(card);
     setBeat(card);
     card.bar.style.width=(card.t/card.sc.dur*100)+'%';
     render(card);
@@ -144,7 +153,7 @@ window.Shorts={cards,seek(i,t){
   c.state=c.sc.init(c.W,c.H);
   // 状態を持つシーン(アリなど)のために少しずつ時間を進める
   for(let x=0;x<=t;x+=0.1){c.t=x;render(c)}
-  c.t=t;c.beat=-1;c.el.classList.toggle('hooking',t<HOOK_T);setBeat(c);render(c);
+  c.t=t;c.beat=-1;c.el.classList.toggle('hooking',t<HOOK_T);c.pinOn=null;setPin(c);setBeat(c);render(c);
 }};
 requestAnimationFrame(frame);
 })();
