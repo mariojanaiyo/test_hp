@@ -12,13 +12,15 @@ const store={
 };
 let likes=new Set(store.get('cs-likes',[]));
 let auto=store.get('cs-auto',true);
+const SPEED=1.35, HOOK_T=3.4; // 動画を速めに流す / 冒頭フックの表示時間(動画内秒)
 let paused=false, sheetOpen=false, active=-1;
 
 const cards=window.SCENES.map((sc,i)=>{
   const el=document.createElement('article');
   el.className='card';
   el.innerHTML=
-    '<canvas></canvas><div class="shade"></div>'+
+    '<canvas></canvas><div class="shade"></div><div class="dim"></div>'+
+    '<div class="hook"><p>'+sc.hook[0]+'</p><p class="a">'+sc.hook[1]+'</p></div>'+
     '<div class="bar"><i></i></div>'+
     '<div class="chip">'+sc.tag+'</div>'+
     '<div class="cap"><p class="line"></p><div class="dots">'+sc.beats.map(()=>'<i></i>').join('')+'</div></div>'+
@@ -97,12 +99,13 @@ function frame(now){
   const card=cards[active];
   if(card){
     if(!paused&&!sheetOpen){
-      card.t+=dt;
+      card.t+=dt*SPEED;
       if(card.t>=card.sc.dur){
         card.t-=card.sc.dur;card.loops++;card.beat=-1;
         if(auto&&card.loops>=1)next(1);
       }
     }
+    card.el.classList.toggle('hooking',card.t<HOOK_T);
     setBeat(card);
     card.bar.style.width=(card.t/card.sc.dur*100)+'%';
     render(card);
@@ -141,7 +144,7 @@ window.Shorts={cards,seek(i,t){
   c.state=c.sc.init(c.W,c.H);
   // 状態を持つシーン(アリなど)のために少しずつ時間を進める
   for(let x=0;x<=t;x+=0.1){c.t=x;render(c)}
-  c.t=t;c.beat=-1;setBeat(c);render(c);
+  c.t=t;c.beat=-1;c.el.classList.toggle('hooking',t<HOOK_T);setBeat(c);render(c);
 }};
 requestAnimationFrame(frame);
 })();

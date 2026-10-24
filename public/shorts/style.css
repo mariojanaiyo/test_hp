@@ -46,3 +46,12 @@ body{display:flex;justify-content:center;background:radial-gradient(1200px 600px
 .sheet a{color:var(--acc);font-size:13px;font-weight:700;text-decoration:none}
 .close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:14px;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.line{animation:none}}
+
+.dim{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,rgba(0,0,0,.55),rgba(0,0,0,.2));opacity:0;transition:opacity .5s;pointer-events:none}
+.hook{position:absolute;z-index:3;left:22px;right:22px;top:36%;transform:translateY(-50%);pointer-events:none;opacity:0;transform:translateY(-44%) scale(.96);transition:opacity .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.hook p{margin:0;font-size:30px;font-weight:900;line-height:1.35;letter-spacing:.01em;text-shadow:0 2px 18px #000,0 0 4px #000}
+.hook .a{color:var(--acc);font-size:32px}
+.card.hooking .hook{opacity:1;transform:translateY(-50%) scale(1)}
+.card.hooking .dim{opacity:1}
+.card.hooking .cap{opacity:0}
+.cap{transition:opacity .4s}
