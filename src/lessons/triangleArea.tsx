@@ -1,8 +1,12 @@
-import { AQUA, CHEESE_A, CHEESE_B, INK, PEPPERONI, POP, PopText } from '../components/pizza';
+import { AQUA, INK, POP, PopText } from '../components/pizza';
+
+const CREAM = '#fff8ee';
+const CREAM_B = '#ffd3df';
+const STRAWBERRY = '#e8204f';
 import { easeInOut, easeOut, prog } from './math';
 import type { Lesson } from './types';
 
-// 三角形（三角ピザ）の頂点
+// 三角形（三角のケーキ）の頂点
 const P1 = { x: 110, y: 700 };
 const P2 = { x: 590, y: 700 };
 const P3 = { x: 260, y: 370 };
@@ -14,11 +18,11 @@ const tri = `${P1.x},${P1.y} ${P2.x},${P2.y} ${P3.x},${P3.y}`;
 function Defs() {
   return (
     <defs>
-      {[['dotsA', CHEESE_A], ['dotsB', CHEESE_B]].map(([id, bg]) => (
+      {[['dotsA', CREAM], ['dotsB', CREAM_B]].map(([id, bg]) => (
         <pattern key={id} id={`tri-${id}`} width="70" height="70" patternUnits="userSpaceOnUse">
           <rect width="70" height="70" fill={bg} />
-          <circle cx="18" cy="20" r="9" fill={PEPPERONI} />
-          <circle cx="52" cy="52" r="9" fill={PEPPERONI} />
+          <path d="M18 12 q9 -2 9 8 q-3 12 -9 14 q-6 -2 -9 -14 q0 -10 9 -8z" fill={STRAWBERRY} />
+          <path d="M52 44 q9 -2 9 8 q-3 12 -9 14 q-6 -2 -9 -14 q0 -10 9 -8z" fill={STRAWBERRY} />
         </pattern>
       ))}
       <clipPath id="tri-keep"><rect x={P3.x} y="300" width="600" height="460" /></clipPath>
@@ -134,8 +138,8 @@ export const triangleArea: Lesson = {
   point: <>三角形 ＝ <span className="c">2枚で長方形</span> の半分<br />底辺 × 高さ ÷ 2</>,
   scenes: [
     { at: 0, big: true, caption: <>三角形の面積って<br />なんで <span className="m">÷2</span> なの？</> },
-    { at: 3.5, caption: <>三角ピザの<br /><span className="c">底辺</span> と <span className="m">高さ</span></> },
-    { at: 8, caption: <>同じピザをもう1枚<br />くるっと回して…</> },
+    { at: 3.5, caption: <>ショートケーキの<br /><span className="c">底辺</span> と <span className="m">高さ</span></> },
+    { at: 8, caption: <>同じケーキをもう1切れ<br />くるっと回して…</> },
     { at: 13, caption: <>2枚合わせると<br /><span className="m">平行四辺形</span>！</> },
     { at: 17.5, caption: <>はみ出した<span className="c">三角</span>を<br />反対側へ</> },
     { at: 23, caption: <><span className="m">長方形</span>になった！</>, formula: [T1] },
