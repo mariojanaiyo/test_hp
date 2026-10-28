@@ -965,5 +965,70 @@ S.push({
   }
 });
 
-window.SCENES=[S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+// 13 ─────────── シカの過密と森の下 ───────────
+S.push({
+  id:'deer',pin:{t:15,text:'森の下が空っぽ！'},hook:['オオカミやクマが消えると、','森の下が空っぽに？'],tag:'連鎖・カスケード',dur:24,
+  title:'捕食者が減ると、シカが増えて森が変わる？',
+  beats:[
+    {t:0,text:'森の下には、<b>草と若木</b>が茂っている'},
+    {t:5,text:'<b>捕食者</b>が、いなくなる'},
+    {t:9,text:'<b>シカ</b>が、増えていく'},
+    {t:14,text:'草と若木が、<b>食べ尽くされる</b>'},
+    {t:19,text:'上は緑でも、<b>次の木が育たない</b>'}
+  ],
+  more:'世界各地でシカが増え、森の更新や生態系のはたらきに影響していることが、総説論文でまとめられています。増えた背景には、捕食者の減少や生息環境の変化があるとされます。シカが林床の草や若木を食べ続けると、上の木は残っても、次の世代が育ちにくくなります。',
+  caveat:'これは「こういう連鎖が起きうる」という模式図です。シカが増える原因は、捕食者の減少だけでなく、生息環境の変化など複数あるとされ、地域で事情が違います。具体的な数字は、論文の本文で照合できるまで動画に出していません。',
+  source:{short:'Côté et al. 2004, Annu. Rev. Ecol. Evol. Syst.',cite:'Côté, S.D., Rooney, T.P., Tremblay, J.-P., Dussault, C. & Waller, D.M. (2004). Ecological impacts of deer overabundance. Annual Review of Ecology, Evolution, and Systematics, 35, 113–147. doi:10.1146/annurev.ecolsys.35.021103.105725',query:'Ecological impacts of deer overabundance Côté 2004'},
+  init(W,H){const r=rng(21);return{
+    st:mkStars(40,W,H*0.3,5),
+    trunks:Array.from({length:7},(_,i)=>({x:18+i*52+r()*14,h:78+r()*24,d:r()*3})),
+    plants:Array.from({length:34},()=>({x:8+r()*344,y:r(),d:r(),s:.7+r()*.6,p:r()*6})),
+    deer:Array.from({length:10},(_,i)=>({x:30+r()*300,y:(i%3),ph:r()*6,dir:r()<.5?1:-1,delay:i*0.75}))}},
+  draw(c,t,W,H,s){
+    const gy=H*0.5;
+    vgrad(c,0,0,W,H,[[0,'#0b1a2e'],[0.3,'#12383a'],[0.5,'#1d4a2a'],[0.51,'#16331f'],[1,'#07130d']]);
+    stars(c,W,H,s.st,t,H*0.2);
+    // 上の木(ずっと緑のまま)
+    s.trunks.forEach(tr=>{
+      const top=gy-tr.h;
+      c.strokeStyle='rgb(96,74,52)';c.lineWidth=3;c.beginPath();c.moveTo(tr.x,gy+8);c.lineTo(tr.x,top);c.stroke();
+      c.globalCompositeOperation='lighter';glow(c,tr.x,top-6,38,'110,255,170',0.22);c.globalCompositeOperation='source-over';
+      c.fillStyle='hsl(128,45%,'+(26+tr.d*2)+'%)';c.beginPath();c.ellipse(tr.x,top-6,24,17,0,0,TAU);c.fill();
+    });
+    // 地面
+    vgrad(c,0,gy,W,H*0.12,[[0,'#1d4a2a'],[1,'#10281a']]);
+    // 下草と若木(シカに食べられて消える)
+    s.plants.forEach(p=>{
+      const g=1-sm(t,8.5+p.d*6.5,10.5+p.d*6.5);
+      const gx=p.x,base=gy+10+p.y*H*0.08;
+      const h=(4+14*g)*p.s;
+      c.strokeStyle='hsl('+(100+p.d*30)+',60%,'+(36+g*10)+'%)';c.lineWidth=1.6;c.lineCap='round';
+      for(let k=-1;k<=1;k++){c.beginPath();c.moveTo(gx+k*2.5,base);c.lineTo(gx+k*3.5+Math.sin(t*1.3+p.p)*1.2,base-h*(1-Math.abs(k)*0.25));c.stroke()}
+      if(g>0.4){c.globalCompositeOperation='lighter';glow(c,gx,base-h,6,'130,255,170',0.28*g);c.globalCompositeOperation='source-over'}
+    });
+    // 捕食者(去っていく)
+    const wl=sm(t,1.5,6);
+    [[110,0],[230,1.4]].forEach((w,i)=>{
+      const x=mix(w[0],-50-i*30,wl);
+      if(x>-45)wolf(c,x,gy+24+i*10,1.1,-1,t*9+w[1],'rgb(170,205,255)');
+    });
+    // シカ(増える)
+    s.deer.forEach((d,i)=>{
+      const a=sm(t,5+d.delay,6.2+d.delay);
+      if(a<=0)return;
+      const x=d.x+Math.sin(t*0.4+d.ph)*8,y=gy+22+d.y*10;
+      const head=0.15+0.1*Math.sin(t*3+d.ph);
+      c.globalAlpha=a;
+      elk(c,x,y,0.85,d.dir,t*2+d.ph,head,'rgb(255,222,170)');
+      c.globalAlpha=1;
+    });
+    // 凡例
+    const ly=H*0.585;
+    c.fillStyle='#5ae68c';c.beginPath();c.arc(30,ly,4,0,TAU);c.fill();txt(c,'下草・若木',40,ly,10,'rgba(170,250,200,.9)','left');
+    c.fillStyle='#ffdea8';c.beginPath();c.arc(30,ly+18,4,0,TAU);c.fill();txt(c,'シカ',40,ly+18,10,'rgba(255,225,175,.9)','left');
+    if(t<6)txt(c,'捕食者',300,ly,10,'rgba(190,215,255,'+(1-sm(t,4,6))+')','left');
+  }
+});
+
+window.SCENES=[S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9],S[12]];
 })();
