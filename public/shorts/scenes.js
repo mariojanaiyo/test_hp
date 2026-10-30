@@ -1032,5 +1032,67 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'otter',pin:{t:14,text:'海の森が消えた！'},hook:['ラッコがいない島の','海の森はどうなる？'],tag:'海のつながり',dur:24,
+  title:'ラッコのいる島といない島で、海の中は違う？',
+  beats:[
+    {t:0,text:'アリューシャンの<b>2つの島</b>の海中'},
+    {t:5,text:'左は<b>ラッコがいる</b>島'},
+    {t:9,text:'右は<b>いない</b>島。ウニが多い'},
+    {t:14,text:'ウニが<b>海藻を食べつくす</b>'},
+    {t:19,text:'ラッコが<b>ウニを抑える</b>、と報告'}
+  ],
+  more:'アリューシャン列島西部で、ラッコがいる島といない島の浅い海を比べた研究です。ラッコはウニなどの草食の無脊椎動物を食べて数を抑えます。ラッコがいない島ではウニが増え、海藻の林(ケルプ)が食べ尽くされていました。海藻の林は魚や島の動物のエサの土台なので、ラッコの有無が海辺の生き物全体に響く、と論文は述べています。',
+  caveat:'これは模式図です。ウニの数や時間の流れは実際の数字ではありません。論文は「ラッコのいる島といない島を比べた」観察で、同じ島を前後で追った実験ではありません(私が確認できたのは抄録までで、本文は未確認)。のちの研究(Estes ら 1998)では、アラスカ西部でラッコが急減し、シャチの捕食が原因の可能性が示され、ウニ増加と海藻の林の減少が起きたとされています。',
+  source:{short:'Estes & Palmisano 1974, Science',cite:'Estes, J.A. & Palmisano, J.F. (1974). Sea otters: their role in structuring nearshore communities. Science, 185(4156), 1058–1060. doi:10.1126/science.185.4156.1058',query:'Sea otters: their role in structuring nearshore communities Estes Palmisano 1974'},
+  init(W,H){const r=rng(31);
+    return{
+      kelpL:Array.from({length:7},(_,i)=>({x:10+i*24+r()*8,h:70+r()*40,p:r()*6})),
+      kelpR:Array.from({length:7},(_,i)=>({x:192+i*24+r()*8,h:70+r()*40,p:r()*6,te:9.5+i*0.7})),
+      urL:Array.from({length:4},(_,i)=>({x:20+i*40+r()*14,p:r()*6})),
+      urR:Array.from({length:22},(_,i)=>({x:190+r()*160,p:r()*6,t0:6+i*0.45}))
+    }},
+  draw(c,t,W,H,s){
+    const top=H*0.17,fl=H*0.55;
+    vgrad(c,0,0,W,H,[[0,'#0a3a55'],[0.6,'#04162a'],[1,'#020a14']]);
+    c.globalCompositeOperation='lighter';glow(c,W/2,top,W*0.6,'120,200,230',0.12);c.globalCompositeOperation='source-over';
+    // 海底
+    vgrad(c,0,fl-6,W,H*0.06,[[0,'#2b2a22'],[1,'#0a0906']]);
+    // 区切り
+    c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=1;c.setLineDash([4,4]);c.beginPath();c.moveTo(W/2,top);c.lineTo(W/2,fl+12);c.stroke();c.setLineDash([]);
+    txt(c,'ラッコがいる島',W/4,top+10,11,'rgba(180,240,255,.95)','center');
+    txt(c,'ラッコがいない島',W*3/4,top+10,11,'rgba(255,200,170,.95)','center');
+    const kelp=(k,h,col)=>{
+      if(h<2)return;
+      c.strokeStyle=col;c.lineWidth=2.4;c.lineCap='round';
+      c.beginPath();c.moveTo(k.x,fl-4);
+      const n=6;
+      for(let i=1;i<=n;i++){const u=i/n;c.lineTo(k.x+Math.sin(t*1.2+k.p+u*3)*5*u,fl-4-h*u)}
+      c.stroke();
+    };
+    s.kelpL.forEach(k=>kelp(k,k.h*(1),'hsl(120,45%,38%)'));
+    s.kelpR.forEach(k=>kelp(k,k.h*(1-sm(t,k.te,k.te+4)),'hsl(100,40%,34%)'));
+    const urchin=(x,y,sc)=>{
+      c.fillStyle='#8a3fb0';c.beginPath();c.arc(x,y,4*sc,0,TAU);c.fill();
+      c.strokeStyle='#b070d8';c.lineWidth=1;
+      for(let a=0;a<8;a++){const an=-Math.PI+a*Math.PI/7;c.beginPath();c.moveTo(x+Math.cos(an)*4*sc,y+Math.sin(an)*4*sc);c.lineTo(x+Math.cos(an)*7*sc,y+Math.sin(an)*7*sc);c.stroke()}
+    };
+    s.urL.forEach(u=>urchin(u.x,fl+2,1));
+    s.urR.forEach(u=>{if(t<u.t0)return;const e=sm(t,u.t0,u.t0+1.5);urchin(u.x,fl+2-(1-e)*6,e)});
+    // ラッコ(左)
+    if(t>=4){
+      const e=sm(t,4,6),ox=mix(-20,W/4,e)+Math.sin(t*0.8)*6,oy=top+34+Math.sin(t*1.3)*3;
+      c.fillStyle='#b58a5a';c.beginPath();c.ellipse(ox,oy,16,6,0,0,TAU);c.fill();
+      c.beginPath();c.arc(ox+14,oy-3,5,0,TAU);c.fill();
+      c.fillStyle='#e9d3b0';c.beginPath();c.arc(ox+15,oy-4,3,0,TAU);c.fill();
+    }
+    // 数表示
+    const nR=s.urR.filter(u=>t>=u.t0).length;
+    txt(c,'ウニ(模式)',W*3/4,fl+H*0.06,10,'rgba(210,170,240,.9)','center');
+    if(t>=14){const a=sm(t,14,16);txt(c,'海藻がほとんどない',W*3/4,(top+fl)/2,13,'rgba(255,210,170,'+a+')','center')}
+    if(t>=5){const a=sm(t,5,7);txt(c,'海藻の林が残る',W/4,(top+fl)/2+20,12,'rgba(180,250,200,'+a+')','center')}
+  }
+});
+
+window.SCENES=[S[S.length-1],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
