@@ -965,5 +965,72 @@ S.push({
   }
 });
 
-window.SCENES=[S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'deer',pin:{t:14,text:'足元が空っぽ！'},hook:['鹿が増えすぎると','森はどうなる？'],tag:'森と動物のつながり',dur:24,
+  title:'鹿が増えすぎた森では、何が起きる？',
+  beats:[
+    {t:0,text:'下草が<b>茂る森</b>に、鳥の声'},
+    {t:5,text:'鹿が<b>増えていく</b>'},
+    {t:10,text:'草も低木も<b>食べられる</b>'},
+    {t:14,text:'林の<b>足元が空っぽ</b>に'},
+    {t:19,text:'<b>鳥や虫</b>にも広がる'}
+  ],
+  more:'シカ類は世界各地で急に増えています。シカは植物を選んで食べるので、草・低木・若木の育ち方が変わり、食べ続けられた森では植物の量と種類が減ります。その影響は昆虫や鳥、ほかの哺乳類にも広がり、一度単純になった状態は元に戻りにくいことがある、と総説は述べています。',
+  caveat:'これは模式図です。頭数や時間は実際の数字ではありません。論文(総説)は「シカの過密が森を単純にし、鳥や昆虫にも波及する」と述べますが、抄録には具体的な数値はありません。また、クマやオオカミがいなくなったことがシカ増加の原因になるかは、この動画では扱っていません(未確認)。',
+  source:{short:'Côté et al. 2004, Annu Rev Ecol Evol Syst',cite:'Côté, S.D., Rooney, T.P., Tremblay, J.-P., Dussault, C. & Waller, D.M. (2004). Ecological impacts of deer overabundance. Annual Review of Ecology, Evolution, and Systematics, 35, 113–147. doi:10.1146/annurev.ecolsys.35.021103.105725',query:'Ecological impacts of deer overabundance Côté 2004'},
+  init(W,H){const r=rng(77);
+    return{
+      trunks:Array.from({length:7},(_,i)=>({x:20+i*52+r()*14,w:7+r()*5})),
+      plants:Array.from({length:34},(_,i)=>({x:14+i*10.2+r()*4,h:12+r()*20,te:6+r()*9,sw:r()*6})),
+      deer:Array.from({length:9},(_,i)=>({t0:2+i*1.2,x0:(i%2?W+20:-20),dir:i%2?-1:1,gx:40+r()*280,ph:r()*6,sp:6+r()*5,y:r()*10})),
+      birds:Array.from({length:6},(_,i)=>({x:40+i*55+r()*15,y:0.16+r()*0.12,tl:13+i*1.6,p:r()*6}))
+    }},
+  draw(c,t,W,H,s){
+    const gy=H*0.5;
+    vgrad(c,0,0,W,H,[[0,'#07170f'],[1,'#0c2a1a']]);
+    // 木の幹
+    s.trunks.forEach(k=>{c.fillStyle='#1c2a1c';c.fillRect(k.x,0,k.w,gy);c.fillStyle='rgba(120,200,120,.05)';c.fillRect(k.x,0,2,gy)});
+    // 樹冠の影
+    c.globalCompositeOperation='lighter';glow(c,W/2,H*0.02,W*0.6,'90,200,110',0.12);c.globalCompositeOperation='source-over';
+    // 地面
+    vgrad(c,0,gy,W,H*0.12,[[0,'#2a1d12'],[1,'#120c07']]);
+    // 下草
+    s.plants.forEach(p=>{
+      const eat=sm(t,p.te,p.te+2.2);
+      const h=p.h*(1-eat*0.93);
+      if(h<1)return;
+      const sw=Math.sin(t*1.5+p.sw)*1.5;
+      c.strokeStyle='hsl('+(115+p.sw*3)+',45%,'+(32+8*(1-eat))+'%)';c.lineWidth=1.6;c.lineCap='round';
+      for(let k=-1;k<=1;k++){c.beginPath();c.moveTo(p.x,gy);c.quadraticCurveTo(p.x+k*4+sw,gy-h*0.5,p.x+k*7+sw,gy-h*(k?0.75:1));c.stroke()}
+    });
+    // 鳥
+    s.birds.forEach(b=>{
+      const fl=clamp((t-b.tl)/3.5);
+      let x=b.x,y=H*b.y;
+      if(fl>0){x+=fl*(b.x<W/2?-1:1)*120;y-=fl*fl*H*0.2+fl*20}
+      if(x<-10||x>W+10||y<-10)return;
+      const wing=fl>0?Math.sin(t*22+b.p)*4:0;
+      c.fillStyle='#e8d070';c.beginPath();c.ellipse(x,y,5,3.2,0,0,TAU);c.fill();
+      c.beginPath();c.arc(x+4.5,y-2,2.4,0,TAU);c.fill();
+      c.strokeStyle='#e8d070';c.lineWidth=1.3;c.beginPath();c.moveTo(x-1,y);c.lineTo(x-4,y-3-wing);c.stroke();
+      if(fl===0){c.strokeStyle='#4a3a20';c.beginPath();c.moveTo(x-12,y+5);c.lineTo(x+12,y+5);c.stroke()}
+    });
+    // 鹿
+    let n=0;
+    s.deer.forEach(d=>{
+      if(t<d.t0)return;n++;
+      const u=sm(t,d.t0,d.t0+4);
+      const x=mix(d.x0,d.gx,u)+Math.sin(t*0.4+d.ph)*8*u;
+      const moving=u<1;
+      elk(c,x,gy+6+d.y,1.5,d.dir>0?1:-1,t*d.sp*0.5+d.ph,moving?0.05:0.9+0.1*Math.sin(t*2+d.ph),'#d9b27a');
+    });
+    // 頭数
+    txt(c,'シカ '+n+' 頭(模式)',W-12,H*0.04,12,'rgba(240,215,160,.9)','right');
+    // 空っぽ表示
+    const em=sm(t,14,16);
+    if(em>0)txt(c,'下草がほとんどない',W/2,gy+H*0.1,13,'rgba(255,200,150,'+em+')','center');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
