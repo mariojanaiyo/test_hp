@@ -20,6 +20,7 @@
 | goe | 大酸化イベントと縞状鉄鉱層 | Lyons et al. 2014, Nature 506:307 | 未確認 |
 | deer | シカの過密で林床の植物が減り、昆虫・鳥にも波及する。単純化した状態は元に戻りにくいことがある | Côté et al. 2004, Annu Rev Ecol Evol Syst 35:113-147 | 主張確認済み (2026-10-30、抄録まで)。本文は未入手 |
 | bat | 野生の吸血コウモリの血の分け合いは、血縁の近さとお返しの機会の両方に左右される | Wilkinson 1984, Nature 308:181-184 | 主張確認済み (2026-10-31、抄録まで)。本文は未入手 |
+| milk | 母乳オリゴ糖(HMO)は乳児に多くが消化されず大腸に届き、特定のビフィズス菌のエサになると考えられている | Bode 2012, Glycobiology 22(9):1147-1162 | 主張確認済み (2026-10-31、抄録と本文前半まで)。後半は未確認 |
 
 ## 確認メモ
 
@@ -32,3 +33,5 @@
 - **bat** (2026-10-31): 書誌(Wilkinson / Nature 308(5955):181–184 / DOI 10.1038/308181a0 / 1984-03-08)を USF デジタルコモンズ(https://digitalcommons.usf.edu/kip_articles/5110)と reflectionsonpaperspast.com(書誌・研究概要)で照合。抄録: 野生の吸血コウモリの吐き戻しによる血の分け合いは、血縁度とお返しの機会の指標に独立に、ほぼ同程度に依存。血縁・非血縁の混在群でお返しが働き、飼育下で非血縁個体が血を交換。本文は未入手でサンプル数は未確認、動画に数字は出していない。反論・更新: Carter & Wilkinson 2013 Proc R Soc B 280:20122573(飼育20匹、過去に受けた分与が血縁より分与をよく予測)を検索結果の要約で確認、caveat に記載。BACKLOG 仮フックの「覚えている？」は記憶の直接証拠ではなく、お返しの偏りから推定される話なので、動画では「？」型の問いに留め、字幕は「お返しが効く、と報告」とした。 YouTube 限定公開で投稿済み(2026-10-31): https://youtube.com/shorts/msdrOaUMTaQ
 
 - **新チャンネル(toriaezu_test)への投稿** (2026-10-31): 投稿先を toriaezu_test(UCH_pPsd1BvsaZSgyc8OSfeQ)に切り替え、既存の3本を限定公開で上げた。deer: https://youtube.com/shorts/MqHR23avoOc / otter: https://youtube.com/shorts/bbQLfIcUHGk / bat: https://youtube.com/shorts/HV-7hpQadWs
+
+- **milk** (2026-10-31): 書誌(Bode, L. / Glycobiology 22(9):1147–1162 / DOI 10.1093/glycob/cws074 / PMC3406618)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC3406618/)で照合。総説の抄録と本文の前半(約10万字)を読んだ。HMO は胃酸・消化酵素に耐えて大部分が大腸に届き(約1%が吸収)、B. infantis など一部のビフィズス菌のエサになる。ビフィズス菌すべてに効くわけではない。働きの多くは試験管・動物・観察研究で、人での介入試験が必要と著者が述べている。BACKLOG 仮フックの「赤ちゃんのためじゃない」は言い過ぎなので、「消化されない？」の問いにとどめた。本文後半は未確認。

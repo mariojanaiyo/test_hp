@@ -1164,5 +1164,77 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'milk',pin:{t:14,text:'菌のエサだった！'},hook:['母乳の糖の多くは、','消化されない？'],tag:'からだと菌のつながり',dur:24,
+  title:'母乳の糖は、赤ちゃんの腸でどうなる？',
+  beats:[
+    {t:0,text:'母乳には<b>特別な糖</b>が入っている'},
+    {t:5,text:'ふつうの糖は<b>小腸で吸収</b>'},
+    {t:10,text:'母乳の糖は<b>消化されず</b>大腸へ'},
+    {t:14,text:'<b>ビフィズス菌</b>のエサに'},
+    {t:19,text:'働きの多くは<b>動物や試験管</b>の研究'}
+  ],
+  more:'母乳には、ヒト母乳オリゴ糖(HMO)という糖が、種類も量も豊富に入っています。この糖は、赤ちゃんの胃酸や消化酵素では分解されにくく、多くが消化されないまま大腸に届くと、総説は述べています。そこで特定のビフィズス菌のエサになり、腸内細菌のバランスに関わると考えられています。病原菌が腸にくっつくのを邪魔する働きも提案されています。',
+  caveat:'これは模式図です。粒の数や時間は実際の数字ではありません。論文は総説で、HMO の働きの多くは試験管・動物・観察研究にもとづき、人での介入試験は足りないと著者自身が述べています。ビフィズス菌のうち育つのは一部の種類だけです。私が読めたのは抄録と本文の前半までで、本文の後半は未確認です。',
+  source:{short:'Bode 2012, Glycobiology',cite:'Bode, L. (2012). Human milk oligosaccharides: Every baby needs a sugar mama. Glycobiology, 22(9), 1147–1162. doi:10.1093/glycob/cws074',query:'Human milk oligosaccharides: Every baby needs a sugar mama Bode 2012'},
+  init(W,H){const r=rng(52);
+    return{
+      hmo:Array.from({length:12},(_,i)=>({t0:1+i*0.55,tx:215+r()*105,ty:(r()-0.5)*22,tc:14.5+i*0.4,p:r()*6})),
+      lac:Array.from({length:12},(_,i)=>({t0:1+i*0.55,tx:90+r()*60,p:r()*6})),
+      bac:Array.from({length:9},(_,i)=>({x:205+(i%3)*45+r()*14,y:(Math.floor(i/3)-1)*13+r()*4,p:r()*6}))
+    }},
+  draw(c,t,W,H,s){
+    const gy=H*0.3,th=44;
+    vgrad(c,0,0,W,H,[[0,'#150f1c'],[1,'#07050c']]);
+    // 腸
+    c.fillStyle='rgba(200,120,130,.22)';c.fillRect(14,gy-th/2,W-28,th);
+    c.strokeStyle='rgba(240,160,170,.5)';c.lineWidth=2;c.strokeRect(14,gy-th/2,W-28,th);
+    c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=1;c.setLineDash([4,4]);c.beginPath();c.moveTo(188,gy-th/2-12);c.lineTo(188,gy+th/2+12);c.stroke();c.setLineDash([]);
+    txt(c,'小腸',100,gy-th/2-10,11,'rgba(255,215,220,.9)','center');
+    txt(c,'大腸',265,gy-th/2-10,11,'rgba(255,215,220,.9)','center');
+    // ふつうの糖(乳糖など):小腸で吸収
+    s.lac.forEach(l=>{
+      if(t<l.t0)return;
+      const u=sm(t,l.t0,l.t0+4);
+      const x=mix(24,l.tx,u);
+      const ab=sm(t,l.t0+3.5,l.t0+6);
+      const y=gy+ab*(th/2+22);
+      const a=1-ab*0.9;
+      if(a<0.05)return;
+      c.fillStyle='rgba(235,235,245,'+a+')';c.beginPath();c.arc(x,y,3.2,0,TAU);c.fill();
+    });
+    // 母乳の糖(HMO)
+    let alive=0;
+    s.hmo.forEach(h=>{
+      if(t<h.t0)return;
+      const u=sm(t,h.t0,h.t0+9);
+      const x=mix(24,h.tx,u),y=gy+h.ty*sm(t,h.t0+6,h.t0+9)+Math.sin(t*2+h.p)*1.5;
+      const eat=sm(t,h.tc,h.tc+1.2);
+      const r=4.2*(1-eat);
+      if(r<0.3)return;alive++;
+      c.globalCompositeOperation='lighter';glow(c,x,y,r*3.2,'255,200,80',0.55);c.globalCompositeOperation='source-over';
+      c.fillStyle='#ffc95a';c.beginPath();c.arc(x,y,r,0,TAU);c.fill();
+    });
+    // ビフィズス菌
+    const grow=sm(t,14,19);
+    s.bac.forEach((b,i)=>{
+      const e=sm(t,8+i*0.25,10+i*0.25);
+      if(e<=0)return;
+      const x=b.x,y=gy+b.y,rr=(3+3*grow)*e;
+      c.fillStyle='hsl(135,50%,'+(38+14*grow)+'%)';
+      c.beginPath();c.ellipse(x,y,rr*1.5,rr,Math.sin(t+b.p)*0.4,0,TAU);c.fill();
+      if(grow>0.3){c.globalCompositeOperation='lighter';glow(c,x,y,rr*3,'110,230,140',0.25*grow);c.globalCompositeOperation='source-over'}
+    });
+    if(t>=9)txt(c,'ビフィズス菌(模式)',265,gy+th/2+16,10,'rgba(170,240,185,'+sm(t,9,10.5)+')','center');
+    // 凡例
+    c.fillStyle='#ffc95a';c.beginPath();c.arc(22,gy-th/2-36,3.6,0,TAU);c.fill();
+    txt(c,'母乳の糖(HMO)',32,gy-th/2-32,10,'rgba(255,225,160,.95)','left');
+    c.fillStyle='#ebebf5';c.beginPath();c.arc(150,gy-th/2-36,3,0,TAU);c.fill();
+    txt(c,'ふつうの糖',159,gy-th/2-32,10,'rgba(235,235,245,.9)','left');
+    if(t>=10&&t<14)txt(c,'そのまま大腸へ',W/2,gy+th/2+44,13,'rgba(255,220,150,'+sm(t,10,12)+')','center');
+    if(t>=15)txt(c,'菌が増える',W/2,gy+th/2+44,13,'rgba(170,240,185,'+sm(t,15,17)+')','center');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
