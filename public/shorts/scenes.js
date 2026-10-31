@@ -189,7 +189,7 @@ S.push({
     s.salmon.forEach(f=>{
       const u=(f.u+t*f.sp)%1,y=H*0.62*(1-u),x=riverX(y)+f.l*16+Math.sin(t*2+f.p)*3;
       const a=sm(t,1,5);
-      glow(c,x,y,9,'255,140,70',0.4*a);
+      glow(c,x,y,12,'255,140,70',0.4*a);
       c.fillStyle='rgba(255,170,100,'+0.95*a+')';c.beginPath();c.ellipse(x,y,2.6,6.5,Math.sin(t*6+f.p)*0.2,0,TAU);c.fill();
     });
     c.globalCompositeOperation='source-over';
@@ -1149,7 +1149,7 @@ S.push({
         const p=clamp(u*1.3-k*0.12);
         if(p<=0||p>=1)continue;
         const x=mix(x0,x1,p),y=ty+27+Math.sin(p*Math.PI)*-14;
-        glow(c,x,y,9,'255,60,80',0.9);
+        glow(c,x,y,12,'255,60,80',0.9);
       }
       c.globalCompositeOperation='source-over';
     };
@@ -1161,6 +1161,70 @@ S.push({
     if(t>=1)txt(c,t<10?'A:満腹  B:空腹':t<14?'A:空腹  B:満腹':'B が A に分ける',W-12,ty+72,11,'rgba(255,200,210,.9)','right');
     const f=sm(t,14,16);
     if(f>0)txt(c,'もらった側が、お返し',W/2,ty+235,13,'rgba(255,225,190,'+f+')','center');
+  }
+});
+
+S.push({
+  id:'bat',pin:{t:14,text:'血を分けた！'},hook:['血を分け合うコウモリ','お返しを覚えてる？'],tag:'動物の助け合い',dur:24,
+  title:'吸血コウモリは、血を分け合う？',
+  beats:[
+    {t:0,text:'洞くつに<b>逆さにぶら下がる</b>仲間たち'},
+    {t:5,text:'その夜、<b>血を吸えなかった</b>1匹'},
+    {t:10,text:'仲間が<b>血を吐き戻して</b>分ける'},
+    {t:14,text:'<b>空腹の仲間</b>が命をつなぐ'},
+    {t:19,text:'<b>血縁</b>と<b>お返し</b>が関係、と報告'}
+  ],
+  more:'ナミチスイコウモリは、血を吸えなかった仲間に、吐き戻した血を分けることがあります。1984年の論文は、野生のコウモリの血の分け合いが「血縁かどうか」と「お返しできる機会があったか」の両方に、それぞれ独立に左右されると報告しました。さらに、血縁のない個体どうしが、飼育下で血を交換し合う実験も示されています。',
+  caveat:'これは模式図です。頭数や時間は実際の数字ではありません。論文は、血縁でない個体どうしでも分け合いが起こること、お返しの機会が関係することを示したもので、「相手を覚えている」ことそのものを測ったわけではありません(私が確認できたのは抄録までで、本文は未確認)。のちの研究(Carter & Wilkinson 2013)は、受け取った量が血縁よりも分ける量をよく予測したと報告しています。',
+  source:{short:'Wilkinson 1984, Nature',cite:'Wilkinson, G.S. (1984). Reciprocal food sharing in the vampire bat. Nature, 308, 181–184. doi:10.1038/308181a0',query:'Reciprocal food sharing in the vampire bat Wilkinson 1984'},
+  init(W,H){const r=rng(52);
+    return{
+      bg:Array.from({length:5},(_,i)=>({x:30+i*70+r()*18,p:r()*6,s:0.8+r()*0.2})),
+      drops:Array.from({length:3},(_,i)=>({t0:10+i*0.7}))
+    }},
+  draw(c,t,W,H,s){
+    const by=H*0.2;
+    vgrad(c,0,0,W,H,[[0,'#120b1c'],[0.55,'#0a0612'],[1,'#05030a']]);
+    // 天井
+    vgrad(c,0,by-26,W,26,[[0,'#2a2030'],[1,'#3a2c44']]);
+    for(let x=10;x<W;x+=34){c.fillStyle='#2a2030';c.beginPath();c.moveTo(x,by-6);c.lineTo(x+10,by-6);c.lineTo(x+5,by+8+((x*7)%9));c.fill()}
+    const bat=(x,col,fat,sc,sway,mouthGlow)=>{
+      c.save();c.translate(x+sway,by);c.scale(sc,sc);
+      c.fillStyle=col;c.strokeStyle=col;c.lineWidth=1.5;
+      c.beginPath();c.moveTo(-2,0);c.lineTo(-2,6);c.moveTo(2,0);c.lineTo(2,6);c.stroke();
+      c.beginPath();c.ellipse(0,20,7*fat,14,0,0,TAU);c.fill();
+      c.beginPath();c.ellipse(-8*fat,20,3,12,0.15,0,TAU);c.fill();
+      c.beginPath();c.ellipse(8*fat,20,3,12,-0.15,0,TAU);c.fill();
+      c.beginPath();c.arc(0,38,5,0,TAU);c.fill();
+      c.beginPath();c.moveTo(-4,42);c.lineTo(-6,50);c.lineTo(-1,44);c.moveTo(4,42);c.lineTo(6,50);c.lineTo(1,44);c.fill();
+      c.fillStyle='#ff6a5a';c.beginPath();c.arc(-2,38,0.9,0,TAU);c.arc(2,38,0.9,0,TAU);c.fill();
+      c.restore();
+    };
+    s.bg.forEach(b=>bat(b.x,'#3a2a48',1,b.s*1.25,Math.sin(t*0.6+b.p)*1.2,0));
+    // ドナー(左)と、おなかのすいた個体(右)
+    const dx=110,rx=250,hy=by+80;
+    const hungry=1-sm(t,11,15)*0.35;
+    bat(dx,'#6a4a8a',1.15,2,Math.sin(t*0.7)*1,0);
+    bat(rx,'#8a5a5a',hungry*0.85,2,Math.sin(t*0.7+1)*1+ (t<10?Math.sin(t*9)*(t>5?0.8:0):0),0);
+    // 印
+    if(t>=5&&t<10){const a=sm(t,5,6.5);txt(c,'血を吸えなかった',rx,by+135,12,'rgba(255,190,170,'+a+')','center')}
+    if(t>=1){const a=sm(t,1,2.5)*(1-sm(t,5,6));txt(c,'ねぐらの仲間',W/2,by+135,12,'rgba(210,190,240,'+a+')','center')}
+    // 血のしずく(口から口へ)
+    c.globalCompositeOperation='lighter';
+    s.drops.forEach(d=>{
+      const u=clamp((t-d.t0)/3.4);if(u<=0||u>=1)return;
+      const x=mix(dx,rx,u),y=hy+Math.sin(u*Math.PI)*18;
+      glow(c,x,y,12,'255,60,60',0.7);
+    });
+    c.globalCompositeOperation='source-over';
+    // お返し(模式): 後半に逆向きの細い矢印
+    if(t>=18){const a=sm(t,18,20);
+      c.strokeStyle='rgba(255,200,120,'+(0.7*a)+')';c.lineWidth=1.5;c.setLineDash([4,4]);
+      c.beginPath();c.moveTo(rx-14,by+160);c.quadraticCurveTo(W/2,by+190,dx+14,by+160);c.stroke();c.setLineDash([]);
+      c.beginPath();c.moveTo(dx+14,by+160);c.lineTo(dx+22,by+156);c.lineTo(dx+22,by+165);c.fillStyle='rgba(255,200,120,'+(0.7*a)+')';c.fill();
+      txt(c,'あとで、お返し(模式)',W/2,by+200,12,'rgba(255,220,160,'+a+')','center');
+    }
+    if(t>=14){const a=sm(t,14,16);txt(c,'分けてもらった個体',rx,by+135,12,'rgba(255,200,180,'+a+')','center')}
   }
 });
 
