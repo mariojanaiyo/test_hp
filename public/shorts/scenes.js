@@ -1094,5 +1094,75 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'bat',pin:{t:14,text:'お返しした！'},hook:['血を分けてくれた','相手を覚えている？'],tag:'仲間のつながり',dur:24,
+  title:'吸血コウモリは、血を分け合う相手を選ぶ？',
+  beats:[
+    {t:0,text:'木のうろの<b>ねぐら</b>、夜のおわり'},
+    {t:5,text:'満腹の1匹が、空腹の仲間に<b>血を分ける</b>'},
+    {t:10,text:'べつの晩、<b>立場が逆</b>に'},
+    {t:14,text:'今度は、<b>もらった側が分ける</b>'},
+    {t:19,text:'血縁と<b>お返し</b>が効く、と報告'}
+  ],
+  more:'中米コスタリカで野生の吸血コウモリを観察した研究です。吸血コウモリは、吸った血を吐き戻して仲間に分けることがあります。分け合いは、血縁の近さと、お返しをする機会の多さの両方に、それぞれ同じくらい左右されていたと報告されました。血縁でない個体どうしでも、飼育下では血を交換し合いました。',
+  caveat:'これは模式図です。コウモリの数や時間の流れは実際のものではありません。論文は、野生の観察と飼育下の実験からの報告で、小さなデータです(私が確認できたのは抄録までで、本文は未確認)。のちの Carter & Wilkinson 2013 では、飼育コウモリ20匹で、過去に受けた分け与えが血縁の近さよりもよく分け与えを予測すると報告されました。',
+  source:{short:'Wilkinson 1984, Nature',cite:'Wilkinson, G.S. (1984). Reciprocal food sharing in the vampire bat. Nature, 308(5955), 181–184. doi:10.1038/308181a0',query:'Reciprocal food sharing in the vampire bat Wilkinson 1984'},
+  init(W,H){return{}},
+  draw(c,t,W,H,s){
+    const top=H*0.16,ty=top+34;
+    vgrad(c,0,0,W,H,[[0,'#1a1220'],[1,'#07050c']]);
+    const night=sm(t,10,11)*(1-sm(t,13,14));
+    c.fillStyle='rgba(0,0,10,'+(0.35*night)+')';c.fillRect(0,0,W,H);
+    // 天井の枝
+    c.fillStyle='#2b2018';c.fillRect(0,top,W,8);
+    const xs=[90,180,270];
+    const lv=[
+      t<5?1:t<6?1:t<9?mix(1,0.6,sm(t,6,9)):t<11?0.6:t<14?mix(0.6,0.1,sm(t,11,12)):mix(0.1,0.6,sm(t,14.5,17)),
+      t<6?0.1:mix(0.1,0.6,sm(t,6,9))*(t<11?1:1)+(t<11?0:0),
+      0.7
+    ];
+    lv[1]=t<6?0.1:t<11?mix(0.1,0.6,sm(t,6,9)):t<14?mix(0.6,1,sm(t,11,12)):mix(1,0.65,sm(t,14.5,17));
+    const names=['A','B','C'];
+    xs.forEach((x,i)=>{
+      const sw=Math.sin(t*0.9+i*2)*1.5;
+      // 足
+      c.strokeStyle='#4a3a30';c.lineWidth=2;c.beginPath();c.moveTo(x-4,top+8);c.lineTo(x-3,ty-10);c.moveTo(x+4,top+8);c.lineTo(x+3,ty-10);c.stroke();
+      // 体(逆さ)
+      c.fillStyle='#3a2f3a';c.beginPath();c.ellipse(x+sw,ty+6,12,17,0,0,TAU);c.fill();
+      c.beginPath();c.arc(x+sw,ty+26,7,0,TAU);c.fill();
+      c.beginPath();c.moveTo(x+sw-6,ty+22);c.lineTo(x+sw-8,ty+32);c.lineTo(x+sw-2,ty+25);c.fill();
+      c.beginPath();c.moveTo(x+sw+6,ty+22);c.lineTo(x+sw+8,ty+32);c.lineTo(x+sw+2,ty+25);c.fill();
+      c.fillStyle='#ff6a6a';c.fillRect(x+sw-2.5,ty+25,2,2);c.fillRect(x+sw+1,ty+25,2,2);
+      // 満腹ゲージ
+      const gx=x-20,gy=ty+52;
+      c.strokeStyle='rgba(255,255,255,.4)';c.lineWidth=1;c.strokeRect(gx,gy,40,6);
+      const v=lv[i];
+      c.fillStyle=v<0.3?'#e05050':'#d03a5a';c.fillRect(gx+1,gy+1,38*v,4);
+    });
+    txt(c,'おなかの血',W/2,ty+90,10,'rgba(255,200,210,.8)','center');
+    // 分け合い: 血のしずく
+    const give=(x0,x1,ta,tb)=>{
+      if(t<ta||t>tb)return;
+      const u=(t-ta)/(tb-ta);
+      c.globalCompositeOperation='lighter';
+      for(let k=0;k<5;k++){
+        const p=clamp(u*1.3-k*0.12);
+        if(p<=0||p>=1)continue;
+        const x=mix(x0,x1,p),y=ty+27+Math.sin(p*Math.PI)*-14;
+        glow(c,x,y,9,'255,60,80',0.9);
+      }
+      c.globalCompositeOperation='source-over';
+    };
+    give(xs[0],xs[1],6,9.5);
+    give(xs[1],xs[0],14.5,18);
+    // 時刻ラベル
+    const lab=t<10?'ある晩':t<14?'べつの晩':'べつの晩';
+    txt(c,lab,12,ty+72,11,'rgba(240,215,200,.9)','left');
+    if(t>=1)txt(c,t<10?'A:満腹  B:空腹':t<14?'A:空腹  B:満腹':'B が A に分ける',W-12,ty+72,11,'rgba(255,200,210,.9)','right');
+    const f=sm(t,14,16);
+    if(f>0)txt(c,'もらった側が、お返し',W/2,ty+235,13,'rgba(255,225,190,'+f+')','center');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
