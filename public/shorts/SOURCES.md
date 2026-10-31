@@ -34,4 +34,4 @@
 
 - **新チャンネル(toriaezu_test)への投稿** (2026-10-31): 投稿先を toriaezu_test(UCH_pPsd1BvsaZSgyc8OSfeQ)に切り替え、既存の3本を限定公開で上げた。deer: https://youtube.com/shorts/MqHR23avoOc / otter: https://youtube.com/shorts/bbQLfIcUHGk / bat: https://youtube.com/shorts/HV-7hpQadWs
 
-- **milk** (2026-10-31): 書誌(Bode, L. / Glycobiology 22(9):1147–1162 / DOI 10.1093/glycob/cws074 / PMC3406618)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC3406618/)で照合。総説の抄録と本文の前半(約10万字)を読んだ。HMO は胃酸・消化酵素に耐えて大部分が大腸に届き(約1%が吸収)、B. infantis など一部のビフィズス菌のエサになる。ビフィズス菌すべてに効くわけではない。働きの多くは試験管・動物・観察研究で、人での介入試験が必要と著者が述べている。BACKLOG 仮フックの「赤ちゃんのためじゃない」は言い過ぎなので、「消化されない？」の問いにとどめた。本文後半は未確認。
+- **milk** (2026-10-31): 書誌(Bode, L. / Glycobiology 22(9):1147–1162 / DOI 10.1093/glycob/cws074 / PMC3406618)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC3406618/)で照合。総説の抄録と本文の前半(約10万字)を読んだ。HMO は胃酸・消化酵素に耐えて大部分が大腸に届き(約1%が吸収)、B. infantis など一部のビフィズス菌のエサになる。ビフィズス菌すべてに効くわけではない。働きの多くは試験管・動物・観察研究で、人での介入試験が必要と著者が述べている。BACKLOG 仮フックの「赤ちゃんのためじゃない」は言い過ぎなので、「消化されない？」の問いにとどめた。本文後半は未確認。 YouTube 限定公開で投稿済み(toriaezu_test、2026-10-31、再生リスト「つながりの科学ショート」に追加): https://youtube.com/shorts/ruadFwsrAh0
