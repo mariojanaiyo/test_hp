@@ -1032,5 +1032,89 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'otter',pin:{t:14,text:'海の森が消えた！'},hook:['ラッコがいなくなると','海の森はどうなる？'],tag:'海のつながり',dur:24,
+  title:'ラッコがいなくなった海では、何が起きる？',
+  beats:[
+    {t:0,text:'ラッコのいる海に、<b>海藻の森</b>'},
+    {t:5,text:'ラッコは<b>草食の無脊椎動物</b>を食べる'},
+    {t:9,text:'ラッコが<b>いなくなる</b>'},
+    {t:12,text:'草食の生き物が<b>増えていく</b>'},
+    {t:17,text:'<b>海藻の森</b>が食べ尽くされる'}
+  ],
+  more:'アリューシャン列島の西部で、ラッコのいる島といない島を比べた研究です。ラッコは海藻を食べる草食の無脊椎動物を抑えていて、ラッコがいなくなると食べられる量が増え、海藻の群落がこわされる、と著者らは述べています。一匹の動物が、海の森の姿を左右しているというつながりです。',
+  caveat:'これは模式図です。匹数や時間は実際の数字ではありません。論文は、ラッコのいる島といない島の比較にもとづく3ページの報告で、抄録には数値がありません。抄録は「草食の無脊椎動物」と書いており、ウニなど個別の種は動画では名指ししていません。その後の研究や反論は、この動画では照合していません(未確認)。',
+  source:{short:'Estes & Palmisano 1974, Science',cite:'Estes, J.A. & Palmisano, J.F. (1974). Sea otters: their role in structuring nearshore communities. Science, 185(4156), 1058–1060. doi:10.1126/science.185.4156.1058',query:'Sea otters: their role in structuring nearshore communities Estes Palmisano 1974'},
+  init(W,H){const r=rng(31);
+    return{
+      kelp:Array.from({length:14},(_,i)=>({x:14+i*25+r()*8,h:0.30+r()*0.12,te:11+r()*4.5,sw:r()*6,seg:5+Math.floor(r()*2)})),
+      urch:Array.from({length:30},(_,i)=>({x:12+r()*336,y:r()*10,t0:i<5?-1:9.5+(i-5)*0.2,ph:r()*6})),
+      otters:Array.from({length:3},(_,i)=>({x0:70+i*100,dir:i%2?1:-1,ph:r()*6,ts:6+i*0.9})),
+      fish:Array.from({length:5},(_,i)=>({y:0.22+r()*0.2,sp:8+r()*6,x0:r()*400,ph:r()*6}))
+    }},
+  draw(c,t,W,H,s){
+    const top=H*0.19,gy=H*0.56;
+    vgrad(c,0,top,W,gy-top+H*0.1,[[0,'#0b3b52'],[0.6,'#082a40'],[1,'#051a2a']]);
+    // 海面
+    c.fillStyle='#1d6a8a';c.fillRect(0,top-2,W,4);
+    c.globalCompositeOperation='lighter';glow(c,W*0.5,top,W*0.7,'120,210,230',0.10);c.globalCompositeOperation='source-over';
+    c.strokeStyle='rgba(180,235,250,.25)';c.lineWidth=1;
+    for(let i=0;i<5;i++){const wx=(i*80+t*6)%(W+40)-20;c.beginPath();c.moveTo(wx,top+3);c.quadraticCurveTo(wx+10,top+6,wx+20,top+3);c.stroke()}
+    // 海底
+    vgrad(c,0,gy,W,H*0.1,[[0,'#3a2c20'],[1,'#17100a']]);
+    // 魚(背景)
+    s.fish.forEach(f=>{const x=((f.x0+t*f.sp)%(W+60))-30,y=H*f.y+Math.sin(t*1.2+f.ph)*4;
+      c.fillStyle='rgba(150,210,230,.35)';c.beginPath();c.ellipse(x,y,5,2.2,0,0,TAU);c.fill();
+      c.beginPath();c.moveTo(x-5,y);c.lineTo(x-9,y-3);c.lineTo(x-9,y+3);c.fill()});
+    // 海藻
+    s.kelp.forEach(k=>{
+      const eat=sm(t,k.te,k.te+2.4);
+      const h=(gy-top)*k.h*2.2*(1-eat*0.96);
+      if(h<2)return;
+      const n=k.seg;let px=k.x,py=gy;
+      c.strokeStyle='hsl('+(95+k.sw*4)+',55%,'+(30+8*(1-eat))+'%)';c.lineWidth=2.6;c.lineCap='round';
+      c.beginPath();c.moveTo(px,py);
+      for(let i=1;i<=n;i++){const u=i/n;const x=k.x+Math.sin(t*1.1+k.sw+u*2.4)*6*u;const y=gy-h*u;c.lineTo(x,y);px=x;py=y}
+      c.stroke();
+      // 葉
+      c.fillStyle='hsl('+(100+k.sw*4)+',50%,'+(34+6*(1-eat))+'%)';
+      for(let i=2;i<=n;i++){const u=i/n;const x=k.x+Math.sin(t*1.1+k.sw+u*2.4)*6*u;const y=gy-h*u;
+        c.beginPath();c.ellipse(x+(i%2?5:-5),y,5.5,1.9,(i%2?-0.5:0.5),0,TAU);c.fill()}
+    });
+    // 草食の無脊椎動物(模式: とげのある丸)
+    let n=0;
+    s.urch.forEach(u=>{
+      if(t<u.t0)return;n++;
+      const a=u.t0<0?1:sm(t,u.t0,u.t0+1.2);
+      const x=u.x,y=gy+4+u.y;
+      c.strokeStyle='rgba(190,120,200,'+a+')';c.fillStyle='rgba(120,60,140,'+a+')';c.lineWidth=1.2;
+      c.beginPath();c.arc(x,y,4.5,0,TAU);c.fill();
+      for(let k=0;k<9;k++){const an=k/9*TAU-Math.PI/2;if(Math.sin(an)>0.6)continue;
+        c.beginPath();c.moveTo(x+Math.cos(an)*4.5,y+Math.sin(an)*4.5);c.lineTo(x+Math.cos(an)*8,y+Math.sin(an)*8);c.stroke()}
+    });
+    // ラッコ
+    s.otters.forEach(o=>{
+      const gone=sm(t,o.ts,o.ts+3);
+      const x=o.x0+o.dir*gone*260,y=top-1+Math.sin(t*1.6+o.ph)*2;
+      if(x<-30||x>W+30)return;
+      c.save();c.translate(x,y);c.scale(o.dir,1);
+      c.fillStyle='#8a6a48';c.strokeStyle='#8a6a48';c.lineWidth=2;c.lineCap='round';
+      c.beginPath();c.ellipse(0,0,14,5,0,0,TAU);c.fill();
+      c.beginPath();c.ellipse(16,-3,5,4.2,0,0,TAU);c.fill();
+      c.fillStyle='#d8bb94';c.beginPath();c.arc(17.5,-4,2.6,0,TAU);c.fill();
+      c.fillStyle='#2a1c10';c.beginPath();c.arc(18.5,-4.5,0.9,0,TAU);c.fill();
+      c.strokeStyle='#8a6a48';c.beginPath();c.moveTo(4,-4);c.lineTo(8,-9);c.moveTo(-3,-4);c.lineTo(1,-9);c.stroke();
+      c.beginPath();c.moveTo(-13,2);c.quadraticCurveTo(-20,5,-24,2);c.stroke();
+      c.restore();
+    });
+    // 表示
+    txt(c,'草食の無脊椎動物 '+n+' 匹(模式)',W-12,H*0.62+4,11,'rgba(230,190,240,.95)','right');
+    const em=sm(t,16.5,18.5);
+    if(em>0)txt(c,'海藻がほとんどない',W/2,gy-H*0.12,13,'rgba(255,215,160,'+em+')','center');
+    const ot=1-sm(t,9,10.5);
+    if(ot>0.01&&t>1)txt(c,'ラッコ(模式)',12,H*0.62+4,11,'rgba(255,230,190,'+ot+')','left');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
