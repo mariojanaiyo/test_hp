@@ -6,7 +6,7 @@ const path=require('path'),fs=require('fs');
   const [out,which,times]=process.argv.slice(2);
   if(!out||!which||!times){console.log('usage: node shoot.cjs <outDir> <index|id> <t1,t2,...>');process.exit(1)}
   fs.mkdirSync(out,{recursive:true});
-  const b=await chromium.launch();
+  const b=await chromium.launch({channel:'chrome'});
   const p=await b.newPage({viewport:{width:390,height:780}});
   const errs=[];p.on('pageerror',e=>errs.push(e.message));
   await p.goto('file://'+path.resolve(__dirname,'../../public/shorts/index.html'));

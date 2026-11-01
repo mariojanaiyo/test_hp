@@ -1236,5 +1236,76 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'window',pin:{t:14,text:'景色で差が出た！'},hook:['窓から木が見えると、','回復が早い？'],tag:'からだと自然のつながり',dur:24,
+  title:'窓の外が木か壁かで、入院はどう違った？',
+  beats:[
+    {t:0,text:'同じ<b>胆のうの手術</b>を受けた患者を比べた'},
+    {t:5,text:'窓の外は<b>木</b>と<b>壁</b>'},
+    {t:10,text:'木の部屋は<b>入院が短め</b>だった'},
+    {t:16,text:'<b>痛み止め</b>も少なめだった'},
+    {t:20,text:'ただし<b>観察</b>の比較。原因は断定できない'}
+  ],
+  more:'1972〜81年の米国ペンシルベニア州の病院の記録から、胆のう摘出手術を受けた患者を比べた研究です。窓から自然の景色が見える部屋の23人と、レンガの壁が見える似た部屋の、条件をそろえた23人を比べると、木が見える側は術後の入院が短く、看護記録の否定的な記述が少なく、強い痛み止めの使用も少なかったと、抄録は述べています。',
+  caveat:'これは模式図です。日数や人数の描き方は実際の数字ではありません。研究は記録をさかのぼって調べた観察で、くじ引きで部屋を決めた実験ではなく、人数も23組と小さいため、景色が原因とまでは言えません。私が確認できたのは抄録までで、本文は未確認です。後の追試や総説は確認できていません。',
+  source:{short:'Ulrich 1984, Science',cite:'Ulrich, R. S. (1984). View through a window may influence recovery from surgery. Science, 224(4647), 420–421. doi:10.1126/science.6143402',query:'View through a window may influence recovery from surgery Ulrich 1984'},
+  init(W,H){const r=rng(61);
+    return{
+      tr:Array.from({length:6},(_,i)=>({x:12+i*22+r()*6,h:26+r()*18,p:r()*6}))
+    }},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H,[[0,'#0f1a17'],[1,'#060a09']]);
+    const ry=H*0.16,rh=H*0.2,rw=158;
+    const rooms=[{x:10,tree:true,n:8,col:'120,230,150'},{x:W-10-rw,tree:false,n:9,col:'200,170,150'}];
+    rooms.forEach((R,k)=>{
+      const x=R.x,a=sm(t,0,1.2);
+      c.globalAlpha=a;
+      c.fillStyle='rgba(255,255,255,.05)';c.fillRect(x,ry,rw,rh);
+      c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1.5;c.strokeRect(x,ry,rw,rh);
+      // 窓
+      const wx=x+14,wy=ry+10,ww=rw-28,wh=rh*0.5;
+      c.save();c.beginPath();c.rect(wx,wy,ww,wh);c.clip();
+      if(R.tree){
+        vgrad(c,wx,wy,ww,wh,[[0,'#6fb8e8'],[1,'#bfe6f5']]);
+        s.tr.forEach(q=>{
+          const sw=Math.sin(t*1.3+q.p)*1.6,bx=wx+q.x*(ww/150),by=wy+wh;
+          c.fillStyle='#5a4028';c.fillRect(bx-1.5,by-q.h*0.55,3,q.h*0.55);
+          c.fillStyle='#3f9a4c';c.beginPath();c.arc(bx+sw,by-q.h*0.7,q.h*0.38,0,TAU);c.fill();
+          c.fillStyle='#57b862';c.beginPath();c.arc(bx+sw-3,by-q.h*0.8,q.h*0.26,0,TAU);c.fill();
+        });
+      }else{
+        c.fillStyle='#8a4a3a';c.fillRect(wx,wy,ww,wh);
+        c.strokeStyle='rgba(30,12,8,.55)';c.lineWidth=1;
+        for(let yy=0;yy<wh;yy+=8){c.beginPath();c.moveTo(wx,wy+yy);c.lineTo(wx+ww,wy+yy);c.stroke();
+          for(let xx=((yy/8)%2)*10;xx<ww;xx+=20){c.beginPath();c.moveTo(wx+xx,wy+yy);c.lineTo(wx+xx,wy+yy+8);c.stroke()}}
+      }
+      c.restore();
+      c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=2;c.strokeRect(wx,wy,ww,wh);
+      // ベッドと患者
+      const by=ry+rh-14,left=t>=(k?15:13.5);
+      c.fillStyle='rgba(255,255,255,.35)';c.fillRect(x+16,by,rw-32,6);
+      if(!left){
+        c.fillStyle='#e9c9a8';c.beginPath();c.arc(x+34,by-8,6,0,TAU);c.fill();
+        c.fillStyle='#7fa7d6';c.beginPath();c.ellipse(x+rw/2+4,by-3,rw/2-30,6,0,0,TAU);c.fill();
+      }else{
+        const u=sm(t,k?15:13.5,k?16.5:15);
+        c.fillStyle='rgba(120,230,150,'+(1-u)+')';c.font='700 11px "Noto Sans JP",sans-serif';c.textAlign='center';c.fillText('退院',x+rw/2,by-12-u*10);
+      }
+      c.globalAlpha=1;
+      txt(c,R.tree?'木が見える部屋':'壁が見える部屋',x+rw/2,ry-10,11,'rgba('+R.col+',.95)','center');
+      // 入院日数(模式)
+      const dy=ry+rh+22;
+      for(let i=0;i<R.n;i++){
+        const e=sm(t,5+i*1.0,5.6+i*1.0);if(e<=0)continue;
+        const dx=x+8+i*16;
+        c.fillStyle='rgba('+R.col+','+(0.25+0.65*e)+')';c.fillRect(dx,dy,12,12);
+      }
+    });
+    if(t>=5)txt(c,'入院した日数(模式)',W/2,ry+rh+14-1,10,'rgba(255,255,255,'+sm(t,5,6.5)*0.7+')','center');
+    if(t>=10&&t<16)txt(c,'木の部屋が先に退院',W/2,ry+rh+58,13,'rgba(170,240,185,'+sm(t,10,12)+')','center');
+    if(t>=16)txt(c,'痛み止めも少なめ(報告)',W/2,ry+rh+58,13,'rgba(170,240,185,'+sm(t,16,18)+')','center');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();

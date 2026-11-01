@@ -35,3 +35,5 @@
 - **新チャンネル(toriaezu_test)への投稿** (2026-10-31): 投稿先を toriaezu_test(UCH_pPsd1BvsaZSgyc8OSfeQ)に切り替え、既存の3本を限定公開で上げた。deer: https://youtube.com/shorts/MqHR23avoOc / otter: https://youtube.com/shorts/bbQLfIcUHGk / bat: https://youtube.com/shorts/HV-7hpQadWs
 
 - **milk** (2026-10-31): 書誌(Bode, L. / Glycobiology 22(9):1147–1162 / DOI 10.1093/glycob/cws074 / PMC3406618)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC3406618/)で照合。総説の抄録と本文の前半(約10万字)を読んだ。HMO は胃酸・消化酵素に耐えて大部分が大腸に届き(約1%が吸収)、B. infantis など一部のビフィズス菌のエサになる。ビフィズス菌すべてに効くわけではない。働きの多くは試験管・動物・観察研究で、人での介入試験が必要と著者が述べている。BACKLOG 仮フックの「赤ちゃんのためじゃない」は言い過ぎなので、「消化されない？」の問いにとどめた。本文後半は未確認。 YouTube 限定公開で投稿済み(toriaezu_test、2026-10-31、再生リスト「つながりの科学ショート」に追加): https://youtube.com/shorts/ruadFwsrAh0
+
+- **window** (2026-11-01): 書誌(Ulrich, R. S. / Science 224(4647):420–421 / DOI 10.1126/science.6143402 / 1984-04-27)と抄録を PubMed(https://pubmed.ncbi.nlm.nih.gov/6143402/)で照合。抄録: 1972〜81年、ペンシルベニア州郊外の病院の胆のう摘出患者。自然の景色の窓の23人と、レンガの壁の窓の条件をそろえた23人を比較。木側は術後入院が短く、看護記録の否定的記述が少なく、強い鎮痛薬が少ない。具体的な日数・件数は抄録になく、動画に数字は出していない(二次情報の「7.96日対8.70日」は未確認のため不使用)。記録をさかのぼる観察でランダム化ではない → caveat に記載。追試・総説は確認できていない。本文は未入手。
