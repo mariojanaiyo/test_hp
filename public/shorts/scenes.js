@@ -1116,5 +1116,97 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'bat',pin:{t:12,text:'お返しした！'},hook:['腹ぺこの仲間に','血を分けるのは誰？'],tag:'動物の助け合い',dur:24,
+  title:'吸血コウモリは、血を分け合う',
+  beats:[
+    {t:0,text:'ねぐらに集まる<b>吸血コウモリ</b>'},
+    {t:4.5,text:'空腹の仲間へ<b>血を分ける</b>'},
+    {t:10,text:'<b>別の夜</b>、立場が逆になる'},
+    {t:12,text:'こんどは<b>お返し</b>'},
+    {t:18,text:'分け合いは<b>血縁とお返し</b>しだい'}
+  ],
+  more:'野生の吸血コウモリを調べた研究です。胃の血を吐き戻して仲間に分ける行動は、血縁の近さと、お返しができる機会の多さの両方に、それぞれ独立して左右される、と著者は述べています。飼育下の実験では、血縁のないコウモリどうしでも、血を交互に分け合いました。',
+  caveat:'これは模式図です。血を分ける量や回数は実際の数字ではありません。論文の抄録には標本数がなく、動画にも数字は出していません。「相手を覚えている」ことそのものは、この動画では主張していません。論文は、分け合いが血縁だけでは説明できず、お返しの機会にも左右されると述べています。その後の研究や反論は、この動画では照合していません(未確認)。',
+  source:{short:'Wilkinson 1984, Nature',cite:'Wilkinson, G.S. (1984). Reciprocal food sharing in the vampire bat. Nature, 308, 181–184. doi:10.1038/308181a0',query:'Reciprocal food sharing in the vampire bat Wilkinson 1984'},
+  init(W,H){const r=rng(52);
+    return{
+      stars:mkStars(26,W,H*0.5,9),
+      drops:Array.from({length:16},(_,i)=>({u:i/16,j:r()*4-2})),
+      moths:Array.from({length:5},(_,i)=>({x0:r()*W,y:0.46+r()*0.1,sp:5+r()*6,ph:r()*6}))
+    }},
+  draw(c,t,W,H,s){
+    const y0=H*0.2;
+    vgrad(c,0,0,W,H*0.62,[[0,'#120d1c'],[1,'#07050d']]);
+    // 洞窟の天井
+    vgrad(c,0,0,W,y0,[[0,'#241a2c'],[1,'#3a2c3c']]);
+    c.fillStyle='#3a2c3c';c.beginPath();c.moveTo(0,y0);
+    for(let x=0;x<=W;x+=18)c.lineTo(x,y0+3+Math.sin(x*0.5)*2.5);
+    c.lineTo(W,0);c.lineTo(0,0);c.fill();
+    // 別の夜への切り替え(暗転)
+    const dk=Math.sin(Math.PI*clamp((t-9)/3))**2*(t>9&&t<12?1:0);
+    // 水準(模式の満腹度)
+    const A=t<10.3?mix(0.08,0.55,sm(t,5,9)):mix(0.92,0.6,sm(t,12,16.5));
+    const B=t<10.3?mix(0.92,0.55,sm(t,5,9)):mix(0.08,0.55,sm(t,12,16.5));
+    // コウモリ
+    const bats=[
+      {x:38,a:0.12,lv:0.5,sc:1.8,own:false,ph:1},
+      {x:138,a:-0.3,lv:A,sc:2.4,own:true,ph:2},
+      {x:222,a:0.3,lv:B,sc:2.4,own:true,ph:3},
+      {x:322,a:-0.1,lv:0.6,sc:1.8,own:false,ph:4}
+    ];
+    const L=44;
+    function mouth(b){return[b.x-Math.sin(b.a)*L*b.sc,y0+Math.cos(b.a)*L*b.sc]}
+    bats.forEach(b=>{
+      const wob=Math.sin(t*0.9+b.ph)*0.025;
+      c.save();c.translate(b.x,y0+2);c.rotate(b.a+wob);c.scale(b.sc,b.sc);
+      // 体
+      c.fillStyle='#4a3a4a';c.strokeStyle='#4a3a4a';c.lineWidth=2;c.lineCap='round';
+      c.beginPath();c.ellipse(0,20,9,17,0,0,TAU);c.fill();
+      // たたんだ翼
+      c.fillStyle='#352838';
+      c.beginPath();c.moveTo(-8,8);c.quadraticCurveTo(-15,22,-5,34);c.quadraticCurveTo(-8,20,-5,8);c.fill();
+      c.beginPath();c.moveTo(8,8);c.quadraticCurveTo(15,22,5,34);c.quadraticCurveTo(8,20,5,8);c.fill();
+      // 足
+      c.strokeStyle='#5a485a';c.lineWidth=1.6;c.beginPath();c.moveTo(-3,0);c.lineTo(-3,5);c.moveTo(3,0);c.lineTo(3,5);c.stroke();
+      // 頭
+      c.fillStyle='#5a485a';c.beginPath();c.arc(0,38,6.2,0,TAU);c.fill();
+      c.beginPath();c.moveTo(-5,34);c.lineTo(-6.5,28);c.lineTo(-2,32);c.fill();
+      c.beginPath();c.moveTo(5,34);c.lineTo(6.5,28);c.lineTo(2,32);c.fill();
+      c.fillStyle='#ffd0a0';c.beginPath();c.arc(-2.2,38,0.9,0,TAU);c.arc(2.2,38,0.9,0,TAU);c.fill();
+      // おなか(血の量: 模式)
+      c.globalCompositeOperation='lighter';
+      glow(c,0,20,6+14*b.lv,'255,60,70',0.15+0.5*b.lv);
+      c.globalCompositeOperation='source-over';
+      c.restore();
+    });
+    // 血のしずく(だれが渡すか)
+    function flow(from,to,a,b2){
+      if(t<a||t>b2)return;
+      const fade=sm(t,a,a+0.6)*(1-sm(t,b2-0.8,b2));
+      const m1=mouth(from),m2=mouth(to);
+      s.drops.forEach(d=>{
+        const u=((t-a)*0.6+d.u)%1;
+        const x=mix(m1[0],m2[0],u),y=mix(m1[1],m2[1],u)-Math.sin(u*Math.PI)*10;
+        c.globalCompositeOperation='lighter';
+        glow(c,x,y,5,'255,70,80',0.85*fade);
+        c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba(255,90,100,'+fade+')';c.beginPath();c.arc(x,y,1.8,0,TAU);c.fill();
+      });
+    }
+    flow(bats[2],bats[1],5,9.4);
+    flow(bats[1],bats[2],12,16.5);
+    // ラベル
+    const lb1=1-sm(t,9,9.8);
+    if(lb1>0.01)txt(c,'ある夜',W/2,H*0.08,13,'rgba(220,210,240,'+lb1+')','center');
+    if(t>11.2)txt(c,'別の夜',W/2,H*0.08,13,'rgba(220,210,240,'+sm(t,11.2,12)+')','center');
+    if(t>=4.5&&t<9.4)txt(c,'血を吐き戻して分ける',W/2,H*0.52,12,'rgba(255,170,175,'+sm(t,4.5,5.5)+')','center');
+    if(t>=12&&t<16.8)txt(c,'さっきのお返し',W/2,H*0.5,12,'rgba(255,170,175,'+sm(t,12,13)+')','center');
+    txt(c,'赤いほど満腹(模式)',W-12,H*0.6,11,'rgba(255,150,160,.8)','right');
+    // 暗転
+    if(dk>0){c.fillStyle='rgba(5,3,10,'+dk*0.85+')';c.fillRect(0,0,W,H*0.62)}
+  }
+});
+
+window.SCENES=[S[S.length-1],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
