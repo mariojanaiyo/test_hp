@@ -1208,5 +1208,74 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'milk',pin:{t:12,text:'腸まで届いた！'},hook:['母乳の糖は、','だれのため？'],tag:'母と子と菌',dur:24,
+  title:'母乳のオリゴ糖は、赤ちゃんの先へ進む',
+  beats:[
+    {t:0,text:'赤ちゃんが<b>母乳</b>を飲む'},
+    {t:4,text:'母乳には<b>オリゴ糖</b>(HMO)が入っている'},
+    {t:8,text:'HMOは<b>ほとんど吸収されず</b>先へ進む'},
+    {t:12,text:'大腸の<b>腸内細菌</b>に届く'},
+    {t:17,text:'主な役割は<b>菌のエサ</b>、と総説は述べる'}
+  ],
+  more:'ヒトの母乳には、乳糖やタンパク質とは別に、100種類以上のオリゴ糖(HMO)が入っています。総説(Bode 2012)によると、HMOは赤ちゃん自身にはほとんど吸収されず、大部分がそのまま腸の奥の大腸まで届き、ある種の腸内細菌のエサになります。病原体の付着を防ぐ働きなどの可能性も論じられています。',
+  caveat:'これは模式図です。粒の数や速さは実際の数字ではありません。HMOの役割は「菌のエサ」だけではなく、病原体の付着を防ぐ、脳の発達に必要なシアル酸を供給するなど他の可能性も論じられていますが、総説自身が、根拠の多くは試験管内・動物実験由来で、ヒトでの確認には無作為化比較試験が必要と述べています。「赤ちゃんのためではない」と言い切る動画ではありません。その後の研究は、この動画では照合していません(未確認)。',
+  source:{short:'Bode 2012, Glycobiology',cite:'Bode, L. (2012). Human milk oligosaccharides: Every baby needs a sugar mama. Glycobiology, 22(9), 1147–1162. doi:10.1093/glycob/cws074',query:'Human milk oligosaccharides: Every baby needs a sugar mama Bode 2012'},
+  init(W,H){const r=rng(61);
+    return{
+      stars:mkStars(18,W,H*0.5,5),
+      parts:Array.from({length:22},(_,i)=>({u:i/22,j:(r()-0.5)*8,k:r()})),
+      bugs:Array.from({length:14},(_,i)=>({a:r()*TAU,d:r(),ph:r()*6,n:i/14}))
+    }},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H*0.62,[[0,'#140f1c'],[1,'#080610']]);
+    stars(c,W,H,s.stars,t,H*0.5);
+    const P=[[W*0.5,H*0.09],[W*0.5,H*0.17],[W*0.22,H*0.23],[W*0.78,H*0.29],[W*0.22,H*0.35],[W*0.78,H*0.41],[W*0.5,H*0.48],[W*0.5,H*0.54]];
+    // 腸の管
+    c.lineJoin='round';c.lineCap='round';
+    c.strokeStyle='#7a4a60';c.lineWidth=26;c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.stroke();
+    c.strokeStyle='#2a1520';c.lineWidth=20;c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.stroke();
+    // 大腸の太い部分
+    c.fillStyle='#2a1824';c.beginPath();c.ellipse(W*0.5,H*0.5,40,H*0.045,0,0,TAU);c.fill();
+    // ミルク(白)とHMO(琥珀)
+    const fm=sm(t,0.5,2);
+    if(t<4.5){
+      const mv=clamp(t/4.5);
+      for(let i=0;i<8;i++){const u=clamp(mv*0.3-i*0.025);const q=polyAt(P,u);
+        c.globalCompositeOperation='lighter';glow(c,q[0],q[1],7,'230,235,255',0.7*fm*(1-sm(t,3.4,4.5)));c.globalCompositeOperation='source-over'}
+    }
+    // HMO: 4秒から流れ、大腸に着く
+    s.parts.forEach(d=>{
+      if(t<4)return;
+      const u=clamp((t-4)*0.085+d.u*0.55-0.0);
+      const uu=Math.min(u,0.9);
+      if((t-4)*0.085+d.u*0.55<0)return;
+      const q=polyAt(P,uu);const x=q[0]+d.j*(uu>0.88?3:0.8),y=q[1]+(uu>0.88?d.j*2:0);
+      const eaten=t>12?sm(t,12+d.k*3,14+d.k*3):0;
+      const a=(1-eaten)*sm(t,4,5);
+      if(a<=0.02)return;
+      c.globalCompositeOperation='lighter';glow(c,x,y,7,'255,190,70',0.8*a);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(255,215,120,'+a+')';c.beginPath();c.arc(x,y,2.2,0,TAU);c.fill();
+    });
+    // 腸内細菌(大腸)
+    const bg=sm(t,10,12.5),grow=0.4+0.6*sm(t,12,18);
+    s.bugs.forEach((b,i)=>{
+      if(b.n>grow)return;
+      const x=W*0.5+Math.cos(b.a+t*0.15)*(8+b.d*28),y=H*0.5+Math.sin(b.a+t*0.15)*(4+b.d*H*0.03);
+      const pulse=1+0.12*Math.sin(t*3+b.ph);
+      const fed=sm(t,12.5,15);
+      c.fillStyle='rgba(120,230,150,'+(0.35+0.5*bg)+')';c.beginPath();c.ellipse(x,y,4*pulse,2.6*pulse,b.a,0,TAU);c.fill();
+      c.globalCompositeOperation='lighter';glow(c,x,y,10,'110,255,160',0.55*fed*bg);c.globalCompositeOperation='source-over';
+    });
+    // 吸収のしるし(わずか)
+    if(t>7&&t<11){const a=sm(t,7,8)*(1-sm(t,10,11));const q=polyAt(P,0.5);
+      txt(c,'吸収はほんのわずか',W*0.5,H*0.3,12,'rgba(255,215,140,'+a+')','center')}
+    // ラベル
+    txt(c,'赤ちゃんの腸(模式)',W-12,H*0.6,11,'rgba(220,200,230,.75)','right');
+    if(t>=4&&t<12)txt(c,'オリゴ糖 HMO',W-12,H*0.14,12,'rgba(255,200,110,'+sm(t,4,5)+')','right');
+    if(t>=12)txt(c,'腸内細菌',W-12,H*0.5,12,'rgba(150,240,175,'+sm(t,12,13)+')','right');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
