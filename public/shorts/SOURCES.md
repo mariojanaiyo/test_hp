@@ -41,3 +41,4 @@
   YouTube 限定公開で投稿済み(toriaezu_test、2026-11-01): https://youtube.com/shorts/0rJe6H15rM4 / Artifact: https://claude.ai/artifact/7Xhpv486udoSs1WHhiSdGe
 
 - **zombie** (2026-11-02): 書誌(Hughes, Andersen, Hywel-Jones, Himaman, Billen, Boomsma / BMC Ecology 11:13 / DOI 10.1186/1472-6785-11-13 / PMID 21554670 / 2011-05-09)と抄録を PubMed(https://pubmed.ncbi.nlm.nih.gov/21554670/)で照合。抄録: タイの森で Camponotus leonardi が感染し、樹冠から下の植物の葉脈にかみついて死ぬ。墓場は地上約25cm。ふらふら歩きと痙攣で落ちる。かみつきへの移行は急で正午ごろにそろう。あごが葉脈に深く入り、あごの筋肉が萎縮して死後も固定される。頭部に菌細胞が多く、萎縮の原因と著者は推測。本文は PMC・Springer・大学PDFが認証/ボット確認で開けず未入手。動画に数字は出していない。BACKLOG 仮フックの「操られている」は、脳の直接支配を示した論文ではないので、「？」型にとどめ、caveat に記載。更新: Fredericksen et al. 2017 PNAS(DOI 10.1073/pnas.1711673114)は、菌が筋肉に入り脳内には見つからなかったと報じられている(検索結果の要約のみ、論文未確認)。
+  YouTube 限定公開で投稿済み(toriaezu_test、2026-11-02): https://youtube.com/shorts/1bVi-PDpZSI / Artifact: https://claude.ai/artifact/GGHUGHhY5Np4dbhvSpZ9nH
