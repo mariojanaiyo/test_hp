@@ -1307,5 +1307,73 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'zombie',pin:{t:14,text:'正午にかんだ！'},hook:['ゾンビになるアリは、','菌に操られている？'],tag:'寄生のつながり',dur:24,
+  title:'菌に感染したアリは、どこで最期を迎える？',
+  beats:[
+    {t:0,text:'タイの森。<b>菌に感染</b>したアリ'},
+    {t:5,text:'巣を離れて、木を<b>おりていく</b>'},
+    {t:10,text:'ふらふら歩き、<b>低い葉</b>へ'},
+    {t:14,text:'<b>正午ごろ</b>、葉脈にかみつく'},
+    {t:19,text:'死後、菌が<b>体から伸びる</b>'}
+  ],
+  more:'タイの熱帯雨林で、Ophiocordyceps という菌に感染したオオアリの一種(Camponotus leonardi)を調べた研究です。感染したアリは樹上の巣を離れ、低い植物の葉の裏の葉脈にかみついて死にます。かみつく動きは正午ごろにそろって起こり、あごの筋肉は縮んで、死んだあとも葉にしがみついたままになる、と抄録は述べています。',
+  caveat:'これは模式図です。高さや時間の流れは実際の数字ではありません。論文が示したのは、どこでいつ死ぬかという行動と、あごの筋肉の変化です。菌が脳を直接操るとは示していません。のちの研究(Fredericksen ら 2017)では、菌は筋肉に入り込む一方、脳の中には見つからなかったと報告されていますが、これは検索結果の要約で確認したもので、論文は未確認です。私が確認できたのは Hughes 2011 の抄録までで、本文は未確認です。',
+  source:{short:'Hughes et al. 2011, BMC Ecol',cite:'Hughes, D.P., Andersen, S.B., Hywel-Jones, N.L., Himaman, W., Billen, J. & Boomsma, J.J. (2011). Behavioral mechanisms and morphological symptoms of zombie ants dying from fungal infection. BMC Ecology, 11, 13. doi:10.1186/1472-6785-11-13',query:'Behavioral mechanisms and morphological symptoms of zombie ants dying from fungal infection Hughes 2011'},
+  init(W,H){const r=rng(71);
+    return{
+      lv:Array.from({length:9},(_,i)=>({x:10+r()*340,y:r(),a:r()*6,l:16+r()*10})),
+      sp:Array.from({length:14},(_,i)=>({a:r()*TAU,v:6+r()*10,t0:20+r()*2}))
+    }},
+  draw(c,t,W,H,s){
+    const top=H*0.12,fl=H*0.58,tx=70,lx=205,ly=top+(fl-top)*0.72;
+    vgrad(c,0,0,W,H,[[0,'#0c2a1b'],[0.7,'#06140d'],[1,'#030905']]);
+    // 太陽(正午に最高点)
+    const su=clamp((t-6)/16),sx=mix(250,340,su),sy=top+6+Math.sin(clamp((t-6)/16)*Math.PI)*-1*0+ (1-Math.sin(su*Math.PI))*26;
+    c.globalCompositeOperation='lighter';glow(c,sx,sy,26,'255,230,150',0.35+0.25*sm(t,12,14)*(1-sm(t,15,17)));c.globalCompositeOperation='source-over';
+    c.fillStyle='#ffe08a';c.beginPath();c.arc(sx,sy,5,0,TAU);c.fill();
+    if(t>=12)txt(c,'正午ごろ',sx-6,sy+16,10,'rgba(255,230,150,'+sm(t,12,13.5)*(1-sm(t,17,19)*0.5)+')','center');
+    // 地面と枝・幹
+    vgrad(c,0,fl,W,H*0.05,[[0,'#2a2a1c'],[1,'#0a0a06']]);
+    c.strokeStyle='#5b432a';c.lineWidth=7;c.lineCap='round';c.beginPath();c.moveTo(tx,top-6);c.lineTo(tx,fl);c.stroke();
+    s.lv.forEach(q=>{c.fillStyle='rgba(60,140,80,.35)';c.beginPath();c.ellipse(q.x,top+q.y*(fl-top)*0.3,q.l,q.l*0.4,Math.sin(t*0.8+q.a)*0.2,0,TAU);c.fill()});
+    txt(c,'樹上の巣',tx+14,top+34,10,'rgba(200,230,200,.8)','left');
+    // 低い葉
+    c.strokeStyle='#3d6a3a';c.lineWidth=2;c.beginPath();c.moveTo(tx+4,ly+14);c.quadraticCurveTo(tx+60,ly+22,lx-30,ly+4);c.stroke();
+    c.fillStyle='#3f9a4c';c.beginPath();c.ellipse(lx,ly,46,13,-0.08,0,TAU);c.fill();
+    c.strokeStyle='#8fd49a';c.lineWidth=1.5;c.beginPath();c.moveTo(lx-44,ly+1);c.lineTo(lx+44,ly-2);c.stroke();
+    if(t>=10)txt(c,'低い葉(地上近く)',lx,ly+30,10,'rgba(170,240,185,'+sm(t,10,12)+')','center');
+    // アリ
+    let ax,ay,ang=0;
+    if(t<5){ax=tx;ay=top+12+t*3;ang=Math.PI/2}
+    else if(t<10){const u=sm(t,5,10);ax=tx+Math.sin(t*3)*5*(t-5)/5;ay=mix(top+27,ly-8,u);ang=Math.PI/2+Math.sin(t*4)*0.5}
+    else if(t<14){const u=sm(t,10,14);ax=mix(tx+8,lx-28,u)+Math.sin(t*5)*3;ay=mix(ly+8,ly-12,u)+Math.sin(t*6)*2;ang=0+Math.sin(t*5)*0.4}
+    else{ax=lx-28;ay=ly-12;ang=0}
+    const dead=t>=14.6;
+    c.save();c.translate(ax,ay);c.rotate(ang);c.scale(1.9,1.9);
+    c.fillStyle=dead?'#2b1c14':'#4a2b1c';
+    c.beginPath();c.ellipse(-8,0,6,3.6,0,0,TAU);c.fill();c.beginPath();c.ellipse(0,0,3,2.4,0,0,TAU);c.fill();
+    c.beginPath();c.arc(6,0,3.2,0,TAU);c.fill();
+    if(!dead){c.strokeStyle='#4a2b1c';c.lineWidth=1;for(let k=-1;k<=1;k++){const w=Math.sin(t*14+k)*2;c.beginPath();c.moveTo(-2+k*3,2);c.lineTo(-2+k*3+w,6);c.moveTo(-2+k*3,-2);c.lineTo(-2+k*3-w,-6);c.stroke()}}
+    c.restore();
+    // 感染のしるし
+    if(t<14.6){c.globalCompositeOperation='lighter';glow(c,ax,ay,12,'255,90,70',0.28+0.1*Math.sin(t*5));c.globalCompositeOperation='source-over'}
+    // かみつく瞬間
+    if(t>=14&&t<16){const e=sm(t,14,14.6)*(1-sm(t,15.2,16));c.strokeStyle='rgba(255,230,150,'+e+')';c.lineWidth=1.5;c.beginPath();c.arc(ax+8,ay+3,6+8*e,0,TAU);c.stroke()}
+    // 菌の柄
+    if(t>=16){
+      const g=sm(t,16,21),L=44*g;
+      c.strokeStyle='#d9d2b4';c.lineWidth=2.6;c.lineCap='round';c.beginPath();c.moveTo(ax+8,ay-4);c.quadraticCurveTo(ax+14,ay-L*0.5,ax+4+Math.sin(t)*2,ay-L);c.stroke();
+      if(g>0.9){c.fillStyle='#e8a05a';c.beginPath();c.ellipse(ax+4,ay-L,3,5,0,0,TAU);c.fill()}
+      if(t>=20){
+        s.sp.forEach(p=>{if(t<p.t0)return;const u=t-p.t0;c.fillStyle='rgba(255,220,160,'+Math.max(0,0.8-u*0.15)+')';
+          c.beginPath();c.arc(ax+4+Math.cos(p.a)*p.v*u*0.8,ay-L+Math.sin(p.a)*p.v*u*0.5+u*5,1.4,0,TAU);c.fill()});
+      }
+      if(t>=17)txt(c,'菌の柄(胞子を飛ばす)',ax+30,ay-L-10,10,'rgba(255,225,170,'+sm(t,17,19)+')','left');
+    }
+    if(t>=2&&t<10)txt(c,'感染したアリ',ax+22,ay,10,'rgba(255,170,150,'+sm(t,2,3.5)+')','left');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
