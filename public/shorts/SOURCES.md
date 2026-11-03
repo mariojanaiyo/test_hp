@@ -44,3 +44,4 @@
   YouTube 限定公開で投稿済み(toriaezu_test、2026-11-02): https://youtube.com/shorts/1bVi-PDpZSI / Artifact: https://claude.ai/artifact/GGHUGHhY5Np4dbhvSpZ9nH
 
 - **elephant** (2026-11-03): 書誌(Campos-Arceiz & Blake / Acta Oecologica 37(6):542–553 / DOI 10.1016/j.actao.2011.01.014 / 2011)を、論文PDFの本文(faculty.washington.edu 掲載の写し)で照合。抄録と本文: アフリカのマルミミゾウは大型脊椎動物のなかで最も多くの種の種を食べうる、フンの中で運ばれる、ゾウの減少は一部の植物と群集に悪影響、と述べる(総説)。57kmは本文が Blake et al. 2009(コンゴ Ndoki、首輪4頭、88%が1km超、14%が10km超、最長57km)として引く数字で、元論文は未確認 → caveat に明記、動画は「記録では最長57km」と限定。状態: 主張確認済み(総説の本文まで)。反論・更新の検索は未実施。
+  YouTube 限定公開で投稿済み(toriaezu_test、2026-11-03): https://youtube.com/shorts/YfWuI_e2N14 / Artifact: https://claude.ai/artifact/BC2AxusqcmnPnNhjvREUNX
