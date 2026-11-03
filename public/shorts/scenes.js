@@ -1375,5 +1375,92 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'elephant',pin:{t:14,text:'最長57km先へ！'},hook:['ゾウのフンが、','森の木を運んでいる？'],tag:'種を運ぶつながり',dur:24,
+  title:'大きな木の種は、どうやって遠くへ行く？',
+  beats:[
+    {t:0,text:'アフリカの森。ゾウが<b>大きな果実</b>を食べる'},
+    {t:5,text:'種は体を<b>通り抜ける</b>'},
+    {t:10,text:'何時間も歩き、<b>遠く</b>でフンに'},
+    {t:14,text:'記録では、最長<b>57km</b>'},
+    {t:19,text:'<b>フンの中</b>から芽が出る'}
+  ],
+  more:'ゾウは地球で最大の果実食の動物です。なかでもアフリカのマルミミゾウは、大型の脊椎動物のなかで、いちばん多くの種類の種を食べているかもしれない、と総説は述べています。種はそのままフンに混ざって、遠くへ運ばれます。ゾウが減ると、一部の植物や森の群集に悪い影響が出ると、著者らは考えています。',
+  caveat:'これは模式図です。地形や時間の流れは実際の数字ではありません。57kmは、コンゴの森で首輪をつけた4頭のゾウから推定された最長の記録で、総説が Blake ら 2009 の結果として紹介したものです(元の論文は未確認)。論文は文献をまとめた総説で、影響の大きさは種や場所によって違うとしています。私が確認できたのは総説の本文までで、引用された元の論文は未確認です。',
+  source:{short:'Campos-Arceiz & Blake 2011, Acta Oecol',cite:'Campos-Arceiz, A. & Blake, S. (2011). Megagardeners of the forest – the role of elephants in seed dispersal. Acta Oecologica, 37(6), 542–553. doi:10.1016/j.actao.2011.01.014',query:'Megagardeners of the forest the role of elephants in seed dispersal Campos-Arceiz Blake 2011'},
+  init(W,H){const r=rng(88);
+    return{
+      tr:Array.from({length:7},(_,i)=>({x:18+i*52+r()*14,h:50+r()*34,p:r()*6})),
+      sp:Array.from({length:8},(_,i)=>({a:r()*TAU,v:3+r()*5}))
+    }},
+  draw(c,t,W,H,s){
+    const gy=H*0.6,ex0=40,ex1=300;
+    vgrad(c,0,0,W,H,[[0,'#0c2a1b'],[0.6,'#06140d'],[1,'#030905']]);
+    vgrad(c,0,gy,W,H-gy,[[0,'#2a2616'],[1,'#0a0905']]);
+    // 森(奥)
+    s.tr.forEach(q=>{const sw=Math.sin(t*0.9+q.p)*1.5;
+      c.fillStyle='#4a3622';c.fillRect(q.x-2,gy-q.h*0.55,4,q.h*0.55);
+      c.fillStyle='rgba(50,150,80,.55)';c.beginPath();c.arc(q.x+sw,gy-q.h*0.7,q.h*0.36,0,TAU);c.fill();
+      c.fillStyle='rgba(80,190,100,.4)';c.beginPath();c.arc(q.x+sw-4,gy-q.h*0.85,q.h*0.24,0,TAU);c.fill()});
+    // 母樹(左の大きな木と果実)
+    c.fillStyle='#5b432a';c.fillRect(20,gy-110,10,110);
+    c.fillStyle='#2f8a46';c.beginPath();c.arc(25,gy-120,34,0,TAU);c.fill();
+    if(t<5){c.fillStyle='#ffd070';[[10,-122],[30,-112],[22,-134]].forEach(f=>{c.beginPath();c.arc(25+f[0]-5,gy+f[1],4,0,TAU);c.fill()})}
+    txt(c,'果実のなる木',32,gy+16,10,'rgba(200,230,200,.8)','center');
+    // ゾウの位置
+    const u=sm(t,3,14.5);
+    const ex=mix(ex0,ex1,u)+sm(t,15,19)*130,ey=gy-4;
+    // 影と体
+    const mv=(u>0&&u<1)||(t>15&&t<19),bob=Math.sin(t*5)*(mv?1.4:0);
+    c.save();c.translate(ex,ey+bob);
+    c.fillStyle='#8a8f92';
+    c.beginPath();c.ellipse(0,-22,30,19,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(26,-30,13,12,0,0,TAU);c.fill();
+    c.fillRect(34,-30,5,24); // 鼻
+    c.fillStyle='#777c7f';c.beginPath();c.ellipse(22,-26,9,12,0.3,0,TAU);c.fill();
+    c.fillStyle='#8a8f92';
+    const lg=Math.sin(t*5)*(mv?3:0);
+    c.fillRect(-20+lg,-6,8,12);c.fillRect(-4-lg,-6,8,12);c.fillRect(8+lg,-6,8,12);c.fillRect(18-lg,-6,8,12);
+    c.fillStyle='#fff';c.fillRect(32,-24,3,9);
+    c.restore();
+    if(t<3){c.fillStyle='#ffd070';c.beginPath();c.arc(ex+36,gy-14,3.5,0,TAU);c.fill()}
+    // 体の中を通る種(光る点)
+    if(t>=4.5&&t<14.5){
+      const k=sm(t,4.5,8),px=ex-14+k*-6;
+      c.globalCompositeOperation='lighter';glow(c,px,ey-24,10,'255,200,90',0.5);c.globalCompositeOperation='source-over';
+      c.fillStyle='#ffd070';c.beginPath();c.arc(px,ey-24,3,0,TAU);c.fill();
+    }
+    if(t>=5&&t<10)txt(c,'種は体を通り抜ける',ex,ey-62,11,'rgba(255,215,140,'+sm(t,5,6.5)+')','center');
+    // 距離の物差し
+    const ry=gy+36;
+    if(t>=8){const a=sm(t,8,10);
+      c.strokeStyle='rgba(255,255,255,'+0.5*a+')';c.lineWidth=1.5;c.beginPath();c.moveTo(ex0,ry);c.lineTo(Math.min(ex,ex1),ry);c.stroke();
+      c.beginPath();c.moveTo(ex0,ry-4);c.lineTo(ex0,ry+4);c.moveTo(Math.min(ex,ex1),ry-4);c.lineTo(Math.min(ex,ex1),ry+4);c.stroke();
+      if(t>=10&&t<14)txt(c,'何時間も歩く',(ex0+Math.min(ex,ex1))/2,ry+14,11,'rgba(255,255,255,'+sm(t,10,11.5)+')','center')}
+    // フンと種
+    if(t>=14){
+      const a=sm(t,14,15);
+      c.fillStyle='rgba(90,60,30,'+a+')';
+      c.beginPath();c.ellipse(ex1+2,gy+6,12,6,0,0,TAU);c.fill();
+      c.beginPath();c.ellipse(ex1+10,gy+9,8,4,0,0,TAU);c.fill();
+      c.globalCompositeOperation='lighter';glow(c,ex1+4,gy+4,22,'255,210,120',0.4*a*(1-sm(t,16,18)*0.6));c.globalCompositeOperation='source-over';
+      if(t<16.5){const e=sm(t,14,14.6)*(1-sm(t,15.4,16.5));
+        c.strokeStyle='rgba(255,220,140,'+e+')';c.lineWidth=1.5;c.beginPath();c.arc(ex1+4,gy+4,8+24*sm(t,14,15.6),0,TAU);c.stroke()}
+      txt(c,'最長57km(記録)',(ex0+ex1)/2,ry+14,12,'rgba(255,225,150,'+sm(t,14,15.5)+')','center');
+      c.strokeStyle='rgba(255,225,150,'+0.7*a+')';c.lineWidth=1.5;c.beginPath();c.moveTo(ex0,ry);c.lineTo(ex1,ry);c.stroke();
+      c.beginPath();c.moveTo(ex1,ry-4);c.lineTo(ex1,ry+4);c.stroke();
+    }
+    // 芽(フンから)
+    if(t>=19){
+      const g=sm(t,19,23);
+      c.strokeStyle='#6fd07f';c.lineWidth=2.4;c.lineCap='round';
+      c.beginPath();c.moveTo(ex1+4,gy+3);c.quadraticCurveTo(ex1+4+Math.sin(t*1.5)*2,gy-12*g,ex1+4,gy-26*g);c.stroke();
+      c.fillStyle='#57c46a';c.beginPath();c.ellipse(ex1-2,gy-24*g,7*g,3.5*g,-0.5,0,TAU);c.fill();
+      c.beginPath();c.ellipse(ex1+10,gy-28*g,7*g,3.5*g,0.5,0,TAU);c.fill();
+      txt(c,'新しい木',ex1+4,gy-46,11,'rgba(170,240,185,'+sm(t,20,22)+')','center');
+    }
+  }
+});
+
+window.SCENES=[S[S.length-1],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
