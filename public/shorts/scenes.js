@@ -1277,5 +1277,90 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+// 17 ─────────── 窓の外の景色と術後の回復 ───────────
+S.push({
+  id:'window',pin:{t:12,text:'0.7日ちがい！'},hook:['窓の外に木があると、','手術後の回復が早い？'],tag:'自然と人',dur:24,
+  title:'窓から木が見える病室と、壁が見える病室',
+  beats:[
+    {t:0,text:'ある病院の<b>2種類の病室</b>'},
+    {t:4,text:'窓の外は<b>木</b>か<b>レンガ壁</b>'},
+    {t:8,text:'胆のうの手術後、<b>入院日数</b>を比べた'},
+    {t:12,text:'木 <b>7.96日</b> / 壁 <b>8.70日</b>'},
+    {t:17,text:'<b>1病院</b>の記録比較。断定は禁物'}
+  ],
+  more:'1972〜1981年、アメリカ・ペンシルベニア州の病院で、胆のう摘出手術を受けた患者の記録を調べた研究です(Ulrich 1984)。年齢・性別・喫煙などをそろえた23組46人で、窓が小さな木立に向いた病室の患者は、茶色いレンガ壁に向いた病室の患者より、入院が平均7.96日と8.70日で短く(P=0.025)、強い鎮痛薬の使用も少なめでした。',
+  caveat:'これは模式図です。日数の数字は論文の平均値ですが、絵の動きは実際の記録ではありません。1つの病院・1種類の手術の記録の比較で、無作為に部屋を割り当てた実験ではありません。比べた相手は何もない単調な壁で、街の景色など他の「見える景色」には当てはまると限りません。ヒト全般や他の病気への当てはめは、この論文だけでは言えません。その後の研究・反論は照合していません(未確認)。',
+  source:{short:'Ulrich 1984, Science',cite:'Ulrich, R. S. (1984). View through a window may influence recovery from surgery. Science, 224(4647), 420–421. doi:10.1126/science.6143402',query:'View through a window may influence recovery from surgery Ulrich 1984'},
+  init(W,H){const r=rng(17);
+    return{
+      stars:mkStars(10,W,H*0.5,9),
+      leaves:Array.from({length:46},()=>({x:(r()-0.5)*1.5,y:(r()-0.5)*1.0,r:3+r()*3.4,ph:r()*6,h:92+r()*38})),
+      bricks:Array.from({length:60},()=>r())
+    }},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H*0.62,[[0,'#10141c'],[1,'#080a10']]);
+    stars(c,W,H,s.stars,t,H*0.5);
+    const fade=sm(t,0,1.5);
+    const ww=132,wh=H*0.2,wy=H*0.1;
+    const cx=[W*0.26,W*0.74];
+    // 窓の外(左: 木 / 右: 壁)
+    for(let k=0;k<2;k++){
+      const x0=cx[k]-ww/2;
+      c.save();c.globalAlpha=fade;
+      c.beginPath();c.rect(x0,wy,ww,wh);c.clip();
+      if(k===0){
+        vgrad(c,x0,wy,ww,wh,[[0,'#6fa6c9'],[1,'#cfe6d4']]);
+        c.strokeStyle='#5a4330';c.lineWidth=5;c.beginPath();c.moveTo(cx[k],wy+wh);c.lineTo(cx[k]+2,wy+wh*0.45);c.stroke();
+        s.leaves.forEach(l=>{
+          const sway=Math.sin(t*1.3+l.ph)*2.2;
+          const x=cx[k]+l.x*ww*0.55+sway,y=wy+wh*0.38+l.y*wh*0.7;
+          c.fillStyle='hsl('+l.h+',50%,'+(34+Math.sin(t+l.ph)*4)+'%)';
+          c.beginPath();c.arc(x,y,l.r,0,TAU);c.fill();
+        });
+        c.globalCompositeOperation='lighter';glow(c,cx[k]+14,wy+wh*0.28,40,'255,240,170',0.22);c.globalCompositeOperation='source-over';
+      }else{
+        c.fillStyle='#7a4a3a';c.fillRect(x0,wy,ww,wh);
+        c.strokeStyle='#3a2018';c.lineWidth=1.2;
+        for(let y=0;y<wh;y+=11){c.beginPath();c.moveTo(x0,wy+y);c.lineTo(x0+ww,wy+y);c.stroke();
+          const off=(Math.round(y/11)%2)*14;
+          for(let x=-14+off;x<ww;x+=28){c.beginPath();c.moveTo(x0+x,wy+y);c.lineTo(x0+x,wy+y+11);c.stroke()}}
+        s.bricks.forEach((b,i)=>{if(b<0.25){c.fillStyle='rgba(0,0,0,0.12)';c.fillRect(x0+(i*23)%ww,wy+((i*7)%Math.floor(wh/11))*11,28,11)}});
+      }
+      c.restore();
+      // 窓枠
+      c.globalAlpha=fade;
+      c.strokeStyle='#d9d2c4';c.lineWidth=4;c.strokeRect(x0,wy,ww,wh);
+      c.lineWidth=2;c.beginPath();c.moveTo(cx[k],wy);c.lineTo(cx[k],wy+wh);c.moveTo(x0,wy+wh/2);c.lineTo(x0+ww,wy+wh/2);c.stroke();
+      c.globalAlpha=1;
+    }
+    txt(c,'木が見える病室',cx[0],wy+wh+16,12,'rgba(150,240,175,'+sm(t,3,4.5)+')','center');
+    txt(c,'壁が見える病室',cx[1],wy+wh+16,12,'rgba(235,170,140,'+sm(t,3,4.5)+')','center');
+    // 入院日数(日めくり)
+    const days=clamp((t-4)*1.0,0,10);
+    const ry=H*0.4;
+    const treeEnd=7.96,wallEnd=8.70;
+    for(let k=0;k<2;k++){
+      const end=k===0?treeEnd:wallEnd;
+      const col=k===0?'150,240,175':'235,170,140';
+      for(let i=0;i<10;i++){
+        const x=cx[k]-54+i*12,on=days>i&&t>=4;
+        const a=on?(days>=end&&i+1>end?0.25:0.9):0.18;
+        c.fillStyle='rgba('+col+','+a+')';
+        c.fillRect(x,ry,9,9);
+      }
+      if(t>=4){
+        const done=days>=end;
+        if(!done){c.globalCompositeOperation='lighter';const gx=cx[k]-54+Math.min(days,9.5)*12+4;glow(c,gx,ry+4,14,col,0.5);c.globalCompositeOperation='source-over'}
+        else{
+          const a=sm(t,4+end,5+end);
+          txt(c,k===0?'退院 7.96日':'退院 8.70日',cx[k],ry+32,15,'rgba('+col+','+a+')','center');
+        }
+      }
+    }
+    txt(c,'入院日数(平均)',W/2,ry-14,11,'rgba(220,225,235,'+sm(t,4,5)+')','center');
+    if(t>14)txt(c,'1つの病院・胆のう手術・23組の比較(模式)',W/2,H*0.56,10,'rgba(200,205,220,'+sm(t,14,15.5)+')','center');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
