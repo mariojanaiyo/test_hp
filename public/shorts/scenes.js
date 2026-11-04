@@ -1362,5 +1362,100 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+// 18 ─────────── ゾンビアリと菌 ───────────
+S.push({
+  id:'zombie',pin:{t:12,text:'正午、かみついた！'},hook:['アリは死ぬ前に、','なぜ葉にかみつく？'],tag:'寄生と操作',dur:24,
+  title:'菌に感染したアリの「最後のかみつき」',
+  beats:[
+    {t:0,text:'菌に感染した<b>アリ</b>が巣を離れる'},
+    {t:4,text:'低い草を<b>のぼっていく</b>'},
+    {t:9,text:'<b>正午ごろ</b>、葉の葉脈にかみつく'},
+    {t:14,text:'菌は脳や筋肉の<b>まわり</b>にいた'},
+    {t:19,text:'<b>操作のしくみは</b>まだ研究中'}
+  ],
+  more:'タイの熱帯雨林で、オオアリの一種(Camponotus leonardi)が菌(Ophiocordyceps unilateralis s.l.)に感染して死ぬ前の行動を観察した研究です(Hughes ほか 2011)。感染したアリは正午ごろに葉にかみつきました。頭の中を調べると、菌の細胞は脳や筋肉の中ではなく、そのまわりに広がっていました。大あごの筋肉は縮んでいて、かみついたまま固定される一因と考えられていますが、因果は今後の課題とされています。',
+  caveat:'これは模式図です。絵の動きや高さは実際の記録ではありません。観察は特定の森の特定の種で、感染したアリを調べた記述的な研究です。筋肉が縮んだ原因が菌かどうかは、論文自身も今後の課題としています。「菌がアリの脳を操る」と言い切れる段階ではなく、操作のしくみは研究中です。その後の研究・反論は照合していません(未確認)。',
+  source:{short:'Hughes et al. 2011, BMC Ecol',cite:'Hughes, D. P., Andersen, S. B., Hywel-Jones, N. L., et al. (2011). Behavioral mechanisms and morphological symptoms of zombie ants dying from fungal infection. BMC Ecology, 11, 13. doi:10.1186/1472-6785-11-13',query:'Behavioral mechanisms and morphological symptoms of zombie ants dying from fungal infection'},
+  init(W,H){const r=rng(18);
+    return{
+      stars:mkStars(8,W,H*0.5,5),
+      spores:Array.from({length:26},()=>({x:(r()-0.5)*60,v:6+r()*10,ph:r()*6,o:r()*14})),
+      grass:Array.from({length:14},()=>({x:r()*360,h:14+r()*26,l:(r()-0.5)*8}))
+    }},
+  draw(c,t,W,H,s){
+    const gy=H*0.56;
+    // 空と太陽(朝→正午)
+    const sun=clamp(t/12);
+    vgrad(c,0,0,W,gy,[[0,lerpColor([30,40,70],[70,120,170],sun)],[1,lerpColor([90,70,80],[170,205,200],sun)]]);
+    const sx=mix(W*0.12,W*0.5,sun),sy=mix(H*0.5,H*0.07,sm(sun,0,1));
+    c.globalCompositeOperation='lighter';glow(c,sx,sy,46,'255,230,150',0.55);c.globalCompositeOperation='source-over';
+    c.fillStyle='#ffe9a8';c.beginPath();c.arc(sx,sy,8,0,TAU);c.fill();
+    txt(c,t<12?'午前…':'正午',W*0.86,H*0.06,12,'rgba(255,240,200,0.9)','center');
+    // 地面と草
+    vgrad(c,0,gy,W,H*0.04,[[0,'#1d3a26'],[1,'#10201a']]);
+    c.strokeStyle='#2f6a3c';c.lineWidth=1.6;
+    s.grass.forEach(g=>{c.beginPath();c.moveTo(g.x,gy);c.lineTo(g.x+g.l,gy-g.h);c.stroke()});
+    // 茎と葉
+    const sxm=W*0.5,top=H*0.24;
+    c.strokeStyle='#3f8a4a';c.lineWidth=4;c.lineCap='round';
+    c.beginPath();c.moveTo(sxm,gy);c.lineTo(sxm,top);c.stroke();
+    // 葉(右へ伸びる)
+    c.fillStyle='#4aa05a';c.beginPath();c.moveTo(sxm,top);
+    c.quadraticCurveTo(sxm+60,top-30,sxm+130,top+4);
+    c.quadraticCurveTo(sxm+60,top+22,sxm,top);c.fill();
+    c.strokeStyle='#bfe6bd';c.lineWidth=1.4;c.beginPath();c.moveTo(sxm,top);c.lineTo(sxm+120,top+3);c.stroke();
+    // アリの位置
+    const climb=sm(t,2,11);
+    const ay=mix(gy-6,top+2,climb);
+    const bite=t>=12;
+    const ax=bite?sxm+36:sxm+(climb<1?7:7);
+    const wob=bite?0:Math.sin(t*9)*1.2;
+    const aY=bite?top+1:ay;
+    // 脚と体
+    c.save();c.translate(ax,aY);
+    if(bite)c.rotate(-0.02);else c.rotate(-Math.PI/2+0.12);
+    c.strokeStyle='#1a1410';c.lineWidth=1.3;
+    for(let i=-1;i<=1;i++){
+      const lp=bite?0:Math.sin(t*9+i*2);
+      c.beginPath();c.moveTo(i*4,0);c.lineTo(i*4-5+lp*2,-7);c.moveTo(i*4,0);c.lineTo(i*4-5-lp*2,7);c.stroke();
+    }
+    c.fillStyle='#2a1c14';
+    c.beginPath();c.ellipse(-11,0,8,5,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(0,0,5,3.4,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(9,0,4.6,3.8,0,0,TAU);c.fill();
+    c.strokeStyle='#1a1410';c.lineWidth=1.6;c.beginPath();c.moveTo(12,-2);c.lineTo(15,-1);c.moveTo(12,2);c.lineTo(15,1);c.stroke();
+    c.restore();
+    // かみつき演出
+    if(bite){
+      const a=sm(t,12,13);
+      c.globalCompositeOperation='lighter';glow(c,ax+14,top+2,24*(1+0.2*Math.sin(t*6)),'255,200,120',0.5*a);c.globalCompositeOperation='source-over';
+      // 菌糸(頭のまわり)
+      const g=sm(t,14,19);
+      c.strokeStyle='rgba(235,225,200,'+(0.85*g)+')';c.lineWidth=1;
+      for(let i=0;i<9;i++){
+        const ang=-Math.PI/2+(i-4)*0.32;
+        c.beginPath();c.moveTo(ax+11,top);
+        c.quadraticCurveTo(ax+11+Math.cos(ang)*8*g,top+Math.sin(ang)*14*g,ax+11+Math.cos(ang)*18*g,top+Math.sin(ang)*30*g);c.stroke();
+      }
+      // 子実体の柄
+      if(t>17){
+        const h=sm(t,17,22)*54;
+        c.strokeStyle='#d58a3c';c.lineWidth=2.4;
+        c.beginPath();c.moveTo(ax+10,top-2);c.quadraticCurveTo(ax+16,top-h*0.5,ax+10,top-h);c.stroke();
+        c.fillStyle='#e3a24d';c.beginPath();c.arc(ax+10,top-h,3.2,0,TAU);c.fill();
+        if(t>20){
+          s.spores.forEach(p=>{
+            const u=((t-20)*p.v+p.o)%90;
+            c.fillStyle='rgba(240,225,170,'+(0.55*(1-u/90))+')';
+            c.beginPath();c.arc(ax+10+p.x*0.5+Math.sin(t+p.ph)*5,top-h+u*0.6,1.4,0,TAU);c.fill();
+          });
+        }
+      }
+    }
+    if(t<9)txt(c,'のぼる…',sxm-44,mix(gy-20,top+20,climb),11,'rgba(220,235,220,0.8)','center');
+    if(t>14)txt(c,'菌は脳・筋肉の「内部」ではなく「まわり」(論文)',W/2,H*0.6,10,'rgba(210,220,225,'+sm(t,14,15.5)+')','center');
+  }
+});
+
+window.SCENES=[S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
