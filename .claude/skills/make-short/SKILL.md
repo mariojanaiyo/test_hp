@@ -59,6 +59,25 @@ node tools/shorts/shoot.cjs <出力dir> <id> 1,6,12,13,20
 - Claudeアーティファクトにも出す場合: `python3 tools/shorts/bundle.py <出力>.html` で1枚にまとめ、Artifact で公開する。**既存のリンクを上書きせず、別ファイル名で新しいリンクにする**(ユーザーは旧版を残したがる)。
 - 返答には、確認したこと/していないこと、論文の確認状況を正直に書く。
 
+### 7. 録画する(YouTube用)
+公開(手順6)のあとで、1本ずつ縦長の動画ファイルにする。
+```
+node tools/shorts/record.cjs <出力dir> <id>
+```
+- 出力は `<出力dir>/<id>.webm`(1080x1920、約18秒 = dur÷1.35、音なし)。出力先はリポジトリの外(例: デスクトップの `クロード/shorts_video`)にする。コミットしない。
+- 初回だけ `npm i --no-save --legacy-peer-deps playwright` と `npx playwright install ffmpeg` が要る。Chrome が入っている前提。
+- 操作ボタンは映らない。冒頭フック、センターピン、最後の字幕、出典の短縮表記は映る。
+- 録画後、`ffmpeg-win64.exe`(`%LOCALAPPDATA%\ms-playwrightfmpeg-*`)で数フレームを取り出して Read で見る。冒頭がフック(t=0)か、ピンが出るか、最後の字幕まで入っているかを確認する。外れていたら撮り直す。
+
+### 8. YouTube に投稿する(ユーザーが頼んだときだけ)
+投稿先: https://www.youtube.com/channel/UCH_pPsd1BvsaZSgyc8OSfeQ (チャンネル「toriaezu_test」、@toriaezu_test_1)
+- 自動では投稿しない。投稿は外に公開される操作なので、**ユーザーが「投稿して」と言ったときだけ**進める。録画までは頼まれなくてもやってよい。
+- 投稿前に、タイトル・説明文・公開設定の案を出して、ユーザーの了承をもらう。公開設定は、指定がなければ「非公開」か「限定公開」で上げて、確認してもらう。
+  - タイトル: そのショートの `hook` を1行にしたもの + `#Shorts`。
+  - 説明文: `more` の要約、出典(`source.cite`)、`caveat`(議論・模式図の注意)。出典が「未確認」ならそう書く。
+- アップロードは、ユーザーのログイン済み Chrome(Claude in Chrome)で YouTube Studio から行う。パスワードやログイン操作はユーザーに任せる。「公開」ボタンは、了承をもらった設定のときだけ押す。
+- 投稿したら、動画のリンクと公開設定を報告し、`SOURCES.md` か BACKLOG に投稿済みを書く。
+
 ## 守ること
 - 出典が「未確認」のショートは、そう伝えてから渡す。
 - 議論がある話を断定しない。模式図は模式図と書く。

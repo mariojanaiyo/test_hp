@@ -45,3 +45,5 @@
 
 - **elephant** (2026-11-03): 書誌(Campos-Arceiz & Blake / Acta Oecologica 37(6):542–553 / DOI 10.1016/j.actao.2011.01.014 / 2011)を、論文PDFの本文(faculty.washington.edu 掲載の写し)で照合。抄録と本文: アフリカのマルミミゾウは大型脊椎動物のなかで最も多くの種の種を食べうる、フンの中で運ばれる、ゾウの減少は一部の植物と群集に悪影響、と述べる(総説)。57kmは本文が Blake et al. 2009(コンゴ Ndoki、首輪4頭、88%が1km超、14%が10km超、最長57km)として引く数字で、元論文は未確認 → caveat に明記、動画は「記録では最長57km」と限定。状態: 主張確認済み(総説の本文まで)。反論・更新の検索は未実施。
   YouTube 限定公開で投稿済み(toriaezu_test、2026-11-03): https://youtube.com/shorts/YfWuI_e2N14 / Artifact: https://claude.ai/artifact/BC2AxusqcmnPnNhjvREUNX
+
+- **toxo** (2026-11-05): 書誌(Berdoy, Webster, Macdonald / Proc R Soc B 267(1452):1591–1594 / DOI 10.1098/rspb.2000.1182 / PMID 11007336 / 2000-08-07)を PubMed の記録と、PMC・Oxford 生物学部ページ等の抄録で照合。抄録: ラットは通常ネコの気配を避けるが、感染ラットは回避を失い、場合によってはその場所に引きつけられた。影響は選択的で、ほかの行動や健康はおおむね変わらない。対象は「ラット」(動画は「ネズミ」と表記)。PubMed・出版社ページは直接開けず(cookie/403)、抄録は検索の要約経由。状態: 主張確認済み(抄録まで・本文は未確認)。数字は動画に出していない。

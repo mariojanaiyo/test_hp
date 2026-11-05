@@ -1462,5 +1462,78 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'toxo',pin:{t:14,text:'猫のにおいへ！'},hook:['感染したネズミは、','猫を怖がらない？'],tag:'寄生のつながり',dur:24,
+  title:'猫のにおいがする場所に、ネズミはどう動く？',
+  beats:[
+    {t:0,text:'ネズミの広場に、<b>猫のにおい</b>の場所'},
+    {t:5,text:'ふつうのネズミは、<b>近づかない</b>'},
+    {t:10,text:'寄生虫に<b>感染</b>したネズミは？'},
+    {t:14,text:'<b>猫のにおい</b>の場所へ、近づいた'},
+    {t:19,text:'ほかの行動は、<b>ふつうのまま</b>'}
+  ],
+  more:'トキソプラズマという寄生虫は、ネズミの体から猫に食べられることで、最後に猫の体で増えます。オックスフォードの研究チームは、感染したネズミと感染していないネズミを広い囲いに入れ、猫の気配のある場所にどう動くかを比べました。ふつうのネズミは猫の気配を避けますが、感染したネズミは、場合によってはその場所に引きつけられた、と抄録は述べています。ほかの行動や健康はそのままだったとのことです。',
+  caveat:'これは模式図です。動きや位置は、実際のデータではありません。論文は、猫の気配を避ける習性が感染で変わる場合がある、と報告したものです。「脳を直接操る」ことまでは示していません。のちの研究(Vyas ら 2007 など)でも似た結果が報じられていますが、検索結果の要約で見たもので、論文は未確認です。ヒトへの当てはめは、この研究では確かめられていません。私が確認できたのは Berdoy 2000 の抄録までで、本文は未確認です。',
+  source:{short:'Berdoy et al. 2000, Proc R Soc B',cite:'Berdoy, M., Webster, J.P. & Macdonald, D.W. (2000). Fatal attraction in rats infected with Toxoplasma gondii. Proceedings of the Royal Society B, 267(1452), 1591–1594. doi:10.1098/rspb.2000.1182',query:'Fatal attraction in rats infected with Toxoplasma gondii Berdoy 2000'},
+  init(W,H){const r=rng(53);
+    return{dust:Array.from({length:16},()=>({x:r(),y:r(),p:r()*6,s:0.5+r()}))}},
+  draw(c,t,W,H,s){
+    const ay=H*0.17,ah=H*0.34,aw=152,xs=[20,188];
+    vgrad(c,0,0,W,H,[[0,'#10202e'],[0.65,'#08121b'],[1,'#03070b']]);
+    const rat=(x,y,ang,inf,tt)=>{
+      c.save();c.translate(x,y);c.rotate(ang);c.scale(1.5,1.5);
+      c.strokeStyle=inf?'#c98a7a':'#9aa7b3';c.lineWidth=1.2;c.beginPath();c.moveTo(-9,0);c.quadraticCurveTo(-15,Math.sin(tt*6)*3,-20,Math.sin(tt*6+1)*4);c.stroke();
+      c.fillStyle=inf?'#a9695c':'#8d99a5';
+      c.beginPath();c.ellipse(-2,0,8,4.6,0,0,TAU);c.fill();c.beginPath();c.ellipse(7,0,4.4,3.2,0,0,TAU);c.fill();
+      c.beginPath();c.arc(4,-3.4,1.9,0,TAU);c.fill();c.beginPath();c.arc(4,3.4,1.9,0,TAU);c.fill();
+      c.fillStyle='#111';c.beginPath();c.arc(9,-1.2,0.8,0,TAU);c.fill();
+      c.restore();
+      if(inf){c.globalCompositeOperation='lighter';glow(c,x,y,15,'255,90,70',0.22+0.08*Math.sin(tt*5));c.globalCompositeOperation='source-over'}
+    };
+    const cat=(x,y,a)=>{
+      c.fillStyle='rgba(255,210,120,'+(0.9*a)+')';
+      c.beginPath();c.arc(x,y,6,0,TAU);c.fill();
+      c.beginPath();c.moveTo(x-6,y-2);c.lineTo(x-5,y-10);c.lineTo(x-1,y-5);c.fill();
+      c.beginPath();c.moveTo(x+6,y-2);c.lineTo(x+5,y-10);c.lineTo(x+1,y-5);c.fill();
+    };
+    [0,1].forEach(i=>{
+      const inf=i===1,x0=xs[i],cx=x0+aw/2,py=ay+34,by=ay+ah-16;
+      const a=sm(t,0,1.2);
+      // 囲い
+      c.fillStyle='rgba(30,55,75,'+0.55*a+')';c.fillRect(x0,ay,aw,ah);
+      c.strokeStyle='rgba(150,190,220,'+0.5*a+')';c.lineWidth=1.5;c.strokeRect(x0,ay,aw,ah);
+      // 猫のにおいの場所
+      c.globalCompositeOperation='lighter';
+      const pul=0.28+0.1*Math.sin(t*2.4);
+      glow(c,cx,py,36,'255,190,90',pul*a);c.globalCompositeOperation='source-over';
+      c.strokeStyle='rgba(255,210,120,'+0.7*a+')';c.lineWidth=1.2;c.setLineDash([3,3]);c.beginPath();c.arc(cx,py,24,0,TAU);c.stroke();c.setLineDash([]);
+      cat(cx,py,a);
+      // におい
+      s.dust.forEach(d=>{const u=(t*0.3*d.s+d.p)%1;c.fillStyle='rgba(255,215,140,'+0.5*(1-u)*a+')';c.beginPath();c.arc(cx+(d.x-0.5)*60+Math.sin(t+d.p)*4,py+16-u*30,1.2,0,TAU);c.fill()});
+      // ネズミの動き
+      let rx,ry,ang;
+      const wob=Math.sin(t*2.2+i)*0.2;
+      if(t<4){rx=cx+Math.sin(t*1.3)*14;ry=by+Math.sin(t*1.7)*4;ang=-Math.PI/2+wob}
+      else if(!inf){
+        if(t<8.5){const u=sm(t,4,8.5);rx=cx;ry=mix(by,py+44,u);ang=-Math.PI/2+wob*0.5}
+        else if(t<12){const u=sm(t,8.5,12);rx=mix(cx,x0+22,u);ry=mix(py+44,by,u);ang=Math.PI*0.75}
+        else{rx=x0+22+Math.sin(t*1.5)*3;ry=by+Math.sin(t*1.9)*2;ang=Math.PI*0.5+Math.sin(t)*0.3}
+      }else{
+        if(t<14){const u=sm(t,4,14);rx=cx+Math.sin(t*1.1)*6*(1-u);ry=mix(by,py+6,u);ang=-Math.PI/2+wob*0.5}
+        else{rx=cx+Math.sin(t*1.4)*5;ry=py+6+Math.sin(t*1.8)*3;ang=-Math.PI/2+Math.sin(t*1.2)*0.5}
+      }
+      rat(rx,ry,ang,inf,t);
+      // 見出し
+      txt(c,inf?'感染したネズミ':'ふつうのネズミ',cx,ay-14,12,inf?'rgba(255,170,150,'+a+')':'rgba(190,215,235,'+a+')','center');
+      if(!inf&&t>=8.5&&t<14)txt(c,'引き返す',cx,ay+ah+14,11,'rgba(190,215,235,'+sm(t,8.5,10)+')','center');
+    });
+    // 近づいた瞬間
+    if(t>=14&&t<16.5){const e=sm(t,14,14.6)*(1-sm(t,15.4,16.5)),cx=xs[1]+aw/2,py=ay+34;
+      c.strokeStyle='rgba(255,230,150,'+e+')';c.lineWidth=1.6;c.beginPath();c.arc(cx,py+6,12+22*sm(t,14,15.6),0,TAU);c.stroke()}
+    if(t>=14)txt(c,'猫のにおいへ近づく',xs[1]+aw/2,ay+ah+14,11,'rgba(255,225,150,'+sm(t,14,15.5)+')','center');
+    if(t>=19)txt(c,'ほかの行動・健康は、ふつうのまま(報告)',W/2,ay+ah+44,11,'rgba(200,230,215,'+sm(t,19,21)+')','center');
+  }
+});
+
+window.SCENES=[S[S.length-1],S[S.length-2],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
