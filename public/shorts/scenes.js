@@ -1457,5 +1457,78 @@ S.push({
   }
 });
 
-window.SCENES=[S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+// 19 ─────────── 社会脳仮説 ───────────
+S.push({
+  id:'brain',pin:{t:10,text:'ならんだ！'},hook:['脳が大きいほど、','仲間も多い？'],tag:'脳と社会',dur:24,
+  title:'新皮質の大きさと、群れの大きさ',
+  beats:[
+    {t:0,text:'霊長類の<b>群れの大きさ</b>は種ごとにちがう'},
+    {t:4,text:'脳の<b>新皮質</b>が大きい種ほど…'},
+    {t:9,text:'<b>大きな群れ</b>で暮らす傾向があった'},
+    {t:14,text:'食べ物など<b>生態の要因</b>では説明できなかった'},
+    {t:19,text:'著者の提案:脳が<b>群れの大きさを制限</b>?'}
+  ],
+  more:'霊長類の種ごとに、脳の新皮質の相対的な大きさと群れの大きさ、いくつかの生態の変数を比べた研究です(Dunbar 1992)。群れの大きさは新皮質の相対的な大きさと対応し、生態の変数とは対応しませんでした。著者はこれを、脳の大きさが「同時に追える関係の数」を決め、それを超えた群れは不安定になる、という考え(社会脳仮説)で説明しています。',
+  caveat:'これは模式図です。点の位置は実際のデータではなく、傾向だけを描いています。種どうしを比べた相関で、「群れが脳を大きくした」という因果を示すものではありません。著者の説明は仮説です。その後の研究・反論は照合していません(未確認)。',
+  source:{short:'Dunbar 1992, J Hum Evol',cite:'Dunbar, R. I. M. (1992). Neocortex size as a constraint on group size in primates. Journal of Human Evolution, 22(6), 469–493.',query:'Neocortex size as a constraint on group size in primates'},
+  init(W,H){const r=rng(19);
+    const n=14;
+    return{
+      stars:mkStars(10,W,H*0.5,9),
+      a:Array.from({length:n},(_,i)=>{const x=(i+0.5)/n;return{x:x,y:clamp(x+(r()-0.5)*0.16,0.03,0.97)}}),
+      b:Array.from({length:n},(_,i)=>({x:(i+0.5)/n,y:0.1+r()*0.8})),
+      ring:[3,6,10]
+    }},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H*0.62,[[0,'#10162b'],[1,'#1c1f3a']]);
+    s.stars.forEach(p=>{c.fillStyle='rgba(255,255,255,'+(0.2+0.3*Math.sin(t*p.f+p.p)**2)+')';c.fillRect(p.x,p.y,p.s,p.s)});
+    const fa=1-sm(t,8,9.2);
+    if(fa>0){
+      const cxs=[W*0.18,W*0.5,W*0.82],by=H*0.2,gy=H*0.4;
+      for(let k=0;k<3;k++){
+        const on=sm(t,k*2.6,k*2.6+1);
+        if(on<=0)continue;
+        const a=on*fa,rad=[9,15,22][k],n=s.ring[k];
+        // 脳(新皮質)
+        c.globalCompositeOperation='lighter';glow(c,cxs[k],by,rad*2.2,'255,170,200',0.35*a);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba(240,160,190,'+a+')';c.beginPath();c.arc(cxs[k],by,rad,0,TAU);c.fill();
+        c.strokeStyle='rgba(120,50,80,'+(0.7*a)+')';c.lineWidth=1;
+        for(let i=0;i<k+2;i++){c.beginPath();c.arc(cxs[k]+(i-(k+1)/2)*rad*0.5,by,rad*0.4,0.4,Math.PI*1.4);c.stroke()}
+        txt(c,['新皮質 小','新皮質 中','新皮質 大'][k],cxs[k],by+34,10,'rgba(255,210,225,'+a+')','center');
+        // 群れ(つながり線)
+        const pts=[];
+        for(let i=0;i<n;i++){const an=i/n*TAU+t*0.2;pts.push([cxs[k]+Math.cos(an)*(22+k*4),gy+Math.sin(an)*(22+k*4)*0.9])}
+        c.strokeStyle='rgba(150,220,255,'+(0.22*a)+')';c.lineWidth=0.8;
+        for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){c.beginPath();c.moveTo(pts[i][0],pts[i][1]);c.lineTo(pts[j][0],pts[j][1]);c.stroke()}
+        pts.forEach(q=>{c.fillStyle='rgba(180,235,255,'+a+')';c.beginPath();c.arc(q[0],q[1],3,0,TAU);c.fill()});
+        txt(c,'群れ '+n+'頭',cxs[k],gy+48,10,'rgba(190,225,245,'+a+')','center');
+      }
+    }
+    // グラフ
+    function chart(y0,h,pts,title,t0,trend,col){
+      const a=sm(t,t0,t0+1.2);if(a<=0)return;
+      const x0=48,w=W-48-24;
+      txt(c,title,W-16,y0-8,10,'rgba(220,225,240,'+a+')','right');
+      c.strokeStyle='rgba(200,210,230,'+(0.5*a)+')';c.lineWidth=1;
+      c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();
+      pts.forEach((p,i)=>{
+        const u=sm(t,t0+0.8+i*0.2,t0+1.4+i*0.2);if(u<=0)return;
+        const px=x0+p.x*w,py=y0+h-p.y*h;
+        c.globalCompositeOperation='lighter';glow(c,px,py,9,col,0.45*u);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba('+col+','+u+')';c.beginPath();c.arc(px,py,3,0,TAU);c.fill();
+      });
+      if(trend){
+        const u=sm(t,t0+3.4,t0+4.6);
+        c.setLineDash([4,4]);c.strokeStyle='rgba(255,230,150,'+(0.9*u)+')';c.lineWidth=1.4;
+        c.beginPath();c.moveTo(x0,y0+h);c.lineTo(x0+w*u,y0+h-h*u);c.stroke();c.setLineDash([]);
+      }
+    }
+    chart(H*0.1+10,H*0.2,s.a,'新皮質の相対サイズ → 群れの大きさ(模式)',8.5,true,'150,230,255');
+    chart(H*0.38+8,H*0.17,s.b,'食べ物・行動範囲など → 群れの大きさ(模式)',14,false,'255,190,140');
+    if(t>14)txt(c,'対応が見えない',W-70,H*0.38+8+H*0.17*0.5,10,'rgba(255,200,160,'+sm(t,16,17.5)+')','center');
+    if(t>12)txt(c,'比例して増える',W*0.36,H*0.1+10+H*0.2*0.3,10,'rgba(255,235,170,'+sm(t,12,13.5)+')','center');
+  }
+});
+
+window.SCENES=[S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
