@@ -1530,5 +1530,83 @@ S.push({
   }
 });
 
-window.SCENES=[S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'toxo',pin:{t:12,text:'近づいた！'},hook:['ネズミが猫の匂いに','近づく？'],tag:'寄生と行動',dur:24,
+  title:'感染したラットと、猫の匂い',
+  beats:[
+    {t:0,text:'ラットは<b>猫の匂い</b>のする場所を避ける'},
+    {t:6,text:'そこに寄生虫<b>トキソプラズマ</b>が感染すると…'},
+    {t:11,text:'匂いを避けず、<b>近づく</b>場合があった'},
+    {t:16,text:'ほかの行動や<b>健康</b>は、保たれていた'},
+    {t:20,text:'寄生虫は<b>猫の体内</b>で生活環を完結する'}
+  ],
+  more:'ラットには、猫の痕跡がある場所を避ける生まれつきの行動があります。トキソプラズマはラットを中間宿主、猫を終宿主として生活環を完結します。この研究は、感染したラットでは、猫のリスクの感じ方が変わり、場合によっては忌避が不用意な誘引に変わったと報告しました(Berdoy et al. 2000)。変化は選択的で、ほかの行動や全身の健康は保たれていたとされます。',
+  caveat:'これは模式図です。動きは実際のデータではありません。抄録に数値はなく、動画にも出していません(本文は未入手)。この「誘引」には後年の再評価があり、Worth et al. 2014 のレビューは、感染によるげっ歯類の行動変化の向きや大きさに一貫した傾向は見られず、株・宿主・測定法の違いが影響しうると述べています。ヒトの行動への当てはめは、この研究の範囲外です。',
+  source:{short:'Berdoy et al. 2000, Proc R Soc B',cite:'Berdoy, M., Webster, J. P., & Macdonald, D. W. (2000). Fatal attraction in rats infected with Toxoplasma gondii. Proceedings of the Royal Society B, 267(1452), 1591–1594. / Worth, A. R., Thompson, R. C. A., & Lymbery, A. J. (2014). Reevaluating the evidence for Toxoplasma gondii-induced behavioural changes in rodents. Advances in Parasitology, 85, 109–142.',query:'Fatal attraction in rats infected with Toxoplasma gondii'},
+  init(W,H){return{dust:mkStars(26,W,H*0.5,31)}},
+  draw(c,t,W,H,s){
+    const top=H*0.1,bot=H*0.56,ax=18,aw=W-36,gy=bot-20;
+    vgrad(c,0,0,W,H*0.62,[[0,'#16121f'],[1,'#241a2c']]);
+    // アリーナ
+    c.fillStyle='rgba(255,255,255,0.05)';c.fillRect(ax,top,aw,bot-top);
+    c.strokeStyle='rgba(220,200,240,0.35)';c.lineWidth=1;c.strokeRect(ax,top,aw,bot-top);
+    // 猫の匂い(左)
+    const sx=ax+46,sy=gy-4;
+    const pulse=0.5+0.5*Math.sin(t*2);
+    c.globalCompositeOperation='lighter';glow(c,sx,sy-10,52,'255,150,90',0.28+0.12*pulse);c.globalCompositeOperation='source-over';
+    // 肉球
+    c.fillStyle='rgba(255,190,140,0.85)';
+    c.beginPath();c.ellipse(sx,sy-6,9,7,0,0,TAU);c.fill();
+    [[-10,-16],[-3.5,-21],[3.5,-21],[10,-16]].forEach(q=>{c.beginPath();c.ellipse(sx+q[0],sy+q[1]+4,3.2,4,0,0,TAU);c.fill()});
+    txt(c,'猫の匂い',sx,sy+14,10,'rgba(255,200,160,0.95)','center');
+    // ラットの位置(x)
+    const near=sx+34,far=ax+aw-50;
+    let rx,dir,infected=t>=7;
+    if(t<2.5){rx=mix(far,near+12,sm(t,0,2.5));dir=-1}
+    else if(t<4){rx=near+12;dir=-1}
+    else if(t<6.5){rx=mix(near+12,far,sm(t,4,6.5));dir=1}
+    else if(t<9){rx=far;dir=-1}
+    else if(t<12){rx=mix(far,sx+4,sm(t,9,12));dir=-1}
+    else{rx=sx+4+Math.sin(t*3)*1.5;dir=-1}
+    // ラット
+    const ry=gy-8,bob=Math.sin(t*10)*((t>=9&&t<12)||(t<2.5)||(t>=4&&t<6.5)?1.2:0.2);
+    c.save();c.translate(rx,ry+bob);c.scale(dir,1);
+    c.fillStyle='#b9b2c4';c.strokeStyle='#b9b2c4';
+    c.beginPath();c.ellipse(0,0,14,8,0,0,TAU);c.fill();
+    c.beginPath();c.moveTo(-12,-1);c.quadraticCurveTo(-26,-4+Math.sin(t*4)*3,-30,6);c.lineWidth=1.8;c.lineCap='round';c.stroke();
+    c.beginPath();c.ellipse(15,-1,7,5,0,0,TAU);c.fill();
+    c.fillStyle='#e8a9b8';c.beginPath();c.arc(11,-6,3.2,0,TAU);c.fill();
+    c.fillStyle='#222';c.beginPath();c.arc(18,-3,1.2,0,TAU);c.fill();
+    c.fillStyle='#e8a9b8';c.beginPath();c.arc(22,0,1.3,0,TAU);c.fill();
+    c.restore();
+    // 状態ラベル
+    txt(c,infected?'感染したラット(模式)':'ふつうのラット(模式)',W/2,top+14,11,infected?'rgba(215,170,255,0.95)':'rgba(220,225,240,0.95)','center');
+    // 寄生虫(感染後に頭のまわりへ)
+    if(infected){
+      const a=sm(t,7,8.5);
+      for(let i=0;i<5;i++){
+        const an=t*1.6+i*1.26,hx=rx+(dir*14),hy=ry-2+bob;
+        const px=hx+Math.cos(an)*(9+i%2*3)*dir,py=hy+Math.sin(an)*8;
+        c.globalCompositeOperation='lighter';glow(c,px,py,7,'190,120,255',0.7*a);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba(215,170,255,'+a+')';c.beginPath();c.arc(px,py,1.8,0,TAU);c.fill();
+      }
+    }
+    // 避ける/近づく表示
+    if(t>1&&t<6.5){const a=sm(t,3.2,4.2)*(1-sm(t,5.8,6.5));if(a>0)txt(c,'避ける',rx+10,ry-26,12,'rgba(160,220,255,'+a+')','center')}
+    if(t>12){const a=sm(t,12,13);txt(c,'近づく',rx+20,ry-30,12,'rgba(255,220,150,'+a+')','center')}
+    // 猫(終宿主)
+    if(t>19){
+      const a=sm(t,19.5,21);
+      c.globalAlpha=a;c.fillStyle='#d9b27a';
+      c.beginPath();c.ellipse(W*0.76,H*0.3,16,10,0,0,TAU);c.fill();
+      c.beginPath();c.arc(W*0.76+14,H*0.3-8,8,0,TAU);c.fill();
+      c.beginPath();c.moveTo(W*0.76+9,H*0.3-13);c.lineTo(W*0.76+10,H*0.3-22);c.lineTo(W*0.76+15,H*0.3-15);c.fill();
+      c.beginPath();c.moveTo(W*0.76+18,H*0.3-15);c.lineTo(W*0.76+22,H*0.3-22);c.lineTo(W*0.76+22,H*0.3-12);c.fill();
+      c.globalAlpha=1;
+      txt(c,'終宿主=猫',W*0.76,H*0.3+22,10,'rgba(255,225,180,'+a+')','center');
+    }
+  }
+});
+
+window.SCENES=[S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
