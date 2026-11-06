@@ -25,6 +25,7 @@
 | window | 窓から木立が見える病室の胆のう手術後の患者は、レンガ壁が見える病室の患者より入院が短かった(平均7.96日 vs 8.70日、P=0.025、23組46人)。1病院・1手術の記録比較 | Ulrich 1984, Science 224(4647):420–421 | 主張確認済み (2026-11-03、本文PDFまで) |
 | zombie | 菌(Ophiocordyceps unilateralis s.l.)に感染したアリ(Camponotus leonardi)は正午ごろ葉にかみついて死ぬ。菌は脳・筋肉の内部ではなくそのまわりに広がり、大あごの筋肉は萎縮していた(原因は今後の課題) | Hughes et al. 2011, BMC Ecol 11:13 | 主張確認済み (2026-11-04、BMC本文まで) |
 | brain | 霊長類で、群れの大きさは新皮質の相対的な大きさと対応し、生態の変数とは対応しなかった。著者は、新皮質が同時に追える関係の数を制限すると提案(仮説・種間の相関) | Dunbar 1992, J Hum Evol 22(6):469–493 | 主張確認済み (2026-11-05、抄録まで)。本文は未入手 |
+| toxo | トキソプラズマに感染したラットは、猫の痕跡への生得的な忌避が、場合によって不用意な誘引に変わった。変化は選択的で、他の行動や全身の健康は保たれていた(抄録。数値なし)。後年のレビューは、げっ歯類の行動変化に一貫した傾向は見られないとする | Berdoy, Webster & Macdonald 2000, Proc R Soc B 267(1452):1591–1594 | 主張確認済み (2026-11-06、抄録まで)。本文は未入手 |
 
 ## 確認メモ
 
@@ -43,3 +44,5 @@
 - **zombie** (2026-11-04): 書誌(Hughes, Andersen, Hywel-Jones ほか / BMC Ecology 11:13 / 2011 / DOI 10.1186/1472-6785-11-13)と本文を https://www.biomedcentral.com/1472-6785/11/13 で照合。タイ南部の熱帯雨林、Camponotus leonardi と Ophiocordyceps unilateralis s.l.。かみつきは正午ごろ(太陽高度が最大に近い)。菌細胞は頭部で多数だが、筋肉・脳・腺の内部ではなくそのまわり。大あご筋の萎縮あり、因果は今後の課題。動画に数字は出さない(PMC・PSU PDFは確認画面/ログインで開けず、BMC本文を根拠にした)。BACKLOG 仮フックの「操られている」は断定せず「なぜかみつく？」の問いにした。その後の研究・反論は未照合。
 
 - **brain** (2026-11-05): 書誌(Dunbar, R. I. M. / Journal of Human Evolution 22(6):469–493 / 1992)を BibBase(https://bibbase.org/network/publication/dunbar-neocortexsizeasaconstraintongroupsizeinprimates-1992)で、抄録を Oxford 神経科学部の出版物ページ(https://www.neuroscience.ox.ac.uk/publications/945607)で照合。抄録で、新皮質の相対体積・群れの大きさ・生態変数を比べ、群れの大きさは新皮質に対応し生態変数には対応しなかったこと、著者が「新皮質のニューロン数が追える関係数を制限する」と提案していることを確認。抄録に数値はなく、「約150」はこの照合で確認できていないため動画に出さない。巻の表記が別サイトで vol.20 となっていたが、2サイトの多数と一致する22を採用(DOI 未確認)。相関で因果は示さず、模式図と明記。その後の研究・反論は未照合。本文は未入手。
+
+- **toxo** (2026-11-06): 書誌(Berdoy, Webster, Macdonald / Proc R Soc B 267(1452):1591–1594 / 2000-08-07 / DOI 10.1098/rspb.2000.1182)を scilit(https://www.scilit.net/publications/bf62e1189d3f068a42b9ef6227e2bab8)で、抄録を Oxford 神経科学部の出版物ページ(https://www.neuroscience.ox.ac.uk/publications/1341372)で照合。抄録で、感染ラットの猫への忌避が場合によって不用意な誘引に変わること、変化は選択的で他の行動と健康は保たれることを確認。数値は抄録になく、動画に出さない。PMC は確認画面で開けず、本文は未入手。反論として Worth, Thompson & Lymbery 2014(Adv Parasitol 85:109–142, DOI 10.1016/B978-0-12-800182-0.00003-9)のレビューを Murdoch 大学リポジトリの要旨(https://researchportal.murdoch.edu.au/esploro/outputs/journalArticle/Reevaluating-the-evidence-for-Toxoplasma-gondii-induced/991005543160407891)で確認し、行動変化の向き・大きさに一貫した傾向は見られないとあるため、caveat に入れた。BACKLOG 仮フックの「猫を怖がらなくなる」は「近づく？」の問いにし、模式図と明記。ヒトへの当てはめは扱わない。
