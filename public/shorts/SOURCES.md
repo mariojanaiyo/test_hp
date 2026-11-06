@@ -47,3 +47,5 @@
   YouTube 限定公開で投稿済み(toriaezu_test、2026-11-03): https://youtube.com/shorts/YfWuI_e2N14 / Artifact: https://claude.ai/artifact/BC2AxusqcmnPnNhjvREUNX
 
 - **toxo** (2026-11-05): 書誌(Berdoy, Webster, Macdonald / Proc R Soc B 267(1452):1591–1594 / DOI 10.1098/rspb.2000.1182 / PMID 11007336 / 2000-08-07)を PubMed の記録と、PMC・Oxford 生物学部ページ等の抄録で照合。抄録: ラットは通常ネコの気配を避けるが、感染ラットは回避を失い、場合によってはその場所に引きつけられた。影響は選択的で、ほかの行動や健康はおおむね変わらない。対象は「ラット」(動画は「ネズミ」と表記)。PubMed・出版社ページは直接開けず(cookie/403)、抄録は検索の要約経由。状態: 主張確認済み(抄録まで・本文は未確認)。数字は動画に出していない。
+
+- **cook** (2026-11-06): 書誌(Herculano-Houzel / PNAS 109(Suppl 1):10661–10668 / DOI 10.1073/pnas.1201895109 / PMID 22723358 / 2012-06-22)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC3386878)の本文で照合。神経細胞約860億個、脳は約6kcal/日/10億個で約516kcal/日(体全体の約25%)、火を通した食事が神経細胞の増加を可能にしたかもしれない、という提案(仮説)。本文末尾の約1割は未読。反論: Smaers & Soligo 2013 が構造比較で異論(検索要約のみ・論文未確認)。状態: 主張確認済み(本文の主要部分まで)。

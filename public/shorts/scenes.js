@@ -1535,5 +1535,61 @@ S.push({
   }
 });
 
-window.SCENES=[S[S.length-1],S[S.length-2],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'cook',pin:{t:14,text:'余裕が出た！'},hook:['火を通した食べ物が、','脳を育てた？'],tag:'食と脳のつながり',dur:24,
+  title:'1日分のカロリーを、どれだけ早く食べ終えられる？',
+  beats:[
+    {t:0,text:'大きな脳は、<b>たくさんのエネルギー</b>を使う'},
+    {t:5,text:'生のままだと、食べ続ける時間が<b>長くかかる</b>'},
+    {t:9,text:'火を通すと、<b>短い時間</b>で食べ終わる'},
+    {t:14,text:'空いた時間と余裕が、<b>脳の分</b>に回った？'},
+    {t:19,text:'これは<b>仮説</b>。確かめきれてはいない'}
+  ],
+  more:'ブラジルの神経科学者 Herculano-Houzel は、細胞を数える方法で、ヒトの脳には約860億個の神経細胞があると報告しました。神経細胞が増えるほど、脳が使うエネルギーも増えます。論文では、脳全体で1日あたり約516kcal(体全体の約4分の1)と見積もっています。そのうえで、生の食事のままでは、食べる時間が足りなくなる。火を通した食事なら、1日分のカロリーを短い時間でとれる。そのおかげで、神経細胞の数が増えられたのかもしれない、と提案しています。',
+  caveat:'これは模式図です。棒の長さや時間は、実際のデータではありません。「火を通した食事が脳を育てた」は、論文が提案した仮説で、証明された結論ではありません。「線形に大きくなった霊長類の脳」という見方にも、脳の構造の比較から異論があります(Smaers & Soligo 2013 など。検索結果の要約で見たもので論文は未確認)。私が確認できたのは PMC に載った本文の主要部分までで、末尾の約1割は未確認です。',
+  source:{short:'Herculano-Houzel 2012, PNAS',cite:'Herculano-Houzel, S. (2012). The remarkable, yet not extraordinary, human brain as a scaled-up primate brain and its associated cost. Proceedings of the National Academy of Sciences, 109(Suppl 1), 10661–10668. doi:10.1073/pnas.1201895109',query:'The remarkable, yet not extraordinary, human brain as a scaled-up primate brain and its associated cost'},
+  init(W,H){const r=rng(71);
+    return{sp:Array.from({length:60},()=>({a:r()*TAU,d:r(),p:r()*6}))}},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H,[[0,'#1d1410'],[0.6,'#100b08'],[1,'#060403']]);
+    const rows=[{y:H*0.28,name:'生のまま',cook:false},{y:H*0.42,name:'火を通す',cook:true}];
+    const bx=24,bw=W-48,bh=16;
+    const a=sm(t,0,1.2);
+    rows.forEach(rw=>{
+      const y=rw.y;
+      txt(c,rw.name,bx,y-18,13,rw.cook?'rgba(255,190,110,'+a+')':'rgba(200,210,220,'+a+')','left');
+      c.fillStyle='rgba(255,255,255,'+0.08*a+')';c.fillRect(bx,y,bw,bh);
+      c.strokeStyle='rgba(255,255,255,'+0.3*a+')';c.lineWidth=1;c.strokeRect(bx,y,bw,bh);
+      // 1日分のカロリーをとる進み具合
+      const u=rw.cook?sm(t,4,9):sm(t,4,24)*0.62;
+      c.fillStyle=rw.cook?'rgba(255,170,70,0.9)':'rgba(150,170,190,0.85)';
+      c.fillRect(bx,y,bw*u,bh);
+      if(rw.cook){c.globalCompositeOperation='lighter';glow(c,bx+bw*u,y+bh/2,22,'255,150,50',0.35*a);c.globalCompositeOperation='source-over'}
+      if(rw.cook&&t>=9)txt(c,'1日分、完了',bx+bw-4,y-18,12,'rgba(255,215,150,'+sm(t,9,10.5)+')','right');
+      if(!rw.cook&&t>=9)txt(c,'まだ食べ続ける…',bx+bw-4,y-18,12,'rgba(190,205,220,'+sm(t,9,10.5)+')','right');
+    });
+    txt(c,'1日分のカロリーをとるまで',W/2,H*0.19,12,'rgba(230,220,200,'+a*0.8+')','center');
+    // 炎
+    if(t>=4){const fx=W-34,fy=rows[1].y-30,f=sm(t,4,5)*(1-sm(t,9.5,11)*0.6);
+      c.globalCompositeOperation='lighter';glow(c,fx,fy,18,'255,140,40',0.5*f);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(255,170,60,'+f+')';c.beginPath();c.moveTo(fx,fy-12-Math.sin(t*9)*2);c.quadraticCurveTo(fx+8,fy+2,fx,fy+8);c.quadraticCurveTo(fx-8,fy+2,fx,fy-12);c.fill()}
+    // 脳(神経細胞の粒)
+    const bcx=W/2,bcy=H*0.6,grow=sm(t,9,14.5);
+    const R=22+26*grow;
+    if(t>=9){
+      const al=sm(t,9,11);
+      c.globalCompositeOperation='lighter';glow(c,bcx,bcy,R*1.8,'255,200,120',(0.12+0.3*sm(t,14,15.5))*al);
+      s.sp.forEach((p,i)=>{if(i/60>0.35+0.65*grow)return;
+        const rr=Math.sqrt(p.d)*R;c.fillStyle='rgba(255,225,170,'+(0.35+0.4*Math.sin(t*3+p.p)**2)*al+')';
+        c.beginPath();c.arc(bcx+Math.cos(p.a)*rr*1.2,bcy+Math.sin(p.a)*rr*0.9,1.5,0,TAU);c.fill()});
+      c.globalCompositeOperation='source-over';
+      txt(c,'脳の神経細胞(模式)',bcx,bcy+R*1.1+14,11,'rgba(255,225,170,'+al+')','center');
+    }
+    if(t>=14){const e=sm(t,14,14.6)*(1-sm(t,15.4,16.8));
+      c.strokeStyle='rgba(255,230,160,'+e+')';c.lineWidth=1.6;c.beginPath();c.arc(bcx,bcy,R+6+20*sm(t,14,15.8),0,TAU);c.stroke()}
+    if(t>=19)txt(c,'提案された仮説(証明ではない)',W/2,H*0.6+92,12,'rgba(255,225,170,'+sm(t,19,21)+')','center');
+  }
+});
+
+window.SCENES=[S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
