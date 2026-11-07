@@ -26,6 +26,7 @@
 | zombie | 菌(Ophiocordyceps unilateralis s.l.)に感染したアリ(Camponotus leonardi)は正午ごろ葉にかみついて死ぬ。菌は脳・筋肉の内部ではなくそのまわりに広がり、大あごの筋肉は萎縮していた(原因は今後の課題) | Hughes et al. 2011, BMC Ecol 11:13 | 主張確認済み (2026-11-04、BMC本文まで) |
 | brain | 霊長類で、群れの大きさは新皮質の相対的な大きさと対応し、生態の変数とは対応しなかった。著者は、新皮質が同時に追える関係の数を制限すると提案(仮説・種間の相関) | Dunbar 1992, J Hum Evol 22(6):469–493 | 主張確認済み (2026-11-05、抄録まで)。本文は未入手 |
 | toxo | トキソプラズマに感染したラットは、猫の痕跡への生得的な忌避が、場合によって不用意な誘引に変わった。変化は選択的で、他の行動や全身の健康は保たれていた(抄録。数値なし)。後年のレビューは、げっ歯類の行動変化に一貫した傾向は見られないとする | Berdoy, Webster & Macdonald 2000, Proc R Soc B 267(1452):1591–1594 | 主張確認済み (2026-11-06、抄録まで)。本文は未入手 |
+| cook | 霊長類の採食データによるモデルで、生食だけでは採食時間の制約で体の大きさと脳のニューロン数に上限が出る。見積もりでは、ヒト級の脳(760〜860億ニューロン)の生食は1日9時間超の採食が必要。調理が制約をゆるめたとする提案(仮説) | Fonseca-Azevedo & Herculano-Houzel 2012, PNAS 109(45):18571–18576 | 主張確認済み (2026-11-07、PMC本文まで) |
 
 ## 確認メモ
 
@@ -46,3 +47,5 @@
 - **brain** (2026-11-05): 書誌(Dunbar, R. I. M. / Journal of Human Evolution 22(6):469–493 / 1992)を BibBase(https://bibbase.org/network/publication/dunbar-neocortexsizeasaconstraintongroupsizeinprimates-1992)で、抄録を Oxford 神経科学部の出版物ページ(https://www.neuroscience.ox.ac.uk/publications/945607)で照合。抄録で、新皮質の相対体積・群れの大きさ・生態変数を比べ、群れの大きさは新皮質に対応し生態変数には対応しなかったこと、著者が「新皮質のニューロン数が追える関係数を制限する」と提案していることを確認。抄録に数値はなく、「約150」はこの照合で確認できていないため動画に出さない。巻の表記が別サイトで vol.20 となっていたが、2サイトの多数と一致する22を採用(DOI 未確認)。相関で因果は示さず、模式図と明記。その後の研究・反論は未照合。本文は未入手。
 
 - **toxo** (2026-11-06): 書誌(Berdoy, Webster, Macdonald / Proc R Soc B 267(1452):1591–1594 / 2000-08-07 / DOI 10.1098/rspb.2000.1182)を scilit(https://www.scilit.net/publications/bf62e1189d3f068a42b9ef6227e2bab8)で、抄録を Oxford 神経科学部の出版物ページ(https://www.neuroscience.ox.ac.uk/publications/1341372)で照合。抄録で、感染ラットの猫への忌避が場合によって不用意な誘引に変わること、変化は選択的で他の行動と健康は保たれることを確認。数値は抄録になく、動画に出さない。PMC は確認画面で開けず、本文は未入手。反論として Worth, Thompson & Lymbery 2014(Adv Parasitol 85:109–142, DOI 10.1016/B978-0-12-800182-0.00003-9)のレビューを Murdoch 大学リポジトリの要旨(https://researchportal.murdoch.edu.au/esploro/outputs/journalArticle/Reevaluating-the-evidence-for-Toxoplasma-gondii-induced/991005543160407891)で確認し、行動変化の向き・大きさに一貫した傾向は見られないとあるため、caveat に入れた。BACKLOG 仮フックの「猫を怖がらなくなる」は「近づく？」の問いにし、模式図と明記。ヒトへの当てはめは扱わない。
+
+- **cook** (2026-11-07): 書誌(Fonseca-Azevedo & Herculano-Houzel / PNAS 109(45):18571–18576 / 2012 / DOI 10.1073/pnas.1206390109)と本文を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC3494886)で照合。BACKLOG 仮の論文(PNAS 109 Suppl 1:10661、同著者の総説)では調理の主張を扱わないため、調理仮説を扱う本論文に差し替えた。本文で、脳は約6 kcal/10億ニューロン、霊長類11種で採食1時間あたりの摂取エネルギーは体重の0.526乗、ヒトを含む760〜860億ニューロンのホモ属の生食は1日9時間超の採食が必要という見積もり、チンパンジーの報告採食時間6.8時間、1日10時間は仮定の上限、を確認。調理がこれをゆるめたことは著者の提案(probably/may/propose)で、他の要因も否定されない。動画の数字は 6.8時間・9時間超・10時間上限のみ。同著者の Herculano-Houzel 2012 総説の PMC は確認画面で開けず未使用。その後の研究・反論は未照合。

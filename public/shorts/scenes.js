@@ -1608,5 +1608,68 @@ S.push({
   }
 });
 
-window.SCENES=[S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'cook',pin:{t:12,text:'火を使った！'},hook:['料理が、人間の脳を','育てた？'],tag:'脳と食',dur:24,
+  title:'生で食べ続けると、1日が足りない',
+  beats:[
+    {t:0,text:'大きな脳は<b>エネルギー</b>を食う'},
+    {t:5,text:'生食だと、<b>食べる時間</b>が足りなくなる'},
+    {t:9,text:'ヒトの脳は、生食なら<b>1日9時間超</b>(見積もり)'},
+    {t:13,text:'そこに<b>火</b>。食べる時間が減る…という仮説'},
+    {t:19,text:'浮いた分が<b>脳</b>へ回った？'}
+  ],
+  more:'脳はニューロンの数に応じてエネルギーを使います。Fonseca-Azevedo と Herculano-Houzel(2012)は、霊長類の採食データから、生の食べ物だけでは1日に食べられる量に限りがあり、体の大きさと脳のニューロン数の合計に上限が出るというモデルを示しました。この見積もりでは、ヒトと同じ規模の脳を生食で支えるには、1日9時間を超える採食が必要になります。著者は、調理がこの制約をゆるめ、ホモ属で脳が大きくなるのを助けたのではないか、と提案しています。',
+  caveat:'これは模式図です。動きは実際のデータではありません。「9時間超」は、化石種のニューロン数と霊長類の採食データから推定した値で、1日の採食時間の上限(10時間)も仮定です。調理が脳を大きくしたことは、この論文が直接確かめたものではなく、著者の提案(仮説)です。ほかの要因(代謝の変化など)も否定されていません。本文で確認したのはモデルの数値と著者の言い方までで、その後の研究・反論は未照合です。',
+  source:{short:'Fonseca-Azevedo & Herculano-Houzel 2012, PNAS',cite:'Fonseca-Azevedo, K., & Herculano-Houzel, S. (2012). Metabolic constraint imposes tradeoff between body size and number of brain neurons in human evolution. Proceedings of the National Academy of Sciences, 109(45), 18571–18576. DOI 10.1073/pnas.1206390109',query:'Metabolic constraint imposes tradeoff between body size and number of brain neurons in human evolution'},
+  init(W,H){return{sp:mkStars(30,W,H*0.5,77)}},
+  draw(c,t,W,H,s){
+    const top=H*0.1,bot=H*0.56;
+    vgrad(c,0,0,W,H*0.62,[[0,'#14121c'],[1,'#26180f']]);
+    // 1日24時間の帯
+    const bx=24,bw=W-48,by=top+62,bh=22,hw=bw/24;
+    txt(c,'1日の採食時間(模式)',W/2,top+16,11,'rgba(235,225,210,0.9)','center');
+    c.fillStyle='rgba(255,255,255,0.07)';c.fillRect(bx,by,bw,bh);
+    c.strokeStyle='rgba(235,225,210,0.35)';c.strokeRect(bx,by,bw,bh);
+    let hrs;
+    if(t<5)hrs=mix(0,6.8,sm(t,0.5,4));
+    else if(t<9)hrs=6.8;
+    else if(t<12.5)hrs=mix(6.8,9.4,sm(t,9,10.8));
+    else hrs=mix(9.4,4,sm(t,13,17));
+    const raw=t<12.5;
+    c.fillStyle=raw?'rgba(150,200,120,0.9)':'rgba(255,170,80,0.9)';
+    c.fillRect(bx,by,hrs*hw,bh);
+    // 上限(仮定10時間)
+    c.strokeStyle='rgba(255,120,110,0.9)';c.setLineDash([3,3]);c.beginPath();c.moveTo(bx+10*hw,by-6);c.lineTo(bx+10*hw,by+bh+6);c.stroke();c.setLineDash([]);
+    txt(c,'上限の仮定 10時間',bx+10*hw,by+bh+16,9,'rgba(255,140,130,0.9)','center');
+    // 時間の数字
+    if(t>=10.5&&t<13)txt(c,'ヒトの脳・生食 9時間超(見積もり)',bx,by-12,10,'rgba(200,235,170,'+sm(t,10.5,11.2)+')','left');
+    if(t>=1&&t<6)txt(c,'チンパンジー 約6.8時間(報告値)',bx,by-12,10,'rgba(200,235,170,'+(1-sm(t,5,6))*sm(t,1,2)+')','left');
+    // 脳(下)
+    const cx=W/2,cy=top+(bot-top)*0.66;
+    const big=sm(t,6,11);
+    const r=mix(20,36,big);
+    const pulse=0.5+0.5*Math.sin(t*3);
+    c.globalCompositeOperation='lighter';glow(c,cx,cy,r*2.2,'255,170,110',0.14+0.12*big+0.08*pulse*(t>16?1:0));c.globalCompositeOperation='source-over';
+    c.fillStyle='rgba(240,150,170,0.9)';c.beginPath();c.ellipse(cx,cy,r*1.15,r,0,0,TAU);c.fill();
+    c.strokeStyle='rgba(120,40,60,0.55)';c.lineWidth=1.2;
+    for(let i=-1;i<=1;i++){c.beginPath();c.moveTo(cx-r*0.9,cy+i*r*0.4);c.quadraticCurveTo(cx,cy+i*r*0.4-r*0.3,cx+r*0.9,cy+i*r*0.4);c.stroke()}
+    txt(c,t<9?'脳(小)':'脳(大)',cx,cy+r+14,10,'rgba(255,200,210,0.9)','center');
+    // 火
+    if(t>=12){
+      const a=sm(t,12,12.8);const fx=W*0.2,fy=cy+8;
+      for(let i=0;i<14;i++){
+        const ph=(t*1.6+i*0.37)%1,x=fx+Math.sin(i*2.1+t*3)*6*(1-ph),y=fy-ph*30;
+        c.globalCompositeOperation='lighter';glow(c,x,y,10*(1-ph)+3,'255,'+(110+ph*90|0)+',50',0.6*(1-ph)*a);
+      }
+      c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(255,230,190,'+a+')';c.beginPath();c.arc(fx,fy+2,3,0,TAU);c.fill();
+      txt(c,'火・調理',fx,fy+22,10,'rgba(255,210,160,'+a+')','center');
+    }
+    if(t>=19){const a=sm(t,19,21);
+      c.strokeStyle='rgba(255,200,150,'+a+')';c.lineWidth=1.6;c.beginPath();c.moveTo(W*0.2+22,cy+6);c.lineTo(cx-r*1.3,cy);c.stroke();
+      txt(c,'浮いた時間とエネルギー(仮説)',W/2,bot-4,10,'rgba(255,215,170,'+a+')','center');}
+  }
+});
+
+window.SCENES=[S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
