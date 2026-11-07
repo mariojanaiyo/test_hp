@@ -57,7 +57,7 @@ const isMarker=([r,g,bl])=>r>200&&g<60&&bl>200;
   if(last<0){console.log('目印が映像に見つからない');process.exit(1)}
   const start=(last+1)/FPS;
   const dst=path.resolve(out,id+'.webm');
-  cp.execFileSync(ff,['-y','-ss',String(start),'-i',raw,'-t',String(dur/SPEED),'-c:v','libvpx-vp9','-b:v','4M','-an',dst],{stdio:'ignore'});
+  cp.execFileSync(ff,['-y','-ss',String(start),'-i',raw,'-t',String(dur/SPEED),'-c:v','libvpx-vp9','-b:v','3M','-an',dst],{stdio:'ignore'});
   fs.rmSync(tmp,{recursive:true,force:true});
   console.log(dst);console.log('start(s):',start.toFixed(2),'errors:',errs);
 })();
