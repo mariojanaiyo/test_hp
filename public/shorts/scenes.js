@@ -454,9 +454,9 @@ S.push({
     txt(c,'迷走神経',54,mix(s.by,gy,.45),10,'rgba(255,225,140,.85)','left');
     txt(c,'腸',330,gy-34,12,'rgba(255,190,200,.85)','center');
     const n=Math.round(38e12*sm(t,0.5,5)).toLocaleString('en-US');
-    txt(c,n,180,H*0.585,19,'rgba(200,255,225,'+(0.95*(1-sm(t,12,14)))+')','center',900);
-    txt(c,'個の腸内細菌',180,H*0.585+20,10,'rgba(200,255,225,'+(0.7*(1-sm(t,12,14)))+')','center');
-    if(t>16)txt(c,'腸でつくられる化学物質(セロトニンなど)',180,H*0.585,11,'rgba(225,175,255,'+sm(t,16,18)+')','center');
+    txt(c,n,180,H*0.645,19,'rgba(200,255,225,'+(0.95*(1-sm(t,12,14)))+')','center',900);
+    txt(c,'個の腸内細菌',180,H*0.645+20,10,'rgba(200,255,225,'+(0.7*(1-sm(t,12,14)))+')','center');
+    if(t>16)txt(c,'腸でつくられる化学物質(セロトニンなど)',180,H*0.645,11,'rgba(225,175,255,'+sm(t,16,18)+')','center');
   }
 });
 
@@ -888,14 +888,14 @@ S.push({
       txt(c,'遺伝子 +1',cx,cy+84,16,'rgba(240,220,255,'+fl+')','center',900);
     }
     // 脳パネル(受容体)
-    const bx=292,by=H*0.585;
+    const bx=292,by=H*0.645;
     c.strokeStyle='rgba(210,170,255,.5)';c.lineWidth=1.2;c.beginPath();c.ellipse(bx,by,34,22,0,0,TAU);c.stroke();
     const n=Math.round(4+22*sm(t,10.5,14));
     c.globalCompositeOperation='lighter';
     s.rec.slice(0,n).forEach(r=>glow(c,bx+Math.cos(r.a)*r.d*1.3,by+Math.sin(r.a)*r.d*.8,5,'200,140,255',0.6+0.4*Math.sin(t*3+r.p)));
     c.globalCompositeOperation='source-over';
     txt(c,'脳の受容体',bx,by+34,9,'rgba(220,190,255,.85)','center');
-    txt(c,t<10.5?'ふつうのオス':'遺伝子を足したオス',20,H*0.585,11,t<10.5?'rgba(190,200,255,.85)':'rgba(255,170,215,.95)','left');
+    txt(c,t<10.5?'ふつうのオス':'遺伝子を足したオス',20,H*0.645,11,t<10.5?'rgba(190,200,255,.85)':'rgba(255,170,215,.95)','left');
   }
 });
 
@@ -958,7 +958,7 @@ S.push({
       else{c.beginPath();c.ellipse(x,y,5.5,3.6,0,0,TAU);c.fill();c.strokeStyle='rgba(0,40,20,.55)';c.lineWidth=.8;c.beginPath();c.moveTo(x-2,y-3);c.lineTo(x-2,y+3);c.moveTo(x+1,y-3);c.lineTo(x+1,y+3);c.stroke()}
     });
     // ラベル/凡例
-    const ly=H*0.585;
+    const ly=H*0.645;
     c.fillStyle='#ffaa46';c.beginPath();c.arc(30,ly,4,0,TAU);c.fill();txt(c,'北の動物(ネコ・ウマ・シカなど)',40,ly,10,'rgba(255,215,160,.9)','left');
     c.fillStyle='#5ae68c';c.beginPath();c.arc(30,ly+18,4,0,TAU);c.fill();txt(c,'南の動物(アルマジロ・ナマケモノなど)',40,ly+18,10,'rgba(170,250,200,.9)','left');
     if(t>10.5)txt(c,'パナマの陸橋',204,(by0+by1)/2,10,'rgba(255,235,180,'+sm(t,10.5,12)+')','left');
@@ -1326,7 +1326,7 @@ S.push({
       sp:Array.from({length:14},(_,i)=>({a:r()*TAU,v:6+r()*10,t0:20+r()*2}))
     }},
   draw(c,t,W,H,s){
-    const top=H*0.12,fl=H*0.58,tx=70,lx=205,ly=top+(fl-top)*0.72;
+    const top=H*0.12,fl=H*0.64,tx=70,lx=205,ly=top+(fl-top)*0.72;
     vgrad(c,0,0,W,H,[[0,'#0c2a1b'],[0.7,'#06140d'],[1,'#030905']]);
     // 太陽(正午に最高点)
     const su=clamp((t-6)/16),sx=mix(250,340,su),sy=top+6+Math.sin(clamp((t-6)/16)*Math.PI)*-1*0+ (1-Math.sin(su*Math.PI))*26;
@@ -1591,5 +1591,52 @@ S.push({
   }
 });
 
-window.SCENES=[S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'avpr',pin:{t:14,text:'およそ2倍！'},hook:['人間にも、一途に','なる遺伝子が？'],tag:'遺伝子と行動のつながり',dur:24,
+  title:'ある遺伝子の型と、夫婦の「危機」の報告率',
+  beats:[
+    {t:0,text:'スウェーデンの<b>夫婦</b>を、遺伝子の型で2組に分けた'},
+    {t:5,text:'<b>男性</b>で、型A(334なし)は15%が危機を報告'},
+    {t:10,text:'型B(334が2つ)は、<b>34%</b>'},
+    {t:14,text:'<b>およそ2倍</b>の差が、見えた'},
+    {t:19,text:'ただし<b>男性だけ</b>、効果は小さく、因果は不明'}
+  ],
+  more:'ハタネズミでは、バソプレシン受容体の遺伝子が、つがいの絆に関わると言われています。スウェーデンの研究チームは、ヒトでも同じ遺伝子(AVPR1A)の型を調べ、パートナーとの絆の尺度と比べました。男性では、RS3の「334」という型を持つほど、絆の尺度の点が低く、過去1年に結婚の危機や離婚の話が出た人の割合が、334なしで15%、334が2つで34%でした。女性では関連は見られませんでした。',
+  caveat:'これは模式図です。点の並びは実際のデータではなく、割合だけを表しています。論文が示したのは「相関」で、遺伝子が原因とは言えません。効果は小さく(d=0.27〜0.38)、著者自身が「個人の行動は予測できない」と述べています。絆の尺度は新しく作られたもので、自己申告です。2025年の新婚夫婦70組の追試(Makhanova ら)では支持されず、逆向きの傾向も出ました(検索結果の要約で見たもので、論文は未確認)。私が確認できたのは PMC の本文の要約までで、本文の全文は未確認です。',
+  source:{short:'Walum et al. 2008, PNAS',cite:'Walum, H., Westberg, L., Henningsson, S., Neiderhiser, J.M., Reiss, D., Igl, W., Ganiban, J.M., Spotts, E.L., Pedersen, N.L., Eriksson, E. & Lichtenstein, P. (2008). Genetic variation in the vasopressin receptor 1a gene (AVPR1A) associates with pair-bonding behavior in humans. Proceedings of the National Academy of Sciences, 105(37), 14153–14156. doi:10.1073/pnas.0803081105',query:'Genetic variation in the vasopressin receptor 1a gene (AVPR1A) associates with pair-bonding behavior in humans'},
+  init(W,H){const r=rng(97);
+    const order=Array.from({length:100},(_,i)=>i);
+    for(let i=99;i>0;i--){const j=Math.floor(r()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+    return{rank:order.map((v,i)=>[v,i]).sort((a,b)=>a[0]-b[0]).map(x=>x[1])}},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H,[[0,'#241420'],[0.6,'#140b12'],[1,'#07040a']]);
+    const a=sm(t,0,1.2),gy=H*0.25,xs=[24,196],sp=13,n=10;
+    const panels=[{x:xs[0],name:'型A(334なし)',pct:15,t0:5,t1:9,col:'255,150,120'},
+                  {x:xs[1],name:'型B(334が2つ)',pct:34,t0:10,t1:14,col:'255,90,110'}];
+    txt(c,'男性の、結婚の危機の報告(過去1年)',W/2,H*0.19,12,'rgba(240,215,225,'+a*0.85+')','center');
+    panels.forEach(p=>{
+      txt(c,p.name,p.x+(n-1)*sp/2,gy-8,12,'rgba(235,205,220,'+a+')','center');
+      const k=Math.round(p.pct*sm(t,p.t0,p.t1));
+      for(let i=0;i<100;i++){
+        const cx=p.x+(i%n)*sp,cy=gy+14+Math.floor(i/n)*sp;
+        const on=s.rank[i]<k;
+        const ap=sm(t,0.05+i*0.02,0.5+i*0.02);
+        if(on){c.globalCompositeOperation='lighter';glow(c,cx,cy,9,p.col,0.55*ap);c.globalCompositeOperation='source-over';c.fillStyle='rgba('+p.col+','+ap+')'}
+        else c.fillStyle='rgba(190,170,200,'+0.4*ap+')';
+        c.beginPath();c.arc(cx,cy,on?3.6:2.8,0,TAU);c.fill();
+      }
+      if(t>=p.t0)txt(c,k+'%',p.x+(n-1)*sp/2,gy+14+n*sp+12,22,'rgba('+p.col+','+sm(t,p.t0,p.t0+1)+')','center',800);
+    });
+    if(t>=14){const e=sm(t,14,14.6)*(1-sm(t,15.4,16.8));
+      c.strokeStyle='rgba(255,200,215,'+e+')';c.lineWidth=1.6;
+      const px=xs[1]+(n-1)*sp/2,py=gy+14+(n-1)*sp/2;
+      c.beginPath();c.arc(px,py,60+30*sm(t,14,15.8),0,TAU);c.stroke()}
+    if(t>=14)txt(c,'差はおよそ2倍',W/2,H*0.64,14,'rgba(255,215,225,'+sm(t,14,15.5)+')','center');
+    if(t>=19){const b=sm(t,19,21);
+      txt(c,'女性では関連なし。相関であって原因ではない',W/2,H*0.64+30,11,'rgba(220,200,215,'+b+')','center');
+      txt(c,'追試で支持されなかった例もある',W/2,H*0.64+50,11,'rgba(220,200,215,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
