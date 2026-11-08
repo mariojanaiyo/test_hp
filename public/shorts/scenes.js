@@ -1638,5 +1638,70 @@ S.push({
   }
 });
 
-window.SCENES=[S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'whale',pin:{t:14,text:'海面に届いた！'},hook:['クジラのフンが、','海を育てる？'],tag:'クジラと海のつながり',dur:24,
+  title:'深い所で食べたものは、どこで海に戻る？',
+  beats:[
+    {t:0,text:'クジラは、<b>深い所</b>でエサを食べる'},
+    {t:5,text:'エサの<b>窒素</b>を体に入れ、浮上'},
+    {t:10,text:'息つぎのため、<b>海面近く</b>へ'},
+    {t:14,text:'<b>海面</b>で、フンが窒素を放つ'},
+    {t:19,text:'メイン湾で<b>川の合計より多い</b>と推定'}
+  ],
+  more:'植物プランクトンが育つには、窒素などの栄養が、光の届く海面近くに必要です。クジラは深い所でエサを食べ、息つぎのために海面へ戻り、そこでフンをします。アメリカのメイン湾での研究では、ザトウクジラのフンの跡から、アンモニウムが周りの海水より大幅に多く検出されました。さらに、クジラやアザラシが海面近くに戻す窒素は、年に約2万3千トンと見積もられ、これは湾に流れ込む川すべての合計より多い、と報告しています。',
+  caveat:'これは模式図です。クジラの動き、粒の数、色は実際のデータではありません。窒素の量は、フンの採取(16サンプル)と、個体数・食べる量などの仮定を使った計算による「見積もり」で、論文自身がフンの採取は定量的でないなどの限界を述べています。大気からの窒素は、現在はこれより多いとも書かれています。捕鯨の前はクジラの寄与がさらに大きかったと推定していますが、これも仮定に基づきます。私が確認できたのは PMC に載った本文の要点までで、全文の細部は未確認です。',
+  source:{short:'Roman & McCarthy 2010, PLoS ONE',cite:'Roman, J. & McCarthy, J.J. (2010). The whale pump: marine mammals enhance primary productivity in a coastal basin. PLoS ONE, 5(10), e13255. doi:10.1371/journal.pone.0013255',query:'The whale pump: marine mammals enhance primary productivity in a coastal basin'},
+  init(W,H){const r=rng(131);
+    return{krill:Array.from({length:26},()=>({x:20+r()*(W-40),y:0.50+r()*0.12,p:r()*6})),
+           plume:Array.from({length:40},()=>({a:r()*TAU,d:r(),v:0.4+r()*0.6})),
+           phy:Array.from({length:34},()=>({x:10+r()*(W-20),y:0.215+r()*0.09,p:r()*6}))}},
+  draw(c,t,W,H,s){
+    const top=H*0.18,bot=H*0.66;
+    vgrad(c,0,0,W,H,[[0,'#0a2a3a'],[0.35,'#082033'],[1,'#030a14']]);
+    // 光の帯
+    c.globalCompositeOperation='lighter';
+    const lg=c.createLinearGradient(0,top,0,top+H*0.2);lg.addColorStop(0,'rgba(120,220,200,0.16)');lg.addColorStop(1,'rgba(120,220,200,0)');
+    c.fillStyle=lg;c.fillRect(0,top,W,H*0.2);c.globalCompositeOperation='source-over';
+    // 海面
+    c.strokeStyle='rgba(170,235,230,0.55)';c.lineWidth=1.5;c.beginPath();
+    for(let x=0;x<=W;x+=6){const y=top+Math.sin(x*0.05+t*1.5)*1.6;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+    const a=sm(t,0,1.2);
+    txt(c,'光が届く海面近く',8,top+14,10,'rgba(190,240,230,'+a*0.8+')','left');
+    txt(c,'深い所(エサがある)',8,bot+6,10,'rgba(160,190,215,'+a*0.8+')','left');
+    // 植物プランクトン
+    const bloom=sm(t,15,20);
+    s.phy.forEach((p,i)=>{const on=i/34<0.2+0.8*bloom;const al=on?(0.35+0.45*Math.sin(t*2+p.p)**2):0.18;
+      const col=on&&bloom>0?'120,255,150':'110,150,130';
+      c.globalCompositeOperation='lighter';if(on&&bloom>0)glow(c,p.x,H*p.y+top*0.3,7,'120,255,150',0.4*bloom);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba('+col+','+al+')';c.beginPath();c.arc(p.x,H*p.y+top*0.3,1.8+1.2*(on?bloom:0),0,TAU);c.fill()});
+    // クジラの位置: 0-5 深い所で採食 / 5-12 浮上 / 12- 海面近く
+    const dive=sm(t,0,2),rise=sm(t,5,12);
+    const wx=W*0.5+Math.sin(t*0.5)*14,wy=mix(H*0.30,H*0.56,dive)-(H*0.56-H*0.28)*rise+(1-dive)*0;
+    const yy=t<5?mix(H*0.30,H*0.56,dive):mix(H*0.56,H*0.28,rise);
+    // 小さなエサ
+    s.krill.forEach(k=>{const eaten=t>3&&t<6&&Math.abs(k.x-wx)<60;if(t>=5&&k.x>0&&Math.abs(k.x-wx)<70)return;
+      const al=eaten?0.2:0.6;c.fillStyle='rgba(255,190,140,'+al*a+')';c.fillRect(k.x+Math.sin(t*2+k.p)*2,H*k.y+Math.cos(t*1.7+k.p)*2,2,2)});
+    // クジラ
+    c.save();c.translate(wx,yy);c.fillStyle='#5a7fa0';c.strokeStyle='rgba(180,220,255,0.5)';c.lineWidth=1;
+    c.beginPath();c.ellipse(0,0,46,15,-0.12*rise,0,TAU);c.fill();c.stroke();
+    c.beginPath();c.moveTo(42,-3);c.quadraticCurveTo(62,-8-Math.sin(t*2)*3,66,-16);c.quadraticCurveTo(58,-2,66,12);c.quadraticCurveTo(58,6,42,3);c.fill();
+    c.fillStyle='#0a1a28';c.beginPath();c.arc(-30,-3,1.6,0,TAU);c.fill();
+    c.restore();
+    // 窒素のしるし
+    if(t>=4&&t<12){const k=sm(t,4,6)*(1-sm(t,10,12)*0);txt(c,'N 窒素を体に',wx,yy+26,11,'rgba(255,215,150,'+k+')','center')}
+    // フンの雲(12〜)
+    if(t>=12){const e=sm(t,12,14);const px=wx-30,py=yy+16;
+      c.globalCompositeOperation='lighter';
+      s.plume.forEach(p=>{const u=sm(t,12.5,19)*p.v;const rr=u*70*Math.sqrt(p.d);const x=px+Math.cos(p.a)*rr*1.3,y=py+Math.sin(p.a)*rr*0.6-u*10;
+        c.fillStyle='rgba(150,255,170,'+0.55*e*(1-u*0.5)+')';c.beginPath();c.arc(x,y,2,0,TAU);c.fill();glow(c,x,y,8,'120,255,150',0.2*e)});
+      c.globalCompositeOperation='source-over'}
+    if(t>=14){const e=sm(t,14,14.6)*(1-sm(t,15.4,16.8));
+      c.strokeStyle='rgba(170,255,190,'+e+')';c.lineWidth=1.6;c.beginPath();c.arc(wx-30,yy+16,20+40*sm(t,14,15.8),0,TAU);c.stroke()}
+    if(t>=19){const b=sm(t,19,21);
+      txt(c,'栄養が戻り、プランクトンが育つ(模式)',W/2,H*0.74,12,'rgba(190,245,205,'+b+')','center');
+      txt(c,'窒素の量は、仮定を使った見積もり',W/2,H*0.74+22,11,'rgba(200,215,225,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
