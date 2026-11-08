@@ -1671,5 +1671,95 @@ S.push({
   }
 });
 
-window.SCENES=[S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'elephant',pin:{t:12,text:'落とした！'},hook:['ゾウの糞が、森の','木を決める？'],tag:'種子散布',dur:24,
+  title:'ゾウが運ぶ、森の種',
+  beats:[
+    {t:0,text:'ゾウは果実を、<b>種ごと</b>食べる'},
+    {t:5,text:'種は体内に<b>1日以上</b>とどまることがある'},
+    {t:10,text:'歩いた先で、<b>糞</b>といっしょに種を落とす'},
+    {t:15,text:'コンゴの森では、種の<b>88%</b>が1km超運ばれた'},
+    {t:20,text:'運ぶ植物は<b>451種</b>。森への効果は推定も多い'}
+  ],
+  more:'ゾウは果実を食べ、消化されなかった種を、遠く離れた場所で栄養のある糞とともに落とします。総説(Campos-Arceiz & Blake 2011)は、ゾウが散布する植物を451種(268属・73科)と整理し、コンゴのヌドキでは散布された種の88%が1km以上運ばれたと報告しています。ゾウが木の多様さを保つ役割をもつと著者は論じますが、ゾウがいなくなった影響は、直接測ったのではなく推定です。',
+  caveat:'これは模式図です。動きと距離は実際のデータではありません。88%はコンゴ・ヌドキの1か所の報告で、アジアのゾウでは平均1〜2kmなど、地域で大きく異なります。著者自身が、ゾウ不在時の比較データがなく、ゾウの影響の多くは推定だと述べ、ガーナでは結論と合わない結果も報告されています。「森の木を決める」とは言い切れないため、タイトルは「？」型にしています。',
+  source:{short:'Campos-Arceiz & Blake 2011, Acta Oecol',cite:'Campos-Arceiz, A., & Blake, S. (2011). Megagardeners of the forest – the role of elephants in seed dispersal. Acta Oecologica, 37(6), 542–553. https://doi.org/10.1016/j.actao.2011.01.014',query:'Megagardeners of the forest the role of elephants in seed dispersal'},
+  init(W,H){return{fire:mkStars(22,W,H*0.5,77)}},
+  draw(c,t,W,H,s){
+    const gy=H*0.5,top=H*0.1;
+    vgrad(c,0,0,W,H*0.62,[[0,'#0e1a1a'],[0.8,'#16301f'],[1,'#1d3a24']]);
+    // ホタル
+    s.fire.forEach(p=>{const a=0.25+0.35*Math.sin(t*p.f+p.p)**2;c.fillStyle='rgba(200,255,170,'+a+')';c.fillRect(p.x,p.y+top*0.3,p.s,p.s)});
+    // 地面
+    vgrad(c,0,gy,W,H*0.62-gy,[[0,'#2a2418'],[1,'#17130d']]);
+    // 果樹(左)
+    const tx=46;
+    c.fillStyle='#3a2a1a';c.fillRect(tx-4,gy-70,8,70);
+    c.fillStyle='#2f6b3a';[[0,-82,30],[-18,-70,22],[18,-70,22]].forEach(q=>{c.beginPath();c.arc(tx+q[0],gy+q[1],q[2],0,TAU);c.fill()});
+    const fruitLeft=1-sm(t,0.8,3.5);
+    c.fillStyle='#e8b04a';[[-12,-72],[8,-84],[16,-68],[-2,-64]].forEach((q,i)=>{if(i/4<fruitLeft+0.15||fruitLeft>0.6)c.beginPath(),c.arc(tx+q[0],gy+q[1],3,0,TAU),c.fill()});
+    // ゾウの位置
+    const ex0=tx+50,ex1=W*0.7;
+    const ex=t<4?ex0:t<12?mix(ex0,ex1,sm(t,4,12)):t<13?ex1:mix(ex1,W+70,sm(t,13,19));
+    const walk=(t>=4&&t<12)||t>=13;
+    const ph=t*5,bob=walk?Math.sin(ph)*1.2:0;
+    const sc=1.5;
+    c.save();c.translate(ex,gy+bob);c.scale(sc,sc);
+    c.fillStyle='#8e8a82';c.strokeStyle='#8e8a82';c.lineCap='round';c.lineJoin='round';
+    // 脚
+    c.lineWidth=7;[[-16,0],[-8,1.5],[10,3],[17,4.5]].forEach(l=>{const sw=walk?Math.sin(ph+l[1])*3:0;c.beginPath();c.moveTo(l[0],-20);c.lineTo(l[0]+sw,-1);c.stroke()});
+    // 胴
+    c.beginPath();c.ellipse(0,-30,26,17,0,0,TAU);c.fill();
+    // 頭・耳
+    c.beginPath();c.ellipse(26,-34,11,11,0,0,TAU);c.fill();
+    c.fillStyle='#77736c';c.beginPath();c.ellipse(20,-34,8,12,0.1,0,TAU);c.fill();
+    // 鼻(果実を食べる間は木へ)
+    const reach=t<4?Math.sin(clamp(t/4)*Math.PI):0;
+    c.strokeStyle='#8e8a82';c.lineWidth=5;
+    c.beginPath();c.moveTo(33,-30);c.quadraticCurveTo(40+8*reach,-14-30*reach,34+4*reach-reach*30,-4-reach*28);c.stroke();
+    c.fillStyle='#222';c.beginPath();c.arc(31,-38,1.3,0,TAU);c.fill();
+    c.restore();
+    // 体内の種(光る点)
+    if(t>=3){
+      const a=sm(t,3,4.5)*(1-sm(t,12,13.5));
+      for(let i=0;i<7;i++){
+        const u=((t*0.25+i/7)%1);
+        const sx=ex+(-20+u*30)*sc,sy=gy-30*sc+Math.sin(i*2.1+t)*5;
+        c.globalCompositeOperation='lighter';glow(c,sx,sy,7,'255,225,120',0.65*a);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba(255,235,150,'+a+')';c.beginPath();c.arc(sx,sy,1.8,0,TAU);c.fill();
+      }
+    }
+    // 糞と芽
+    const dx=ex1-38*sc;
+    if(t>=11.5){
+      const a=sm(t,11.5,12.5);
+      const dy=mix(gy-26*sc,gy-4,sm(t,11.5,12.4));
+      c.fillStyle='rgba(70,48,28,'+a+')';
+      c.beginPath();c.ellipse(dx,dy,10,5,0,0,TAU);c.fill();
+      c.beginPath();c.ellipse(dx-6,dy+1,6,3.5,0,0,TAU);c.fill();
+      c.globalCompositeOperation='lighter';glow(c,dx,gy-6,16,'255,225,120',0.4*a);c.globalCompositeOperation='source-over';
+      const g=sm(t,13,18);
+      if(g>0){
+        c.strokeStyle='#7be07a';c.lineWidth=2;
+        [[-6,0.8],[0,1],[6,0.7]].forEach((q,i)=>{
+          const h=q[1]*g*30;
+          c.beginPath();c.moveTo(dx+q[0],gy-4);c.lineTo(dx+q[0],gy-4-h);c.stroke();
+          c.fillStyle='#7be07a';c.beginPath();c.ellipse(dx+q[0]-3,gy-4-h,4,2,-0.5,0,TAU);c.ellipse(dx+q[0]+3,gy-4-h+2,4,2,0.5,0,TAU);c.fill();
+        });
+      }
+    }
+    // 距離の矢印(模式)
+    if(t>=14){
+      const a=sm(t,14,15.5);
+      c.strokeStyle='rgba(255,230,160,'+a+')';c.lineWidth=1.5;c.setLineDash([4,4]);
+      const ay=gy+16;c.beginPath();c.moveTo(tx,ay);c.lineTo(dx,ay);c.stroke();c.setLineDash([]);
+      c.beginPath();c.moveTo(dx,ay);c.lineTo(dx-6,ay-4);c.lineTo(dx-6,ay+4);c.closePath();c.fillStyle='rgba(255,230,160,'+a+')';c.fill();
+      txt(c,'1km超(模式)',(tx+dx)/2,ay+14,10,'rgba(255,230,160,'+a+')','center');
+    }
+    if(t>=15.5){const a=sm(t,15.5,17);txt(c,'88%が1km超',W/2,top+12,13,'rgba(255,235,170,'+a+')','center');txt(c,'(コンゴ・ヌドキの報告)',W/2,top+28,9,'rgba(220,235,200,'+a+')','center')}
+    if(t>=20){const a=sm(t,20,21.5);const n=Math.round(451*sm(t,20,22.5));txt(c,n+'種',W/2,top+52,20,'rgba(160,240,160,'+a+')','center');txt(c,'運ぶ植物(報告)',W/2,top+72,10,'rgba(200,230,200,'+a+')','center')}
+  }
+});
+
+window.SCENES=[S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
