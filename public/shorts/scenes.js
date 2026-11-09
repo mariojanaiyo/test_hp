@@ -1761,5 +1761,67 @@ S.push({
   }
 });
 
-window.SCENES=[S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'pairbond',pin:{t:12,text:'ずれが出た！'},hook:['一途の遺伝子は、','人間にもある？'],tag:'愛の科学',dur:24,
+  title:'ネズミの遺伝子を、人でも調べた',
+  beats:[
+    {t:0,text:'ハタネズミの絆は、<b>受容体の遺伝子</b>と関わる'},
+    {t:5,text:'ヒトにも似た遺伝子 <b>AVPR1A</b> がある'},
+    {t:9,text:'男性の<b>型のちがい</b>と、絆の強さが対応した'},
+    {t:14,text:'ただし差は<b>小さい</b>(著者も「modest」)'},
+    {t:19,text:'のちの研究では、<b>逆向き</b>の結果も'}
+  ],
+  more:'ハタネズミでは、バソプレシン受容体の遺伝子まわりの違いが、パートナーへの絆の強さと関わると報告されていました。Walumら(2008)は、スウェーデンの双子とそのパートナーのデータで、ヒトの同じ遺伝子の繰り返し配列(RS3)の型を調べました。男性では、型の違いが、パートナーへの絆の自己評価・夫婦の問題・婚姻状況と対応し、妻による結婚満足度の評価とも対応しました。',
+  caveat:'これは模式図です。点の位置は実際のデータではありません。論文が示したのは遺伝子の型と回答の「対応(相関)」で、遺伝子が恋愛や一途さを決めるという証明ではありません。著者自身も影響は小さく、将来の関係を予測できないと述べています(研究機関の解説による)。男性での結果で、女性への当てはめはしていません。のちの Makhanova ら(2025, Front Psychol, 新婚70組)は、予想と逆向きの結果を報告し、小さなサンプルの候補遺伝子研究の限界を挙げています。確認したのは Walum 論文の抄録までで、本文は未入手です。',
+  source:{short:'Walum et al. 2008, PNAS',cite:'Walum, H., Westberg, L., Henningsson, S., Neiderhiser, J. M., Reiss, D., Igl, W., Ganiban, J. M., Spotts, E. L., Pedersen, N. L., Eriksson, E., & Lichtenstein, P. (2008). Genetic variation in the vasopressin receptor 1a gene (AVPR1A) associates with pair-bonding behavior in humans. Proceedings of the National Academy of Sciences, 105(37), 14153–14156. DOI 10.1073/pnas.0803081105 / 反論: Makhanova et al. (2025). Front Psychol 16:1303065',query:'Genetic variation in the vasopressin receptor 1a gene (AVPR1A) associates with pair-bonding behavior in humans'},
+  init(W,H){
+    const r=rng(2008),g=()=>(r()+r()+r()-1.5)/1.5;
+    return{a:Array.from({length:22},()=>({x:g(),y:r()})),b:Array.from({length:22},()=>({x:g(),y:r()}))};
+  },
+  draw(c,t,W,H,s){
+    const top=H*0.1,bot=H*0.56;
+    vgrad(c,0,0,W,H*0.62,[[0,'#150f1c'],[1,'#26141f']]);
+    // 遺伝子の帯
+    const gy=top+22,gx=40,gw=W-80,n=16,bw=gw/n;
+    txt(c,'AVPR1A(バソプレシン受容体の遺伝子)',W/2,top+4,10,'rgba(235,215,225,0.9)','center');
+    for(let i=0;i<n;i++){
+      const rep=i>=5&&i<=10;
+      c.fillStyle=rep?'rgba(255,140,170,0.9)':'rgba(255,255,255,0.14)';
+      c.fillRect(gx+i*bw+1,gy,bw-2,10);
+    }
+    txt(c,'繰り返し(RS3)',gx+8*bw,gy+22,9,'rgba(255,170,190,0.9)','center');
+    // ハタネズミ
+    const va=sm(t,0,1);
+    const vx=W*0.2,vy=top+88;
+    c.fillStyle='rgba(210,190,170,'+va+')';c.beginPath();c.ellipse(vx,vy,16,10,0,0,TAU);c.fill();
+    c.beginPath();c.arc(vx+15,vy-3,6,0,TAU);c.fill();c.beginPath();c.arc(vx+13,vy-9,2.6,0,TAU);c.fill();
+    txt(c,'ハタネズミ',vx,vy+20,10,'rgba(235,215,225,'+va+')','center');
+    // ヒト
+    const ha=sm(t,5,6.2);
+    const hx=W*0.8,hy=top+88;
+    c.fillStyle='rgba(190,215,255,'+ha+')';c.beginPath();c.arc(hx,hy-12,7,0,TAU);c.fill();
+    c.beginPath();c.ellipse(hx,hy+6,10,13,0,0,TAU);c.fill();
+    txt(c,'ヒト(男性)',hx,hy+30,10,'rgba(200,220,255,'+ha+')','center');
+    if(ha>0){c.strokeStyle='rgba(255,170,190,'+(0.6*ha)+')';c.setLineDash([4,4]);c.beginPath();c.moveTo(vx+28,vy);c.lineTo(hx-22,hy);c.stroke();c.setLineDash([]);
+      txt(c,'似た遺伝子',W/2,vy-8,10,'rgba(255,190,205,'+ha+')','center');}
+    // 点の分布
+    if(t>=9){
+      const da=sm(t,9,10.5);
+      const ay=top+(bot-top)*0.7,ax0=34,ax1=W-34,cx=W/2;
+      c.strokeStyle='rgba(255,255,255,'+(0.35*da)+')';c.beginPath();c.moveTo(ax0,ay+36);c.lineTo(ax1,ay+36);c.stroke();
+      txt(c,'← 絆が弱い(模式)',ax0,ay+48,9,'rgba(235,215,225,'+da+')','left');
+      txt(c,'絆が強い →',ax1,ay+48,9,'rgba(235,215,225,'+da+')','right');
+      const shift=t<12?0:(t<19?-sm(t,12,13.5)*16:mix(-16,16,sm(t,19,21)));
+      s.a.forEach(p=>{c.fillStyle='rgba(150,220,170,'+(0.85*da)+')';c.beginPath();c.arc(cx+p.x*105,ay-8+p.y*14,2.6,0,TAU);c.fill()});
+      s.b.forEach(p=>{c.fillStyle='rgba(255,140,170,'+(0.85*da)+')';c.beginPath();c.arc(cx+shift+p.x*105,ay+10+p.y*14,2.6,0,TAU);c.fill()});
+      txt(c,'型A',ax0,ay-2,10,'rgba(160,230,180,'+da+')','left');
+      txt(c,'型B',ax0,ay+17,10,'rgba(255,160,185,'+da+')','left');
+      const ma=sm(t,12,13);
+      if(t>=12&&t<19)txt(c,'わずかなずれ(模式)',W/2,ay-28,10,'rgba(255,215,225,'+ma+')','center');
+      if(t>=19)txt(c,'2025 新婚70組:逆向き',W/2,ay-28,10,'rgba(255,215,160,'+sm(t,19,20)+')','center');
+    }
+  }
+});
+
+window.SCENES=[S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
