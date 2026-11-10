@@ -1703,5 +1703,64 @@ S.push({
   }
 });
 
-window.SCENES=[S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'seastar',pin:{t:14,text:'貝が広がった！'},hook:['ヒトデを取り除くと、','岩場はどうなる？'],tag:'岩場の生き物のつながり',dur:24,
+  title:'捕食者を外すと、岩の表面はどうなる？',
+  beats:[
+    {t:0,text:'岩の表面に、<b>15種</b>ほどがすむ'},
+    {t:5,text:'<b>ヒトデ</b>が、貝(イガイ)を食べる'},
+    {t:8,text:'ヒトデを、<b>岩から取り除く</b>'},
+    {t:12,text:'<b>貝</b>が広がり、岩をおおう'},
+    {t:18,text:'岩の表面の種は<b>15→8種</b>'}
+  ],
+  more:'アメリカ西海岸の岩場で、ヒトデ(Pisaster)は貝(カリフォルニアイガイ)をよく食べます。研究者は、幅約8mの岩場からヒトデを取り除き、何が起きるかを観察しました。すると、貝がどんどん広がって岩を占め、岩に直接つく生き物は15種から8種に減りました。ヒトデは、ひとつの種が場所を独占するのを防いでいたのだ、と考えられました。のちにこの考え方は「キーストーン種」の元になりました。',
+  caveat:'これは模式図です。マスの数・色・広がり方は実際のデータではありません。論文の記述は、1つの区画での予備的な観察で、数えたのは岩に直接つく生き物(15→8種)です。のちの再検討(Lafferty & Suchanek 2016)は、貝の層そのものが300種以上の住みかになるため、岩の表面以外も含めた全体の種数は、ヒトデがいないほうが増えると指摘しています。私が確認できたのは、この再検討論文の本文までで、1966年の原論文そのものは開けず未確認です。',
+  source:{short:'Paine 1966, Am Nat',cite:'Paine, R.T. (1966). Food web complexity and species diversity. The American Naturalist, 100(910), 65-75. doi:10.1086/282400 / 再検討: Lafferty, K.D. & Suchanek, T.H. (2016). Am Nat 188(4):365-378. doi:10.1086/688045',query:'Food web complexity and species diversity Paine 1966'},
+  init(W,H){const r=rng(66);
+    const cols=12,rows=6,n=cols*rows;
+    const sp=Array.from({length:n},(_,i)=>i%15);
+    for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[sp[i],sp[j]]=[sp[j],sp[i]]}
+    const seen={};
+    const cells=sp.map((k,i)=>{const row=Math.floor(i/cols)+1,col=i%cols;
+      let keep=false;if(k<8&&!seen[k]){seen[k]=1;keep=true}
+      const cv=keep?999:(k<8?10.5+row*1.1+r()*3.5:10+row*0.8+r()*3);
+      return{k,row,col,cv,jx:(r()-0.5)*2,jy:(r()-0.5)*2}});
+    return{cols,rows,cells}},
+  draw(c,t,W,H,s){
+    const gx=12,gw=W-24,cw=gw/s.cols,gy=H*0.27,ch=Math.min(30,(H*0.62-gy)/(s.rows+1));
+    vgrad(c,0,0,W,H,[[0,'#101820'],[1,'#05080c']]);
+    c.fillStyle='#2a2622';c.fillRect(gx-4,gy-ch-4,gw+8,ch*(s.rows+1)+8);
+    const hue=k=>'hsl('+(k*24+10)+',70%,'+(55+(k%3)*5)+'%)';
+    // 上の帯: 貝
+    const mussel=(x,y,w,h,a)=>{c.fillStyle='rgba(30,40,85,'+a+')';c.beginPath();c.ellipse(x,y,w,h,0,0,TAU);c.fill();
+      c.strokeStyle='rgba(150,170,230,'+0.5*a+')';c.lineWidth=0.8;c.stroke()};
+    for(let i=0;i<s.cols;i++)mussel(gx+cw*(i+0.5),gy-ch*0.5,cw*0.46,ch*0.4,1);
+    // 岩の表面の生き物
+    const alive={};let n=0;
+    s.cells.forEach(e=>{const x=gx+cw*(e.col+0.5),y=gy+ch*(e.row-0.5);
+      const m=sm(t,e.cv,e.cv+1.3);
+      if(m<0.5){if(!alive[e.k]){alive[e.k]=1;n++}}
+      const base=Math.min(cw,ch)*0.42*(1-m);
+      if(base>0.4){c.fillStyle=hue(e.k);c.beginPath();c.arc(x+e.jx,y+e.jy,base,0,TAU);c.fill()}
+      if(m>0)mussel(x,y,cw*0.5*m,ch*0.46*m,0.95)});
+    // 種数
+    txt(c,'岩の表面にすむ種: '+n,W/2,gy-ch-22,13,'rgba(255,235,200,'+sm(t,0,1)+')','center');
+    // ヒトデ
+    const star=(x,y,R,rot,a)=>{c.save();c.globalAlpha=a;c.translate(x,y);c.rotate(rot);c.fillStyle='#ff8a3d';c.strokeStyle='#ffd0a0';c.lineWidth=1;
+      c.beginPath();for(let i=0;i<10;i++){const rr=i%2?R*0.42:R,an=-Math.PI/2+i*Math.PI/5;i?c.lineTo(Math.cos(an)*rr,Math.sin(an)*rr):c.moveTo(Math.cos(an)*rr,Math.sin(an)*rr)}
+      c.closePath();c.fill();c.stroke();c.restore()};
+    if(t<10.5){const lift=sm(t,8,10.2);
+      const sx=W*0.5+Math.sin(t*0.7)*W*0.34*(1-lift*0.8),sy=gy+ch*0.5-lift*70;
+      c.globalCompositeOperation='lighter';glow(c,sx,sy,26,'255,140,60',0.25*(1-lift));c.globalCompositeOperation='source-over';
+      star(sx,sy,15,t*0.4+lift*3,1-sm(t,9.4,10.5));
+      if(t<8)txt(c,'ヒトデ',sx,sy+26,11,'rgba(255,200,150,'+sm(t,1,2)+')','center')}
+    if(t>=8&&t<12){const a=sm(t,8,8.8)*(1-sm(t,11,12));txt(c,'ヒトデを取り除く',W/2,gy+ch*(s.rows+1)+18,13,'rgba(255,215,170,'+a+')','center')}
+    if(t>=10&&t<18){const a=sm(t,10,11)*(1-sm(t,17,18));txt(c,'貝(イガイ)が広がる',W/2,gy+ch*(s.rows+1)+18,13,'rgba(170,190,255,'+a+')','center')}
+    if(t>=19){const b=sm(t,19,21);
+      txt(c,'岩に直接つく種が、15から8に(模式)',W/2,gy+ch*(s.rows+1)+18,12,'rgba(230,235,245,'+b+')','center');
+      txt(c,'貝の層の中の生き物は、数えていない',W/2,gy+ch*(s.rows+1)+38,11,'rgba(190,200,215,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();

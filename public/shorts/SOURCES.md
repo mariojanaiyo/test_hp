@@ -54,3 +54,6 @@
 
 - **whale** (2026-11-09): 書誌(Roman & McCarthy / PLoS ONE 5(10):e13255 / DOI 10.1371/journal.pone.0013255 / PMID 20949007 / 2010-10-11)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC2952594)の本文で照合。ザトウクジラのフン16サンプルでアンモニウムが対照の海水より大幅に高い。クジラ・アザラシ・海鳥の窒素回帰は年約2.3×10^4トンで川の合計(8×10^8 mol)より多いが、大気(93×10^8 mol)よりは少ない。捕鯨前は大気の3倍超と推定。フンの採取は定量的でない等、著者が限界を明記。反論・追試の検索は未実施。状態: 主張確認済み(PMC本文の要点まで)。
   YouTube: 未投稿(2026-11-09。接続中のブラウザ2台は別チャンネル(2family / いなとぴ_INTP)でログイン中で、toriaezu_test には権限なし)。録画: shorts_video/whale.webm
+
+- **seastar** (2026-11-10): 書誌(Paine / Am Nat 100(910):65-75 / DOI 10.1086/282400 / 1966)。原論文は出版社ページ403・PubMed cookie で開けず未入手。代わりに、Paine の実験を詳しく再検討した Lafferty & Suchanek 2016(Am Nat 188(4):365-378、DOI 10.1086/688045、PDF全文 https://polydora.github.io/General-ecology/Literature/Paine-1966-Revisit.pdf)の本文で照合。Mukkaw(現Makah)湾で幅8m×高さ2mの区画からテコでヒトデを外し、貝(Mytilus californianus)が広がり、岩に直接つく種が15から8に(Paine p.70)。1区画の予備的観察。貝の層は300種以上の住みかで、全体の種数はむしろ増える、との指摘を caveat に記載。他の資料に16→8や5年で貝のみ等の食い違いがあり、動画は15→8のみ。状態: 主張確認済み(再検討論文の本文まで。原論文は未確認)。
+
