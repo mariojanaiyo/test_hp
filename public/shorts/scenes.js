@@ -1823,5 +1823,82 @@ S.push({
   }
 });
 
-window.SCENES=[S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'neander',pin:{t:12,text:'こっちが近い！'},hook:['私たちのDNAに、','別の人類が混ざる？'],tag:'人類のつながり',dur:24,
+  title:'ネアンデルタール人のゲノムを、現代人と比べた',
+  beats:[
+    {t:0,text:'ネアンデルタール人の骨から<b>ゲノム</b>を読んだ'},
+    {t:5,text:'現代人<b>5人</b>(アフリカ系2・非アフリカ系3)と比べる'},
+    {t:9,text:'非アフリカ系のほうが、<b>共有する変異が多かった</b>'},
+    {t:14,text:'非アフリカ人ゲノムの<b>1〜4%</b>が由来と推定'},
+    {t:19,text:'ただし<b>別の説明</b>も、著者自身が挙げる'}
+  ],
+  more:'Greenら(2010)は、クロアチアのヴィンディヤ洞窟で見つかった3人のネアンデルタール人の骨から、40億塩基以上の配列を読み、現代人5人(サン、ヨルバ、パプア、漢、フランス)のゲノムと比べました。ネアンデルタール人は、サハラ以南のアフリカの人より、ユーラシアの人と多くの変異を共有していました。著者らは、ネアンデルタール人から、非アフリカ人の祖先へ遺伝子が流れた(交雑があった)と考え、現代の非アフリカ人のゲノムの1〜4%に当たると推定しています。',
+  caveat:'これは模式図です。ます目の数や位置は実際のデータではありません。1〜4%はモデルの仮定(遺伝子が流れた時期など)に依存する推定で、論文の別の解析(S統計)では1.3〜2.7%でした。著者らは、アフリカ内の古い集団構造でも同じ傾向が説明できるかもしれないと認めています(交雑説と矛盾しない、という書き方)。交雑の場所は、中東で起きた可能性を著者が一案として挙げた程度です。確認したのは論文の本文までで、のちの追加研究は確認していません。',
+  source:{short:'Green et al. 2010, Science',cite:'Green, R. E., Krause, J., Briggs, A. W., et al. (2010). A draft sequence of the Neandertal genome. Science, 328(5979), 710–722. DOI 10.1126/science.1188021',query:'A draft sequence of the Neandertal genome Green 2010'},
+  init(W,H){return{}},
+  draw(c,t,W,H,s){
+    const top=H*0.1;
+    vgrad(c,0,0,W,H*0.62,[[0,'#0d1220'],[1,'#1c1426']]);
+    const NV=[2,5,7,10,13,16];       // ネアンデルタール人の変異(模式)
+    const AF=[2,10];                 // アフリカ系と一致(模式)
+    const EU=[2,5,10,13,16];         // 非アフリカ系と一致(模式)
+    const x0=100,cw=13,n=18;
+    const y1=top+80,y2=top+132;
+    const ox=50,oy=top+106;
+    // ネアンデルタール人(光の玉)
+    const oa=sm(t,0,1.2);
+    c.globalCompositeOperation='lighter';glow(c,ox,oy,46+4*Math.sin(t*2),'255,170,70',0.55*oa);c.globalCompositeOperation='source-over';
+    c.fillStyle='rgba(255,200,120,'+oa+')';c.beginPath();c.arc(ox,oy,10,0,TAU);c.fill();
+    txt(c,'ネアンデルタール人',ox+4,oy+30,10,'rgba(255,215,160,'+oa+')','center');
+    txt(c,'(クロアチアの骨3人分)',ox+4,oy+44,8,'rgba(255,215,160,'+(0.8*oa)+')','center');
+    // 行
+    const ra=sm(t,4.5,6);
+    txt(c,'アフリカ系 2人',x0,y1-16,10,'rgba(170,235,190,'+ra+')','left');
+    txt(c,'非アフリカ系 3人',x0,y2-16,10,'rgba(160,200,255,'+ra+')','left');
+    for(let i=0;i<n;i++){
+      c.fillStyle='rgba(255,255,255,'+(0.14*ra)+')';
+      c.fillRect(x0+i*cw,y1-6,cw-2,12);c.fillRect(x0+i*cw,y2-6,cw-2,12);
+    }
+    // 一致を灯す
+    if(t>=8.5){
+      const rows=[[AF,y1,'255,190,90'],[EU,y2,'255,190,90']];
+      rows.forEach((r,ri)=>{
+        r[0].forEach((idx,k)=>{
+          const st=9+ri*0.4+k*0.55,a=sm(t,st,st+0.5);
+          if(a<=0)return;
+          const x=x0+idx*cw+(cw-2)/2;
+          c.strokeStyle='rgba(255,190,90,'+(0.25*a)+')';c.lineWidth=1;
+          c.beginPath();c.moveTo(ox+12,oy);c.lineTo(x,r[1]);c.stroke();
+          c.globalCompositeOperation='lighter';glow(c,x,r[1],14,r[2],0.6*a);c.globalCompositeOperation='source-over';
+          c.fillStyle='rgba('+r[2]+','+a+')';c.fillRect(x-(cw-2)/2,r[1]-6,cw-2,12);
+        });
+      });
+      const la=sm(t,12,13.5);
+      if(t<14){
+        txt(c,'一致が少ない(模式)',x0+n*cw-2,y1-16,9,'rgba(255,215,160,'+la+')','right');
+        txt(c,'一致が多い(模式)',x0+n*cw-2,y2-16,9,'rgba(255,215,160,'+la+')','right');
+      }
+    }
+    // 1〜4%
+    if(t>=14){
+      const ba=sm(t,14,15.5),by=top+206,bw=n*cw-2;
+      c.fillStyle='rgba(255,255,255,'+(0.14*ba)+')';c.fillRect(x0,by,bw,12);
+      c.globalCompositeOperation='lighter';glow(c,x0+4,by+6,16,'255,170,70',0.7*ba);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(255,190,90,'+ba+')';c.fillRect(x0,by,6,12);
+      txt(c,'非アフリカ人のゲノム全体',x0,by-12,10,'rgba(200,220,255,'+ba+')','left');
+      txt(c,'ネアンデルタール由来 1〜4%(推定・図は模式)',x0,by+26,9,'rgba(255,215,160,'+ba+')','left');
+    }
+    // 別の説明
+    if(t>=19){
+      const qa=sm(t,19,20.5);
+      c.setLineDash([4,4]);c.strokeStyle='rgba(255,215,160,'+(0.6*qa)+')';c.lineWidth=1;
+      c.strokeRect(28,top+256,W-56,40);c.setLineDash([]);
+      txt(c,'アフリカ内の古い集団構造でも',W/2,top+270,10,'rgba(255,230,190,'+qa+')','center');
+      txt(c,'同じ傾向が説明できるかも(著者)',W/2,top+286,10,'rgba(255,230,190,'+qa+')','center');
+    }
+  }
+});
+
+window.SCENES=[S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
