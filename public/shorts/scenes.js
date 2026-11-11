@@ -1900,5 +1900,97 @@ S.push({
   }
 });
 
-window.SCENES=[S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'beaver',pin:{t:12,text:'池ができた！'},hook:['ビーバーのダムは、','川を作り変える？'],tag:'生態系の改変',dur:24,
+  title:'ビーバーが、川を作り変える',
+  beats:[
+    {t:0,text:'ビーバーは、川に<b>ダム</b>を作る'},
+    {t:5,text:'水がたまり、<b>池</b>ができる'},
+    {t:9.5,text:'小さなダムが、土砂<b>2,000〜6,500m³</b>をためた例も'},
+    {t:15,text:'ミネソタの半島で、ダムは<b>71→835</b>(1940→86年)'},
+    {t:20,text:'池の無脊椎動物は、流れの場所の<b>2〜5倍</b>になりうる'}
+  ],
+  more:'ビーバーは川に木の枝でダムを作り、水をためて池にします。Naimanら(1988)の総説は、北米の川でこの池が土砂や炭素・窒素をためこみ、まわりの植生も変えると整理しています。ミネソタのカバトゲマ半島では、ダムが1940年の71から1986年の835に増え、池になった面積は半島の1%未満から13%になりました。小さなダム(木材4〜18m³)が土砂2,000〜6,500m³をためた例や、池の水生無脊椎動物が流れの速い場所の2〜5倍にもなりうるという報告も紹介されています。',
+  caveat:'これは模式図です。ビーバーの動き、ダムの位置、池の広がりは実際のデータではありません。数字は総説が紹介する報告で、ダムの数と池の面積はミネソタのカバトゲマ半島、土砂の例とその他は別の地域・研究のものです。池の動物の「2〜5倍」は「なりうる(may be)」という書き方で、どの川でもそうとは限りません。著者自身も、ビーバーの活動どうしがどう影響し合うかは「まだ分からない」と述べています。確認したのは本文PDFで、抄録はない論文です。',
+  source:{short:'Naiman, Johnston & Kelley 1988, BioScience',cite:'Naiman, R. J., Johnston, C. A., & Kelley, J. C. (1988). Alteration of North American streams by beaver. BioScience, 38(11), 753–762.',query:'Alteration of North American Streams by Beaver Naiman Johnston Kelley 1988'},
+  init(W,H){
+    const r=rng(2468),dots=[];
+    for(let i=0;i<835;i++){const a=r()*TAU,d=Math.sqrt(r());dots.push({x:Math.cos(a)*d,y:Math.sin(a)*d,s:3+r()*5})}
+    const fl=[];for(let i=0;i<46;i++)fl.push({x:r()*W,y:r(),v:0.5+r()*0.5});
+    const sed=[];for(let i=0;i<22;i++)sed.push({x:70+r()*130,p:r()*6,v:0.4+r()*0.6});
+    return{dots,fl,sed};
+  },
+  draw(c,t,W,H,s){
+    const top=H*0.1;
+    vgrad(c,0,0,W,H*0.62,[[0,'#0d1a24'],[0.7,'#142a2a'],[1,'#1a3326']]);
+    const A=1-sm(t,12.6,14),B=sm(t,13.2,14.6);
+    // ---- 前半: 川とダム(横から) ----
+    if(A>0.01){
+      c.save();c.globalAlpha=A;
+      const gy=top+215,dx=210;
+      const dh=sm(t,1.5,7)*52;           // ダムの高さ
+      const lvl=sm(t,5.5,11.5)*46;       // 池の水位
+      // 川底
+      vgrad(c,0,gy,W,H*0.62-gy,[[0,'#2c2418'],[1,'#17130d']]);
+      // 池
+      const wl=gy-6-lvl;
+      if(lvl>0.5){c.fillStyle='rgba(60,130,190,0.35)';c.fillRect(24,wl,dx-24,gy-wl)}
+      // 流れの粒(ダムができると、上流側は遅くなる)
+      s.fl.forEach(p=>{
+        const slow=t>6?1-0.8*sm(t,6,9):1;
+        const x=((p.x+t*30*p.v*slow)%W);
+        const upstream=x<dx;
+        if(x>dx-4&&x<dx+10&&dh>6)return;
+        const y=upstream?mix(gy-4,wl+4,p.y):gy-4-p.y*6;
+        c.fillStyle='rgba(140,200,255,'+(upstream&&lvl>1?0.35:0.5)+')';c.fillRect(x,y,2,1.5);
+      });
+      // 沈む土砂
+      if(t>8){const k=sm(t,8,12);
+        s.sed.forEach(p=>{const u=((t*0.25*p.v+p.p/6)%1);const y=mix(wl,gy-4,u);
+          c.fillStyle='rgba(190,150,100,'+(0.7*k)+')';c.fillRect(p.x,y,2,2)});
+        const sh=k*9;c.fillStyle='rgba(176,138,92,'+(0.8*k)+')';
+        c.beginPath();c.moveTo(24,gy);c.lineTo(24,gy-sh*0.3);c.quadraticCurveTo(dx*0.6,gy-sh*0.6,dx,gy-sh);c.lineTo(dx,gy);c.fill();
+      }
+      // ダム(木の枝)
+      if(dh>0.5){
+        c.strokeStyle='#6a4a2a';c.lineWidth=3;c.lineCap='round';
+        for(let i=0;i<14;i++){const f=i/14,y=gy-3-f*dh;c.beginPath();c.moveTo(dx-9+((i*7)%5),y);c.lineTo(dx+9-((i*5)%4),y-2+((i*3)%3));c.stroke()}
+      }
+      // 下流は水が減る(細い流れ)
+      // ビーバー
+      const bx=t<7?mix(60,dx-16,sm(t,0,3.2)):dx-16+Math.sin(t*1.5)*4,by=gy-8-(dh+2)*(t<7?sm(t,3.2,3.6):1)+Math.sin(t*6)*0.8;
+      c.fillStyle='#7a5430';c.beginPath();c.ellipse(bx,by,12,7,0,0,TAU);c.fill();
+      c.beginPath();c.ellipse(bx+11,by-3,5,4.4,0,0,TAU);c.fill();
+      c.fillStyle='#3a2a18';c.beginPath();c.ellipse(bx-14,by+2,7,2.6,0.1,0,TAU);c.fill();
+      c.fillStyle='#fff';c.fillRect(bx+14,by-1,2,2.2);
+      if(t<7){c.strokeStyle='#8a6a3a';c.lineWidth=2;c.beginPath();c.moveTo(bx+14,by-2);c.lineTo(bx+4,by-9);c.stroke()}
+      // ラベル
+      if(t>=9.5){const a=sm(t,9.5,11);txt(c,'土砂が たまる',90,gy-lvl-22,10,'rgba(235,205,160,'+a+')','center')}
+      if(t>=5.5){const a=sm(t,5.5,7);txt(c,'池',90,wl+16,13,'rgba(180,225,255,'+a+')','center')}
+      c.restore();
+    }
+    // ---- 後半: 半島の地図(上から) ----
+    if(B>0.01){
+      c.save();c.globalAlpha=B;
+      const cx=W/2,cy=top+128,rx=128,ry=88;
+      c.fillStyle='#1f4a2c';c.beginPath();c.ellipse(cx,cy,rx,ry,0,0,TAU);c.fill();
+      c.strokeStyle='rgba(150,220,160,0.5)';c.lineWidth=1;c.stroke();
+      const k=sm(t,14.5,19.5);
+      const n=Math.round(mix(71,835,k));
+      // 池(青)
+      for(let i=0;i<n;i++){const d=s.dots[i];const x=cx+d.x*(rx-10),y=cy+d.y*(ry-10);
+        c.fillStyle='rgba(70,150,220,0.38)';c.beginPath();c.arc(x,y,d.s,0,TAU);c.fill()}
+      // ダム(点)
+      for(let i=0;i<n;i++){const d=s.dots[i];const x=cx+d.x*(rx-10),y=cy+d.y*(ry-10);
+        c.fillStyle='rgba(255,220,150,0.9)';c.fillRect(x,y,1.5,1.5)}
+      txt(c,(k<0.5?'1940年':'1986年')+'(模式)',125,cy-ry-12,11,'rgba(220,235,220,1)','left');
+      txt(c,'ダム '+n,cx-62,cy+ry+18,13,'rgba(255,225,160,1)','center');
+      txt(c,'池 '+(k<0.05?'1%未満':k>0.97?'13%':Math.round(mix(1,13,k))+'%'),cx+62,cy+ry+18,13,'rgba(150,205,255,1)','center');
+      if(t>=20){const a=sm(t,20,21.5);txt(c,'池の無脊椎動物 2〜5倍(報告)',W-30,cy-ry-28,9,'rgba(200,235,200,'+a+')','right')}
+      c.restore();
+    }
+  }
+});
+
+window.SCENES=[S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
