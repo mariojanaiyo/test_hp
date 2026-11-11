@@ -57,3 +57,4 @@
 
 - **seastar** (2026-11-10): 書誌(Paine / Am Nat 100(910):65-75 / DOI 10.1086/282400 / 1966)。原論文は出版社ページ403・PubMed cookie で開けず未入手。代わりに、Paine の実験を詳しく再検討した Lafferty & Suchanek 2016(Am Nat 188(4):365-378、DOI 10.1086/688045、PDF全文 https://polydora.github.io/General-ecology/Literature/Paine-1966-Revisit.pdf)の本文で照合。Mukkaw(現Makah)湾で幅8m×高さ2mの区画からテコでヒトデを外し、貝(Mytilus californianus)が広がり、岩に直接つく種が15から8に(Paine p.70)。1区画の予備的観察。貝の層は300種以上の住みかで、全体の種数はむしろ増える、との指摘を caveat に記載。他の資料に16→8や5年で貝のみ等の食い違いがあり、動画は15→8のみ。状態: 主張確認済み(再検討論文の本文まで。原論文は未確認)。
 
+- **interchange** (2026-11-11): 書誌(Carrillo, Forasiepi, Jaramillo & Sánchez-Villagra / Front Genet 5:451 / DOI 10.3389/fgene.2014.00451 / 2015-01-05)を PMC(https://pmc.ncbi.nlm.nih.gov/articles/PMC4283609)の本文(約10万字まで)で照合。大交差の始まりは中新世後期(約1000万〜700万年前)、渡ってきた種は約500万年前から急増し更新世まで増加、更新世に北米由来が南米で急速に多様化。橋の時期(約300万年前説 vs もっと早い説。Bacon 2015 PNAS 112:6110 と Lessios 2015 PNAS 112:E5765 の論争)は議論中として caveat に記載。競争置換は未検証と本文が述べる。状態: 主張確認済み(本文の大部分)。YouTube: 下記。

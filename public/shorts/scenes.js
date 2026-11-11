@@ -1762,5 +1762,57 @@ S.push({
   }
 });
 
-window.SCENES=[S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'interchange',pin:{t:12,text:'陸がつながった！'},hook:['大陸がつながると、','動物は入れ替わる？'],tag:'大陸と動物のつながり',dur:24,
+  title:'海で離れていた2つの大陸が、陸でつながると？',
+  beats:[
+    {t:0,text:'北米と南米は、<b>海</b>で離れていた'},
+    {t:5,text:'南米は長く<b>孤立</b>し、独自の哺乳類が進化'},
+    {t:10,text:'2つの大陸の間に、<b>陸の橋</b>ができる'},
+    {t:15,text:'動物が、<b>両方向</b>に渡りはじめた'},
+    {t:19,text:'<b>北米由来</b>の哺乳類が南米で広がった'}
+  ],
+  more:'南米大陸は長いあいだ他の大陸から離れ、独自の哺乳類が進化していました。やがて中央アメリカに陸の橋ができると、北米と南米の動物が行き来するようになります。これを「アメリカ大陸間大交差」と呼びます。南米の化石を調べた研究では、渡りは約1000万〜700万年前に始まり、約500万年前ごろから渡ってきた種が急に増え、更新世まで増え続けたとされます。とくに更新世には、北米由来の哺乳類が南米で急速に多様化しました。',
+  caveat:'これは模式図です。陸の形、動物の数、動きは実際のデータではありません。陸の橋ができた時期は今も議論中で、約300万年前とする説と、もっと早いとする説があり、始まりの時期も研究で食い違います。化石は高緯度や新しい地層に偏っているため、時期や場所の読み取りには限界があると論文も述べています。「北米由来が勝った」理由が競争かどうかは、厳密には確かめられていません。私が確認できたのは Frontiers in Genetics の論文の本文の大部分(約100,000字まで)で、残りと原典の細部は未確認です。',
+  source:{short:'Carrillo et al. 2015, Front Genet',cite:'Carrillo, J.D., Forasiepi, A., Jaramillo, C. & Sánchez-Villagra, M.R. (2015). Neotropical mammal diversity and the Great American Biotic Interchange: spatial and temporal variation in South America\'s fossil record. Frontiers in Genetics, 5, 451. doi:10.3389/fgene.2014.00451',query:'Neotropical mammal diversity and the Great American Biotic Interchange'},
+  init(W,H){const r=rng(77);
+    const mk=(n,y0,y1,sx)=>Array.from({length:n},()=>({x:W*(0.28+r()*0.44),y:H*(y0+r()*(y1-y0)),p:r()*6,go:r(),tx:W*(0.42+r()*0.16),sp:0.6+r()*0.8}));
+    return{north:mk(12,0.15,0.27),south:mk(12,0.43,0.56)}},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H,[[0,'#0b2238'],[1,'#040a14']]);
+    const a=sm(t,0,1);
+    const land=(y0,y1,col,edge)=>{c.fillStyle=col;c.strokeStyle=edge;c.lineWidth=1.2;c.beginPath();
+      c.moveTo(W*0.18,y1);c.quadraticCurveTo(W*0.12,(y0+y1)/2,W*0.26,y0);c.lineTo(W*0.74,y0);c.quadraticCurveTo(W*0.88,(y0+y1)/2,W*0.82,y1);c.closePath();c.fill();c.stroke()};
+    const ny0=H*0.12,ny1=H*0.31,sy0=H*0.41,sy1=H*0.60;
+    // 橋(10〜13で伸びる)
+    const br=sm(t,10,13);
+    if(br>0){const bx=W*0.5,bw=16;const hh=(sy0-ny1+4)*br;
+      c.fillStyle='#3d5a3a';c.fillRect(bx-bw/2,ny1-2,bw,hh);
+      c.strokeStyle='rgba(170,230,160,0.6)';c.lineWidth=1;c.strokeRect(bx-bw/2,ny1-2,bw,hh)}
+    land(ny0,ny1,'#34503a','rgba(170,230,160,0.5)');land(sy0,sy1,'#5a4a30','rgba(240,200,140,0.5)');
+    txt(c,'北米',W*0.5,ny0+12,11,'rgba(200,235,200,'+a+')','center');
+    txt(c,'南米',W*0.5,sy1-6,11,'rgba(245,220,170,'+a+')','center');
+    // 動物の点: 北=青、南=橙
+    const dot=(x,y,col,al)=>{c.globalCompositeOperation='lighter';glow(c,x,y,7,col,0.4*al);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba('+col+','+al+')';c.beginPath();c.arc(x,y,2.6,0,TAU);c.fill()};
+    s.north.forEach((d,i)=>{let x=d.x+Math.sin(t*d.sp+d.p)*6,y=d.y+Math.cos(t*d.sp*0.8+d.p)*3;
+      if(t>=13.5+d.go*2&&i%3!==2){const u=sm(t,13.5+d.go*2,19+d.go*2);
+        x=mix(x,d.tx,Math.min(1,u*1.6));y=mix(y,sy0+(sy1-sy0)*(0.2+d.go*0.7),u)}
+      dot(x,y,'110,190,255',a)});
+    s.south.forEach((d,i)=>{let x=d.x+Math.sin(t*d.sp+d.p)*6,y=d.y+Math.cos(t*d.sp*0.8+d.p)*3;
+      if(t>=14+d.go*2&&i%4===0){const u=sm(t,14+d.go*2,19+d.go*2);
+        x=mix(x,d.tx,Math.min(1,u*1.6));y=mix(y,ny0+(ny1-ny0)*(0.2+d.go*0.7),u)}
+      dot(x,y,'255,170,80',a)});
+    if(t>=12){const e=sm(t,12,12.6)*(1-sm(t,13.4,14.8));
+      c.strokeStyle='rgba(200,255,200,'+e+')';c.lineWidth=1.6;
+      c.beginPath();c.arc(W*0.5,(ny1+sy0)/2,24+40*sm(t,12,13.8),0,TAU);c.stroke()}
+    txt(c,'●北米の動物',W*0.18,H*0.655,11,'rgba(130,200,255,'+a+')','left');
+    txt(c,'●南米の動物',W*0.58,H*0.655,11,'rgba(255,185,110,'+a+')','left');
+    if(t>=19){const b=sm(t,19,21);
+      txt(c,'渡りの始まりは約1000万〜700万年前(模式)',W/2,H*0.71,11,'rgba(215,230,245,'+b+')','center');
+      txt(c,'橋ができた時期は、今も議論中',W/2,H*0.71+20,11,'rgba(200,215,230,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
