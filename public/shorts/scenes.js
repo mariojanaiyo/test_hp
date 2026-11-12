@@ -1814,5 +1814,65 @@ S.push({
   }
 });
 
-window.SCENES=[S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'germfree',pin:{t:12,text:'脳まで違った！'},hook:['腸の菌がいないと、','脳も変わる？'],tag:'腸と脳のつながり',dur:24,
+  title:'腸に菌がいないマウスは、行動も脳も違った',
+  beats:[
+    {t:0,text:'腸に菌が<b>いない</b>マウスと、<b>いる</b>マウス'},
+    {t:5,text:'菌なしのマウスは、<b>よく動き回った</b>'},
+    {t:9,text:'不安そうな行動は、<b>少なかった</b>'},
+    {t:14,text:'脳の遺伝子や<b>シナプスのたんぱく質</b>も違った'},
+    {t:19,text:'幼いうちに菌を入れると、<b>近づいた</b>'}
+  ],
+  more:'腸内細菌がまったくいない「無菌マウス」と、ふつうの菌がいるマウスを比べた研究です。無菌マウスは運動量が多く、不安に関わる行動が少ないという結果でした。脳の運動や不安に関わる領域では、遺伝子の働きや、シナプスに関わるたんぱく質の量も違っていました。生まれてすぐのうちに菌を入れると、こうした違いの一部が、ふつうのマウスに近づいたとされています。',
+  caveat:'これは模式図で、動きや点の数は実際のデータではありません。結果はマウスの研究で、ヒトに当てはまるかは別の話です。無菌マウスの行動は、系統や実験条件によって、不安が増えたという報告や差がないという報告もあり、結論は割れています(レビューの検索要約で確認)。私が確認できたのは論文の抄録までで、本文は未確認です。',
+  source:{short:'Diaz Heijtz et al. 2011, PNAS',cite:'Diaz Heijtz, R., Wang, S., Anuar, F., Qian, Y., Björkholm, B., Samuelsson, A., Hibberd, M.L., Forssberg, H. & Pettersson, S. (2011). Normal gut microbiota modulates brain development and behavior. Proceedings of the National Academy of Sciences, 108(7), 3047-3052. doi:10.1073/pnas.1010529108',query:'Normal gut microbiota modulates brain development and behavior'},
+  init(W,H){const r=rng(31);
+    return{bac:Array.from({length:22},()=>({a:r()*TAU,d:r(),p:r()*6})),syn:Array.from({length:26},()=>({a:r()*TAU,d:Math.sqrt(r()),p:r()*6,k:r()}))}},
+  draw(c,t,W,H,s){
+    vgrad(c,0,0,W,H,[[0,'#101a2e'],[1,'#05080f']]);
+    const a=sm(t,0,1);
+    const cols=[{x:W*0.26,gf:true,rgb:'150,170,210'},{x:W*0.74,gf:false,rgb:'120,230,160'}];
+    cols.forEach(col=>{
+      const cx=col.x,ay=H*0.24,ar=52;
+      // 箱(オープンフィールド)
+      c.strokeStyle='rgba(180,200,230,'+0.35*a+')';c.lineWidth=1.2;c.beginPath();c.arc(cx,ay,ar,0,TAU);c.stroke();
+      // マウス: 菌なしは大きく動く
+      const amp=col.gf?(t<5?8:42):(t<5?8:16);
+      const tt=t*(col.gf?1.7:0.9);
+      const mx=cx+Math.sin(tt*1.3)*amp*Math.cos(tt*0.5+1);
+      const my=ay+Math.cos(tt*1.1)*amp*0.9;
+      if(t>=5){for(let i=1;i<=14;i++){const u=tt-i*0.07;const px=cx+Math.sin(u*1.3)*amp*Math.cos(u*0.5+1),py=ay+Math.cos(u*1.1)*amp*0.9;
+        c.fillStyle='rgba('+col.rgb+','+0.25*(1-i/14)*sm(t,5,6)+')';c.beginPath();c.arc(px,py,2.2,0,TAU);c.fill()}}
+      c.globalCompositeOperation='lighter';glow(c,mx,my,12,col.rgb,0.45*a);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(240,245,255,'+a+')';c.beginPath();c.arc(mx,my,4,0,TAU);c.fill();
+      // 腸(菌)
+      const gy=H*0.395;
+      c.strokeStyle='rgba(200,210,230,'+0.5*a+')';c.lineWidth=1.2;c.beginPath();c.ellipse(cx,gy,38,12,0,0,TAU);c.stroke();
+      if(!col.gf){s.bac.forEach(b=>{const u=sm(t,1,4);const x=cx+Math.cos(b.a)*b.d*30*u+Math.sin(t*1.5+b.p)*1.5,y=gy+Math.sin(b.a)*b.d*7*u+Math.cos(t*1.3+b.p)*1;
+        c.globalCompositeOperation='lighter';glow(c,x,y,5,col.rgb,0.5*u);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba('+col.rgb+','+u+')';c.beginPath();c.arc(x,y,1.6,0,TAU);c.fill()})}
+      txt(c,col.gf?'菌なし':'菌あり',cx,H*0.455,12,'rgba('+col.rgb+','+a+')','center');
+      // 脳とシナプス
+      const by=H*0.545,br=sm(t,10,12);
+      c.strokeStyle='rgba(200,210,235,'+0.5*br+')';c.lineWidth=1.2;c.beginPath();c.ellipse(cx,by,40,22,0,0,TAU);c.stroke();
+      const n=col.gf?26:(t>=19?26:15);
+      s.syn.forEach((d,i)=>{if(i>=n)return;const x=cx+Math.cos(d.a)*d.d*34,y=by+Math.sin(d.a)*d.d*17;
+        let al=br*(0.55+0.4*Math.sin(t*2+d.p)**2);
+        let rgb=col.rgb;
+        if(!col.gf&&t>=19&&i>=15)al*=sm(t,19,21);
+        c.globalCompositeOperation='lighter';glow(c,x,y,6,rgb,0.4*al);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba('+rgb+','+al+')';c.beginPath();c.arc(x,y,1.8,0,TAU);c.fill()});
+    });
+    // センターピンの輪
+    if(t>=12){const e=sm(t,12,12.6)*(1-sm(t,13.4,14.8));
+      c.strokeStyle='rgba(255,230,150,'+e+')';c.lineWidth=1.6;c.beginPath();c.arc(W/2,H*0.545,30+60*sm(t,12,13.8),0,TAU);c.stroke()}
+    txt(c,'●動き(模式)',W*0.5,H*0.12,10,'rgba(200,215,235,'+0.7*a+')','center');
+    if(t>=19){const b=sm(t,19,21);
+      txt(c,'幼いうちに菌を入れると、違いが近づいた(模式)',W/2,H*0.64,11,'rgba(215,230,245,'+b+')','center');
+      txt(c,'マウスの結果。ヒトは別の話',W/2,H*0.64+20,11,'rgba(200,215,230,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
