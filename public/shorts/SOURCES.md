@@ -62,3 +62,4 @@
   YouTube: 限定公開で投稿済み(2026-11-11)https://youtube.com/shorts/PJkBigDr5QM 録画: shorts_video/interchange.webm
 
 - **germfree** (2026-11-12): 書誌(Diaz Heijtz, Wang, Anuar, Qian, Björkholm, Samuelsson, Hibberd, Forssberg, Pettersson / PNAS 108(7):3047-3052 / DOI 10.1073/pnas.1010529108 / PMC3041077)と抄録を Europe PMC で照合。抄録は、無菌マウスの運動量増加・不安様行動の減少、運動・不安に関わる脳領域の遺伝子発現差、早期の菌の導入で線条体の PSD-95・シナプトフィジンが近づくことを述べる。PMC 本文は確認画面で開けず未確認。反論: 無菌マウスの不安行動は系統・条件で増加や差なしの報告もある(レビューの検索要約のみ)→ caveat に記載。マウスのみ、ヒトは別と注記。
+  Artifact: https://claude.ai/artifact/QMfpoRhCACx3JetHEebieH 録画: shorts_video/germfree.webm YouTube: 未投稿(2026-11-12、toriaezu_test にログインしたブラウザが無かった)
