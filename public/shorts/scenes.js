@@ -1874,5 +1874,88 @@ S.push({
   }
 });
 
-window.SCENES=[S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'acacia',pin:{t:14,text:'協力が崩れた！'},hook:['ゾウやキリンを除くと、','アカシアとアリは？'],tag:'木とアリのつながり',dur:24,
+  title:'大型の草食動物を柵で外すと、木とアリの関係は？',
+  beats:[
+    {t:0,text:'アカシアは、アリに<b>家と蜜</b>をあげる'},
+    {t:5,text:'<b>ゾウやキリン</b>が、葉を食べる'},
+    {t:8,text:'柵で囲い、<b>10年</b>入れない'},
+    {t:12,text:'木が、アリへの<b>家と蜜を減らす</b>'},
+    {t:18,text:'乗っ取るアリの木は、<b>死ぬ率が約2倍</b>'}
+  ],
+  more:'ケニアのサバンナでは、アカシアの木が、ふくらんだトゲ(アリの家)と蜜をアリに与え、アリは木を守っています。研究者は、1995年から、ゾウやキリンなど大型の草食動物を柵で入れない区画をつくりました。10年たつと、木がアリに与える家と蜜が減り、協力的なアリの群れは小さくなって、木を守る力も落ちました。代わりに、家も蜜にも頼らない別のアリが増え、そのアリの木では、木をかじる甲虫が増えて、成長が遅く、枯れる率がおよそ2倍になりました。',
+  caveat:'これは模式図です。アリの数・位置・木の形は実際のデータではありません。論文の「死ぬ率が2倍」は、柵の中の木と外の木の比較ではなく、「乗っ取るアリ(C. sjostedti)がいる木」と「ほかの3種のアリがいる木」の比較です(8年間の観察)。柵の中でそのアリの木が約2倍に増えた、という報告です。木の反応は、動物に食べられなくなったことへの「可塑的な反応」と著者は推測しており、1つの調査地での結果です。私が確認できたのは論文の本文(PDF)までで、補足資料は未確認です。',
+  source:{short:'Palmer et al. 2008, Science',cite:'Palmer, T.M., Stanton, M.L., Young, T.P., Goheen, J.R., Pringle, R.M. & Karban, R. (2008). Breakdown of an ant-plant mutualism follows the loss of large herbivores from an African savanna. Science, 319(5860), 192-195. doi:10.1126/science.1151579',query:'Breakdown of an ant-plant mutualism follows the loss of large herbivores from an African savanna'},
+  init(W,H){const r=rng(88);
+    const pts=[[-62,-58],[-34,-94],[6,-112],[46,-86],[70,-52],[-8,-64]];
+    const ants=[];
+    for(let i=0;i<14;i++)ants.push({k:'b',i,ph:r()*TAU,p:i%6,sp:1+r()*0.8,die:i<7?999:12+(i-7)*0.45});
+    for(let j=0;j<8;j++)ants.push({k:'r',i:j,ph:r()*TAU,p:j%6,sp:1+r()*0.8,born:j<3?-1:14+(j-3)*0.5});
+    const leaves=Array.from({length:40},()=>{const q=pts[Math.floor(r()*pts.length)];return{x:q[0]+(r()-0.5)*44,y:q[1]+(r()-0.5)*34,s:3+r()*3}});
+    return{pts,ants,leaves}},
+  draw(c,t,W,H,s){
+    const cx=W/2,by=H*0.52;
+    vgrad(c,0,0,W,H,[[0,'#2a1d14'],[0.5,'#1a120c'],[1,'#07050a']]);
+    c.fillStyle='#3a2a1a';c.fillRect(0,by,W,H-by);
+    c.save();c.translate(cx,by);c.scale(1.5,1.5);c.translate(-cx,-by);
+    // 柵
+    const fa=sm(t,8,9.2);
+    if(fa>0){c.strokeStyle='rgba(220,220,230,'+0.8*fa+')';c.lineWidth=1.5;c.setLineDash([]);
+      const fx0=cx-96,fx1=cx+96,fy=by+6;
+      for(let x=fx0;x<=fx1;x+=24){c.beginPath();c.moveTo(x,fy);c.lineTo(x,fy-30);c.stroke()}
+      c.beginPath();c.moveTo(fx0,fy-22);c.lineTo(fx1,fy-22);c.moveTo(fx0,fy-10);c.lineTo(fx1,fy-10);c.stroke()}
+    // 木
+    const dead=sm(t,17,20);
+    c.strokeStyle='rgb(110,82,56)';c.lineWidth=4;c.beginPath();c.moveTo(cx,by);c.lineTo(cx,by-62);c.stroke();
+    c.lineWidth=2;s.pts.forEach(p=>{c.beginPath();c.moveTo(cx,by-48);c.lineTo(cx+p[0]*0.9,by+p[1]);c.stroke()});
+    s.leaves.forEach(l=>{c.fillStyle='hsl('+mix(110,70,dead)+','+mix(45,20,dead)+'%,'+mix(34,26,dead)+'%)';c.beginPath();c.arc(cx+l.x,by+l.y,l.s,0,TAU);c.fill()});
+    // 蜜とトゲの家
+    const lose=sm(t,11,14);
+    s.pts.forEach((p,i)=>{const x=cx+p[0],y=by+p[1];
+      const k=i<3?1:1-lose;
+      if(k>0.02){c.fillStyle='#e8e0c8';c.beginPath();c.ellipse(x+4,y+5,5.5*k,4*k,0.4,0,TAU);c.fill()}
+      const na=1-0.75*lose;
+      c.globalCompositeOperation='lighter';glow(c,x-5,y-4,9,'255,205,80',0.55*na);c.globalCompositeOperation='source-over'});
+    // 甲虫の穴
+    if(dead>0){c.fillStyle='rgba(30,16,8,'+dead+')';[[-2,-14],[2,-26],[-1,-38],[3,-48],[-3,-20]].forEach(q=>{c.beginPath();c.arc(cx+q[0],by+q[1],1.8,0,TAU);c.fill()})}
+    // 動物
+    const anim=(x,y,tall)=>{c.save();c.strokeStyle='#8a7a68';c.fillStyle='#8a7a68';c.lineWidth=3;c.lineCap='round';
+      c.beginPath();c.ellipse(x,y-20,16,8,0,0,TAU);c.fill();
+      [-10,-4,6,12].forEach(l=>{c.beginPath();c.moveTo(x+l,y-14);c.lineTo(x+l,y);c.stroke()});
+      if(tall){const bob=Math.sin(t*3)*2;c.lineWidth=4;c.beginPath();c.moveTo(x+12,y-24);c.lineTo(x+22,y-70+bob);c.stroke();c.beginPath();c.ellipse(x+25,y-72+bob,5,3,0.3,0,TAU);c.fill()}
+      else{c.lineWidth=5;c.beginPath();c.moveTo(x+16,y-22);c.quadraticCurveTo(x+30,y-14,x+26,y-2);c.stroke();c.beginPath();c.arc(x+17,y-26,7,0,TAU);c.fill()}
+      c.restore()};
+    if(t>=4&&t<10.6){const a=sm(t,4,5)*(1-sm(t,9.8,10.6));c.globalAlpha=a;
+      const out=sm(t,8.5,10.4);
+      anim(mix(cx-70,cx-150,out),by+8,true);
+      anim(mix(cx+84,cx+170,out),by+8,false);c.globalAlpha=1}
+    // アリ
+    s.ants.forEach(a=>{let vis=1;
+      if(a.k==='b')vis=1-sm(t,a.die,a.die+1);else vis=a.born<0?1:sm(t,a.born,a.born+1);
+      if(vis<=0.02)return;
+      const p=s.pts[a.p],ang=t*a.sp*1.6+a.ph,rad=a.k==='b'?9:11;
+      const x=cx+(a.k==='b'?p[0]:p[0]*0.45)+Math.cos(ang)*rad,y=by+(a.k==='b'?p[1]:p[1]*0.6-6)+Math.sin(ang)*rad*0.6;
+      c.fillStyle=a.k==='b'?'rgba(110,170,255,'+vis+')':'rgba(255,90,80,'+vis+')';
+      c.beginPath();c.arc(x,y,2.4,0,TAU);c.fill()});
+    c.restore();
+    // 凡例
+    const la=sm(t,1,2);
+    c.fillStyle='rgba(110,170,255,'+la+')';c.beginPath();c.arc(W*0.2,by+66,3.2,0,TAU);c.fill();
+    txt(c,'協力するアリ',W*0.2+8,by+66,11,'rgba(200,220,255,'+la+')');
+    c.fillStyle='rgba(255,90,80,'+la+')';c.beginPath();c.arc(W*0.58,by+66,3.2,0,TAU);c.fill();
+    txt(c,'乗っ取るアリ',W*0.58+8,by+66,11,'rgba(255,200,195,'+la+')');
+    // 字幕(絵の中)
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,by+30,12,'rgba(255,235,205,'+q+')','center')};
+    cap(5,8,'ゾウ・キリンが木の葉を食べる');
+    cap(8,11.5,'柵で10年、大型の草食動物を外す');
+    cap(11.5,14.5,'木が、家と蜜を減らす');
+    cap(14.5,18,'協力するアリが減り、乗っ取るアリが増える');
+    if(t>=18){const b=sm(t,18,19.5);
+      txt(c,'乗っ取るアリの木は、成長が遅く死ぬ率が約2倍',W/2,by+30,11.5,'rgba(255,225,200,'+b+')','center');
+      txt(c,'アリの数や木の形は模式',W/2,by+48,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();

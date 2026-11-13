@@ -63,3 +63,5 @@
 
 - **germfree** (2026-11-12): 書誌(Diaz Heijtz, Wang, Anuar, Qian, Björkholm, Samuelsson, Hibberd, Forssberg, Pettersson / PNAS 108(7):3047-3052 / DOI 10.1073/pnas.1010529108 / PMC3041077)と抄録を Europe PMC で照合。抄録は、無菌マウスの運動量増加・不安様行動の減少、運動・不安に関わる脳領域の遺伝子発現差、早期の菌の導入で線条体の PSD-95・シナプトフィジンが近づくことを述べる。PMC 本文は確認画面で開けず未確認。反論: 無菌マウスの不安行動は系統・条件で増加や差なしの報告もある(レビューの検索要約のみ)→ caveat に記載。マウスのみ、ヒトは別と注記。
   Artifact: https://claude.ai/artifact/QMfpoRhCACx3JetHEebieH 録画: shorts_video/germfree.webm YouTube: 未投稿(2026-11-12、toriaezu_test にログインしたブラウザが無かった)
+
+- **acacia** (2026-11-13): 書誌(Palmer, Stanton, Young, Goheen, Pringle, Karban / Science 319(5860):192-195 / DOI 10.1126/science.1151579 / 2008-01-11)を本文PDF(https://tpyoung.ucdavis.edu/sites/g/files/dgvnsk4821/files/inline-files/breakdown%20of%20antplant%20mutualism.pdf)で照合。ケニアKLEEで1995年から大型草食動物(>15kg)を除外、10年で蜜腺・膨らんだトゲが減少、C. mimosae の木は30%以上減、C. sjostedti は倍増、C. mimosae 群れは47%縮小、C. sjostedti の木は成長が遅く8年間の死亡率が約2倍(1750本超の追跡)。「死亡率2倍」は柵の内外の比較ではなくアリ種別の比較と caveat に明記。木の反応は可塑的反応との推測。1調査地。補足資料(SOM)は未確認。状態: 主張確認済み(本文まで)。
