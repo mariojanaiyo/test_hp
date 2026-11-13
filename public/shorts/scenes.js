@@ -2104,5 +2104,72 @@ S.push({
   }
 });
 
-window.SCENES=[S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'extinct',pin:{t:12,text:'世界だけ戻った！'},hook:['大絶滅のあと','命はすぐ戻った？'],tag:'大絶滅と回復',dur:24,
+  title:'ペルム紀末の大絶滅:世界の「種類」は戻っても、場所ごとの顔ぶれは戻らなかった',
+  beats:[
+    {t:0,text:'約<b>2億5100万年前</b>、ペルム紀末'},
+    {t:5,text:'陸の脊椎動物の<b>科が大きく減った</b>'},
+    {t:8.5,text:'世界全体の科の数は、<b>早く戻った</b>'},
+    {t:13,text:'でも、ひとつの場所の<b>顔ぶれは薄いまま</b>'},
+    {t:18,text:'生態系の回復は、約<b>3000万年</b>かかった'}
+  ],
+  more:'SahneyとBenton(2008)は、ペルム紀から三畳紀の陸の脊椎動物69群集のデータで、回復の速さを2つの見方で比べました。世界全体の「科」の数は、リストロサウルスのような「災害種」が広がり、三畳紀の初め(オレネキアン期)には絶滅前の水準に戻って見えます。ところが群集ごとに調べると、1つの場所にいる科の数(アルファ多様性)は戻らず、ふさがらないまま残った役割(食性や大きさのグループ)もありました。著者は、生態系としての回復には約3000万年かかったと述べています。数字だけでなく「場所ごとの中身」を見ると、回復の姿が変わります。',
+  caveat:'これは模式図です。点の数や戻る速さは実際のデータではありません。対象は陸の脊椎動物の科で、海の生物や植物の話ではありません。化石の見つかり方は地域に偏っており、著者も標本の偏りと、一部の分類の曖昧さを注記しています。「約3000万年」は著者の見積もりで、論文には群集の多様性が最後まで絶滅前に戻らなかったという記述もあります。確認したのはPMCの本文で、数字の元データまでは照合していません。',
+  source:{short:'Sahney & Benton 2008, Proc R Soc B',cite:'Sahney, S., & Benton, M. J. (2008). Recovery from the most profound mass extinction of all time. Proceedings of the Royal Society B, 275(1636), 759–765. doi:10.1098/rspb.2007.1370',query:'Recovery from the most profound mass extinction of all time Sahney Benton 2008'},
+  init(W,H){
+    const r=rng(25101),pool=[],com=[];
+    for(let i=0;i<30;i++){const a=r()*TAU,d=Math.sqrt(r());pool.push({x:Math.cos(a)*d,y:Math.sin(a)*d,u:i/30,p:r()*6})}
+    for(let k=0;k<4;k++){const g=[];for(let i=0;i<10;i++){const a=r()*TAU,d=Math.sqrt(r());g.push({x:Math.cos(a)*d,y:Math.sin(a)*d,u:r(),p:r()*6})}com.push(g)}
+    return{pool,com};
+  },
+  draw(c,t,W,H,s){
+    const top=H*0.1,cx=W/2,py=top+78,pr=58,cy=top+196,cr=31;
+    vgrad(c,0,0,W,H*0.62,[[0,'#1c1226'],[0.5,'#3a1c2a'],[1,'#2a1a1a']]);
+    // 絶滅のフラッシュ
+    const boom=sm(t,5,5.6)*(1-sm(t,5.6,8));
+    if(boom>0.01){c.globalCompositeOperation='lighter';glow(c,cx,py+40,230,'255,110,60',0.28*boom);c.globalCompositeOperation='source-over'}
+    // レベル(0〜1)
+    const drop=sm(t,5,7);
+    const gLvl=1-0.67*drop+0.67*sm(t,8.5,12.5);
+    const cLvl=1-0.7*drop+0.55*sm(t,15,22);
+    // 世界ぜんたい
+    c.strokeStyle='rgba(200,190,230,0.5)';c.lineWidth=1.2;c.beginPath();c.arc(cx,py,pr,0,TAU);c.stroke();
+    txt(c,'世界ぜんたい(科の数)',cx,top+4,10.5,'rgba(225,215,245,0.9)','center');
+    s.pool.forEach(d=>{
+      if(d.u>gLvl)return;
+      const x=cx+d.x*(pr-6)+Math.sin(t*0.8+d.p)*1.5,y=py+d.y*(pr-6)+Math.cos(t*0.7+d.p)*1.5;
+      const late=d.u>0.33&&t>8.5; // 回復で増えた点(災害種など)
+      const col=late?'255,190,90':'150,235,160';
+      c.globalCompositeOperation='lighter';glow(c,x,y,7,col,0.5);c.globalCompositeOperation='source-over';
+      c.fillStyle=late?'#ffc860':'#9af0a8';c.fillRect(x-1.8,y-1.8,3.6,3.6);
+    });
+    // 矢印
+    txt(c,'↓ ひとつの場所(群集)ごとに見ると',cx,py+pr+16,10,'rgba(225,215,245,0.8)','center');
+    // 群集
+    for(let k=0;k<4;k++){
+      const x=48+k*88;
+      c.strokeStyle='rgba(200,190,230,0.45)';c.lineWidth=1;c.beginPath();c.arc(x,cy,cr,0,TAU);c.stroke();
+      s.com[k].forEach(d=>{
+        if(d.u>cLvl)return;
+        const px=x+d.x*(cr-5)+Math.sin(t*0.9+d.p)*1.2,qy=cy+d.y*(cr-5)+Math.cos(t*0.8+d.p)*1.2;
+        c.globalCompositeOperation='lighter';glow(c,px,qy,6,'150,235,160',0.5);c.globalCompositeOperation='source-over';
+        c.fillStyle='#9af0a8';c.fillRect(px-1.6,qy-1.6,3.2,3.2);
+      });
+    }
+    // 時間バー
+    const by=cy+cr+26;
+    c.fillStyle='rgba(255,255,255,0.12)';c.fillRect(30,by,W-60,3);
+    if(t>=15){const f=sm(t,15,22);c.fillStyle='rgba(255,200,110,0.9)';c.fillRect(30,by,(W-60)*f,3);
+      txt(c,'絶滅から +'+Math.round(30*f)+'百万年',W/2,by+14,11,'rgba(255,225,170,'+sm(t,15,16)+')','center')}
+    // ラベル
+    if(t<5)txt(c,'ペルム紀末(約2億5100万年前)',W/2,by+14,10.5,'rgba(235,225,250,0.9)','center');
+    if(t>=5&&t<8.5)txt(c,'大絶滅',W/2,by+14,13,'rgba(255,150,110,'+sm(t,5,5.8)+')','center');
+    if(t>=8.5&&t<15)txt(c,'世界の科の数は戻ったように見える',W/2,by+14,10.5,'rgba(255,225,170,'+sm(t,8.5,10)+')','center');
+    if(t>=12.5&&t<15.5)txt(c,'でも、場所の中身は薄いまま',W/2,by+32,11,'rgba(255,170,140,'+sm(t,12.5,13.5)+')','center');
+    txt(c,'模式図(点の数は実測ではない)',W-14,by+50,9,'rgba(220,210,235,0.75)','right');
+  }
+});
+
+window.SCENES=[S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
