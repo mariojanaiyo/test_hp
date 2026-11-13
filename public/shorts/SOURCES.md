@@ -65,3 +65,4 @@
   Artifact: https://claude.ai/artifact/QMfpoRhCACx3JetHEebieH 録画: shorts_video/germfree.webm YouTube: 未投稿(2026-11-12、toriaezu_test にログインしたブラウザが無かった)
 
 - **acacia** (2026-11-13): 書誌(Palmer, Stanton, Young, Goheen, Pringle, Karban / Science 319(5860):192-195 / DOI 10.1126/science.1151579 / 2008-01-11)を本文PDF(https://tpyoung.ucdavis.edu/sites/g/files/dgvnsk4821/files/inline-files/breakdown%20of%20antplant%20mutualism.pdf)で照合。ケニアKLEEで1995年から大型草食動物(>15kg)を除外、10年で蜜腺・膨らんだトゲが減少、C. mimosae の木は30%以上減、C. sjostedti は倍増、C. mimosae 群れは47%縮小、C. sjostedti の木は成長が遅く8年間の死亡率が約2倍(1750本超の追跡)。「死亡率2倍」は柵の内外の比較ではなくアリ種別の比較と caveat に明記。木の反応は可塑的反応との推測。1調査地。補足資料(SOM)は未確認。状態: 主張確認済み(本文まで)。
+  Artifact: https://claude.ai/artifact/1uBfxvqn8PZHvj9oNtSZvQ 録画: shorts_video/acacia.webm YouTube: 未投稿(2026-11-13、toriaezu_test にログインしたブラウザが無かった)
