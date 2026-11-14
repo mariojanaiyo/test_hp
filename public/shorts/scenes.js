@@ -1957,5 +1957,75 @@ S.push({
   }
 });
 
-window.SCENES=[S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'beaver',pin:{t:12,text:'池ができた！'},hook:['ビーバーがダムをつくると、','岸の草はどうなる？'],tag:'環境をつくり変える動物',dur:24,
+  title:'ビーバーのダムは、まわりの草の種類をふやすのか？',
+  beats:[
+    {t:0,text:'小川の岸に、<b>ふつうの草</b>が生える'},
+    {t:5,text:'ビーバーが、枝で<b>ダム</b>をつくる'},
+    {t:10,text:'水がたまり、<b>池と湿った草地</b>ができる'},
+    {t:15,text:'ほかの岸にない<b>草</b>が育つ'},
+    {t:19,text:'岸の草は、<b>3分の1以上</b>種類がふえた'}
+  ],
+  more:'アメリカ北東部のアディロンダック山地で、研究者がビーバーのつくった湿った草地を調べました。ビーバーがダムで水をためると、まわりの岸には見られない草が育つ場所ができます。岸の草の種類を、ビーバーの手が入った場所と入っていない場所をあわせた広さで数えると、ビーバーのいる場所は、いない場合より33%以上多くなっていました。環境そのものをつくり変える動物が、まわりの生きものの種類をふやすことがある、という話です。',
+  caveat:'これは模式図です。草の色・数・川の形は実際のデータではありません。論文が示したのは、ニューヨーク州の1つの地域での、草(草本)の種類の数です。ほかの動物や、別の地域・別の植物にそのまま当てはまるとは言えません。「33%以上」は、ビーバーの池と、手の入っていない岸をあわせた広さでの増え方です。私が確認できたのは抄録までで、本文は未確認です。',
+  source:{short:'Wright et al. 2002, Oecologia',cite:'Wright, J.P., Jones, C.G. & Flecker, A.S. (2002). An ecosystem engineer, the beaver, increases species richness at the landscape scale. Oecologia, 132(1), 96-101. doi:10.1007/s00442-002-0929-1',query:'An ecosystem engineer, the beaver, increases species richness at the landscape scale'},
+  init(W,H){const r=rng(271);
+    const old=Array.from({length:22},(_,i)=>({x:(i<11?-1:1)*(40+r()*130),k:Math.floor(r()*3),h:6+r()*8}));
+    const nw=Array.from({length:26},(_,i)=>{const a=r()*TAU,rr=0.45+r()*0.55;return{a,rr,k:3+Math.floor(r()*3),h:6+r()*8,t0:14+i*0.18}});
+    const parts=Array.from({length:30},()=>({x:r()*W,y:r(),sp:30+r()*30}));
+    return{old,nw,parts}},
+  draw(c,t,W,H,s){
+    const cx=W/2,by=H*0.5;
+    vgrad(c,0,0,W,H,[[0,'#16222a'],[0.5,'#0e1a18'],[1,'#05080a']]);
+    c.fillStyle='#2e2a1e';c.fillRect(0,by-10,W,H-by+10);
+    const pond=sm(t,9,13);
+    // 小川 → 池
+    const sw=mix(26,150,pond),sh=mix(14,52,pond);
+    c.fillStyle='rgb(40,92,140)';
+    c.beginPath();c.rect(0,by-8,W,14);c.fill();
+    if(pond>0){c.fillStyle='rgba(56,120,175,'+(0.35+0.5*pond)+')';c.beginPath();c.ellipse(cx-30*pond,by-1,sw,sh,0,0,TAU);c.fill()}
+    // 流れ
+    c.fillStyle='rgba(180,220,255,0.5)';
+    s.parts.forEach(p=>{const x=(p.x+t*p.sp*(1-0.8*pond))%W,y=by-6+p.y*10;c.fillRect(x,y,3,1)});
+    // ふつうの草(岸の2色まで)
+    const cols=['#7fc060','#5aa050','#a8c868','#e8b0d0','#f0d060','#b090e0'];
+    s.old.forEach(o=>{const x=cx+o.x,y=by+14+((o.x*7)%5);
+      if(pond>0.3&&Math.abs(o.x)<70)return;
+      c.fillStyle=cols[o.k];c.fillRect(x-1,y-o.h,2,o.h);c.beginPath();c.arc(x,y-o.h,2.4,0,TAU);c.fill()});
+    // ダム
+    const dm=sm(t,5,10);
+    if(dm>0){c.strokeStyle='#8a6038';c.lineWidth=3;c.lineCap='round';
+      const n=Math.floor(dm*9);for(let i=0;i<n;i++){const x=cx+50+(i%3)*4,y=by-14+i*3.5;c.beginPath();c.moveTo(x-12,y);c.lineTo(x+12,y-3+(i%2)*3);c.stroke()}}
+    // ビーバー
+    if(t>=3&&t<11){const a=sm(t,3,4.5)*(1-sm(t,10,11));const bx=mix(cx+130,cx+62,sm(t,3,7))+Math.sin(t*4)*2,by2=by-2;
+      c.globalAlpha=a;c.fillStyle='#8a5a30';c.beginPath();c.ellipse(bx,by2,13,7,0,0,TAU);c.fill();
+      c.beginPath();c.arc(bx-11,by2-3,5.5,0,TAU);c.fill();
+      c.fillStyle='#3a2a18';c.beginPath();c.ellipse(bx+14,by2+1,7,2.6,0,0,TAU);c.fill();c.globalAlpha=1}
+    // 新しい草(池のまわり)
+    s.nw.forEach(n=>{const g=sm(t,n.t0,n.t0+1.2);if(g<=0.02)return;
+      const x=cx-30*pond+Math.cos(n.a)*(sw*(0.9+n.rr*0.45)),y=by-1+Math.sin(n.a)*(sh+8+n.rr*22)*0.9+10;
+      const yy=Math.max(y,by+10);
+      c.globalAlpha=g;c.fillStyle=cols[n.k];c.fillRect(x-1,yy-n.h*g,2,n.h*g);c.beginPath();c.arc(x,yy-n.h*g,3,0,TAU);c.fill();
+      c.globalCompositeOperation='lighter';glow(c,x,yy-n.h*g,8,'255,230,160',0.25*g);c.globalCompositeOperation='source-over';c.globalAlpha=1});
+    // 凡例
+    const la=sm(t,1,2);
+    c.fillStyle='rgba(127,192,96,'+la+')';c.beginPath();c.arc(W*0.14,by+112,3.2,0,TAU);c.fill();
+    txt(c,'ふつうの岸の草',W*0.14+8,by+112,11,'rgba(210,235,200,'+la+')');
+    const lb=sm(t,14,15.5);
+    c.fillStyle='rgba(240,208,96,'+lb+')';c.beginPath();c.arc(W*0.6,by+112,3.2,0,TAU);c.fill();
+    txt(c,'池のまわりの草',W*0.6+8,by+112,11,'rgba(255,240,200,'+lb+')');
+    // 絵の中の字幕
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,by+80,12,'rgba(235,245,255,'+q+')','center')};
+    cap(0,5,'小川の岸には、ふつうの草');
+    cap(5,10,'ビーバーが枝でダムをつくる');
+    cap(10,14.5,'水がたまって、池ができる');
+    cap(14.5,19,'まわりに、ほかの岸にない草が育つ');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'草の種類は、33%以上ふえた',W/2,by+80,12.5,'rgba(255,240,200,'+b+')','center');
+      txt(c,'草の色や数は模式',W/2,by+96,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
