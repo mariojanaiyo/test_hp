@@ -2171,5 +2171,111 @@ S.push({
   }
 });
 
-window.SCENES=[S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'whale',pin:{t:12,text:'ふんが浮いた！'},hook:['クジラのふんが','海を肥やす？'],tag:'海の栄養の循環',dur:24,
+  title:'クジラのふんが、海の表面に窒素を運ぶ?(ホエール・ポンプ)',
+  beats:[
+    {t:0,text:'クジラは<b>深い所</b>でえさを食べる'},
+    {t:5,text:'そして<b>海面</b>に浮かび上がる'},
+    {t:10.5,text:'<b>ふん</b>が表面近くに広がる'},
+    {t:14,text:'ふんの<b>窒素</b>が、植物プランクトンのえさになる'},
+    {t:19,text:'メイン湾では、川ぜんぶより<b>多い</b>と見積もり'}
+  ],
+  more:'RomanとMcCarthy(2010)は、米国のメイン湾で、クジラやアザラシが海の「窒素」の循環に果たす役割を、現地の測定と個体数のデータから見積もりました。海の表面では窒素が足りず、植物プランクトンが増えにくい季節があります。クジラのふんは表面近くにただよう「ふわふわした塊(プルーム)」になり、窒素を表面にとどめます。著者はこれを「ホエール・ポンプ」と呼び、クジラとアザラシが戻す窒素は、年に約2万3000トンで、メイン湾の川ぜんぶより多いかもしれないと見積もっています。捕鯨の前は、大気から入る窒素の3倍を超えていたと考えられるとしています。',
+  caveat:'これは模式図です。クジラの大きさ、ふんの広がり、点の数は実際のデータではありません。数字は著者の見積もり(論文の表現は「かもしれない」「だったと考えられる」)で、対象はメイン湾という1つの沿岸域だけです。捕鯨前の個体数も推定です。ほかの海域では鉄など別の栄養が足りないことがあり、同じことが成り立つとは限りません。確認したのは書誌と抄録(複数のサイト)で、本文の数式や元データまでは照合していません。',
+  source:{short:'Roman & McCarthy 2010, PLoS ONE',cite:'Roman, J., & McCarthy, J. J. (2010). The whale pump: Marine mammals enhance primary productivity in a coastal basin. PLoS ONE, 5(10), e13255. doi:10.1371/journal.pone.0013255',query:'The whale pump marine mammals enhance primary productivity in a coastal basin Roman McCarthy 2010'},
+  init(W,H){
+    const r=rng(61010),prey=[],plume=[],plank=[],bub=[];
+    for(let i=0;i<22;i++)prey.push({x:r(),y:r(),p:r()*6,u:r()});
+    for(let i=0;i<46;i++){const a=r()*TAU;plume.push({a:a,d:r(),sp:0.5+r(),p:r()*6,u:r()})}
+    for(let i=0;i<40;i++)plank.push({x:r(),y:r(),p:r()*6,u:r()});
+    for(let i=0;i<14;i++)bub.push({x:r(),p:r()*6,sp:0.4+r()});
+    return{prey,plume,plank,bub};
+  },
+  draw(c,t,W,H,s){
+    const top=H*0.1,surf=top+34,deep=top+226,bot=top+300;
+    // 海
+    vgrad(c,0,top-6,W,bot-top+14,[[0,'#2f8fa8'],[0.18,'#176a88'],[0.6,'#0b3a5c'],[1,'#06213c']]);
+    // 海面の波
+    c.strokeStyle='rgba(210,245,255,0.55)';c.lineWidth=1.4;c.beginPath();
+    for(let x=0;x<=W;x+=6){const y=surf+Math.sin(x*0.07+t*1.6)*1.6;x?c.lineTo(x,y):c.moveTo(x,y)}
+    c.stroke();
+    // 光の筋
+    c.globalCompositeOperation='lighter';
+    for(let k=0;k<4;k++){const x=40+k*92+Math.sin(t*0.4+k)*10;
+      const g=c.createLinearGradient(0,surf,0,surf+170);g.addColorStop(0,'rgba(170,235,255,0.10)');g.addColorStop(1,'rgba(170,235,255,0)');
+      c.fillStyle=g;c.beginPath();c.moveTo(x-10,surf);c.lineTo(x+10,surf);c.lineTo(x+34,surf+170);c.lineTo(x-14,surf+170);c.fill()}
+    c.globalCompositeOperation='source-over';
+    // クジラの位置
+    const down=1-sm(t,5,10.5); // 1=深い, 0=海面
+    const wx=mix(110,235,sm(t,0,10.5))+(t>12?(t-12)*3:0);
+    const wy=mix(surf+14,deep,down)+Math.sin(t*0.9)*2;
+    const rise=sm(t,5,10.5)*(1-sm(t,10.5,11));
+    const ang=-0.35*rise;
+    // 深い所のえさ(窒素をふくむ)
+    s.prey.forEach(p=>{
+      const bx=40+p.x*(W-80),by=deep-16+p.y*50;
+      const pull=sm(t,1.5+p.u*2.5,4.8);
+      const x=mix(bx,wx-30,pull),y=mix(by,wy,pull);
+      const a=(1-pull)*0.9;if(a<0.03)return;
+      c.globalCompositeOperation='lighter';glow(c,x,y,7,'255,190,90',0.45*a);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(255,205,120,'+a+')';c.fillRect(x-1.5,y-1.5,3,3);
+    });
+    // ふんのプルーム(表面近く)
+    const pt=t-12;
+    if(pt>0){
+      const tx=wx-52,ty=wy+4;
+      s.plume.forEach(p=>{
+        const k=clamp(pt/6),dist=(10+p.d*70)*sm(pt,0,4+p.u*3)*p.sp;
+        const x=tx-Math.abs(Math.cos(p.a))*dist*0.9-4,y=ty+Math.sin(p.a)*dist*0.35+pt*1.3+Math.sin(t*0.9+p.p)*1.5;
+        const a=0.8*(1-0.4*k);
+        c.globalCompositeOperation='lighter';glow(c,x,y,9,'255,170,70',0.4*a);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba(255,196,110,'+a+')';c.beginPath();c.arc(x,y,2.1,0,TAU);c.fill();
+      });
+    }
+    // 植物プランクトン(表面の緑、窒素がふえると増える)
+    const gro=sm(t,13,20);
+    s.plank.forEach(p=>{
+      if(p.u>0.12+0.88*gro)return;
+      const x=20+p.x*(W-40)*(0.55+0.45*gro)+ (t>12?0:0),y=surf+8+p.y*58+Math.sin(t*0.8+p.p)*2;
+      const near=p.x<0.7;
+      c.globalCompositeOperation='lighter';glow(c,x,y,8,'120,255,150',0.38);c.globalCompositeOperation='source-over';
+      c.fillStyle='#8cf5a0';c.fillRect(x-1.7,y-1.7,3.4,3.4);
+    });
+    // クジラ
+    const drawWhale=()=>{
+      c.save();c.translate(wx,wy);c.rotate(ang);
+      c.fillStyle='#1b2d42';c.shadowColor='rgba(150,220,255,0.6)';c.shadowBlur=10;
+      c.beginPath();c.ellipse(0,0,46,15,0,0,TAU);c.fill();
+      c.beginPath();c.moveTo(-40,-2);c.quadraticCurveTo(-62,-4,-70,-16);c.quadraticCurveTo(-60,-2,-52,2);c.quadraticCurveTo(-60,8,-70,16);c.quadraticCurveTo(-62,2,-40,4);c.fill();
+      c.beginPath();c.moveTo(-4,10);c.quadraticCurveTo(6,26,18,24);c.quadraticCurveTo(10,14,8,9);c.fill();
+      c.shadowBlur=0;
+      c.fillStyle='#5a7da0';c.beginPath();c.ellipse(0,9,38,5,0,0,Math.PI);c.fill();
+      c.fillStyle='#cfe8ff';c.beginPath();c.arc(32,-3,1.6,0,TAU);c.fill();
+      c.restore();
+    };
+    drawWhale();
+    // 泡
+    if(rise>0.05)s.bub.forEach(b=>{const u=(t*0.25*b.sp+b.p)%1;const x=wx+20+(b.x-0.5)*40,y=wy-u*(wy-surf);
+      c.strokeStyle='rgba(220,245,255,'+0.5*rise*(1-u)+')';c.lineWidth=1;c.beginPath();c.arc(x,y,1.5+b.x*2,0,TAU);c.stroke()});
+    // ラベル
+    if(t<5)txt(c,'深い海',W-16,deep+34,11,'rgba(200,235,255,0.85)','right');
+    if(t>=5&&t<12)txt(c,'海面',W-16,surf-14,11,'rgba(220,245,255,'+sm(t,5,6)+')','right');
+    if(t>=12)txt(c,'窒素(ふんの中)',16,surf+86+(t>=14?0:0),10.5,'rgba(255,205,130,'+sm(t,12.5,13.5)+')','left');
+    if(t>=14)txt(c,'植物プランクトン',16,surf+102,10.5,'rgba(150,255,175,'+sm(t,14,15)+')','left');
+    // 比べる棒(模式)
+    if(t>=18){
+      const a=sm(t,18,19.5),by=bot-30,bw=62;
+      const f=sm(t,18.5,21.5);
+      c.fillStyle='rgba(255,255,255,'+0.1*a+')';c.fillRect(W/2-120,by-62,240,62);
+      c.fillStyle='rgba(150,200,240,'+0.9*a+')';c.fillRect(W/2-96,by-26*f,bw,26*f);
+      c.fillStyle='rgba(255,196,110,'+0.95*a+')';c.fillRect(W/2+34,by-52*f,bw,52*f);
+      txt(c,'川ぜんぶ',W/2-65,by+11,10.5,'rgba(215,235,255,'+a+')','center');
+      txt(c,'クジラ・アザラシ',W/2+65,by+11,10.5,'rgba(255,225,170,'+a+')','center');
+    }
+    c.shadowBlur=0;txt(c,'模式図(大きさ・点の数は実測ではない)',W-12,bot-4,9,'rgba(220,235,250,0.8)','right');
+  }
+});
+
+window.SCENES=[S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
