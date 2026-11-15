@@ -71,3 +71,5 @@
 
 - **attine** (2026-11-15): 書誌(Currie, Scott, Summerbell, Malloch / Nature 398(6729):701-704 / DOI 10.1038/19519 / 1999-04-22)を、論文本文PDF(https://www.insecta.ufv.br/Entomologia/ent/disciplina/ban%20160/AULAP/aula2/Fungusgrowingants.pdf)から抽出したテキストで照合。抄録・本文: 体表の白い粉はStreptomyces属の放線菌、全ての菌食アリで確認、雌の新女王74匹全てにあり雄にはなし、Escovopsisを特異的に抑制(25%の試験で胞子発芽を完全に抑え、残りは伸びを73.9±3.0%抑制)、共生菌の乾燥重量が47.9対5.3mgに。後の研究で菌はPseudonocardia属と修正された(検索要約のみ・論文未確認)→caveatに記載。試験管実験が中心。
   Artifact: https://claude.ai/artifact/DRguL8oDqB1rRgW7szXiTL 録画: shorts_video/attine.webm YouTube: 未投稿(2026-11-15、toriaezu_test にログインしたブラウザが無かった)
+
+- **dust** (2026-11-16): 書誌(Yu, Chin, Yuan, Bian, Remer, Prospero, Omar, Winker, Yang, Zhang, Zhang, Zhao / Geophys Res Lett 42(6):1984-1991 / DOI 10.1002/2015GL063040 / 2015-03-18)と抄録を Crossref(https://api.crossref.org/works/10.1002/2015GL063040)で確認。主張確認済み=抄録まで: CALIOP 2007-2013、砂の沈着は平均約28 Tg/年(8-48)、リンは約0.022 Tg/年(0.006-0.037)で、水の流れで失われる量と同規模。本文(出版社ページ403)は未確認。論文自身が「森の生産を保つのに必要な量は不明」としており、「森を育てている」は問い型にして caveat に明記。

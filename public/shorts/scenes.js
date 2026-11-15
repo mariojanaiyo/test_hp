@@ -2112,5 +2112,75 @@ S.push({
   }
 });
 
-window.SCENES=[S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'dust',pin:{t:12,text:'森に降りそそいだ！'},hook:['砂漠の砂が、海を越えて','森を育てている？'],tag:'地球×生物',dur:24,
+  title:'サハラの砂は、海を渡ってアマゾンの森の土に届いているのか？',
+  beats:[
+    {t:0,text:'サハラ砂漠の<b>砂ぼこり</b>が、風に乗る'},
+    {t:5,text:'大西洋を、<b>数千km</b>わたっていく'},
+    {t:9,text:'アマゾンの<b>森</b>に降りそそぐ'},
+    {t:13,text:'砂にふくまれる<b>リン</b>が、土の栄養になる'},
+    {t:19,text:'衛星の観測で、砂は年に<b>約2800万トン</b>'}
+  ],
+  more:'アマゾンの土は、雨や洪水でリンという栄養を少しずつ失っています。2015年の論文は、NASAの衛星CALIPSOのレーザー観測(2007〜2013年)から、アフリカの砂ぼこりが大西洋を渡ってアマゾン盆地に降る量を見積もりました。平均で年に約2800万トン(8〜48百万トンの幅)。そこに含まれるリンは年に約2.2万トンで、雨や洪水で失われる量とほぼ同じ規模でした。砂漠と熱帯雨林が、風でつながっている、という話です。',
+  caveat:'これは模式図です。砂の粒の動きや量は実際のデータではありません。数字は衛星観測にもとづく見積もりで、年ごとに大きく変わります。論文が示したのは「砂が運ぶリンの量が、失われる量と同じくらい」という点で、「森がこの砂で育っている」ことまで直接確かめたものではありません(論文自身も、森の生産を保つのに必要な量は分からないとしています)。砂のリンのすべてが植物に使える形とは限りません。私が確認できたのは書誌と抄録までで、本文は未確認です。',
+  source:{short:'Yu et al. 2015, Geophys Res Lett',cite:'Yu, H., Chin, M., Yuan, T., Bian, H., Remer, L.A., Prospero, J.M., Omar, A., Winker, D., Yang, Y., Zhang, Y., Zhang, Z. & Zhao, C. (2015). The fertilizing role of African dust in the Amazon rainforest: A first multiyear assessment based on data from Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observations. Geophysical Research Letters, 42(6), 1984-1991. doi:10.1002/2015GL063040',query:'The fertilizing role of African dust in the Amazon rainforest CALIPSO'},
+  init(W,H){const r=rng(777);
+    const dust=Array.from({length:90},()=>({u0:r(),sp:0.05+r()*0.03,off:(r()-0.5)*40,sz:1+r()*1.4,fall:r()<0.6,ph:r()*TAU}));
+    const tr=Array.from({length:16},()=>({x:r()*70-35,s:3+r()*3,ph:r()*TAU}));
+    return{dust,tr}},
+  draw(c,t,W,H,s){
+    const by=H*0.5;
+    vgrad(c,0,0,W,H,[[0,'#0b1a2e'],[0.5,'#12263a'],[1,'#050a12']]);
+    // 海
+    c.fillStyle='#0d2a44';c.fillRect(0,by+14,W,H-by);
+    c.strokeStyle='rgba(120,180,230,0.12)';c.lineWidth=1;
+    for(let i=0;i<5;i++){const y=by+30+i*16;c.beginPath();for(let x=0;x<=W;x+=8){const yy=y+Math.sin(x*0.05+t*1.5+i)*1.5;x?c.lineTo(x,yy):c.moveTo(x,yy)}c.stroke()}
+    // アフリカ(左)・南米(右)
+    c.fillStyle='#b58a4a';c.beginPath();c.moveTo(0,by-20);c.lineTo(52,by-12);c.lineTo(64,by+14);c.lineTo(0,by+14);c.closePath();c.fill();
+    const gw=sm(t,12,16);
+    c.fillStyle=lerpColor([40,95,50],[70,170,80],gw);
+    c.beginPath();c.moveTo(W,by-24);c.lineTo(W-70,by-14);c.lineTo(W-58,by+14);c.lineTo(W,by+14);c.closePath();c.fill();
+    s.tr.forEach(q=>{const x=W-34+q.x*0.8,y=by-6+Math.sin(q.ph)*3;
+      c.fillStyle='rgba(30,90,40,0.95)';c.beginPath();c.arc(x,y-q.s*0.4,q.s,0,TAU);c.fill()});
+    txt(c,'サハラ',26,by+30,11,'rgba(240,215,160,'+sm(t,0.3,1)+')','center');
+    txt(c,'アマゾン',W-30,by+30,11,'rgba(190,240,190,'+sm(t,8,9)+')','center');
+    // 砂ぼこり
+    const x0=44,x1=W-34,ya=by-60;
+    const sp=Math.min(1,sm(t,0,3));
+    s.dust.forEach(d=>{
+      const u=((t*d.sp*2.2+d.u0)%1);
+      if(t<0.5)return;
+      const x=mix(x0,x1,u)+Math.sin(t*2+d.ph)*2;
+      let y=ya+Math.sin(u*Math.PI)*-28+d.off*0.5+u*20;
+      if(d.fall&&u>0.82)y+= (u-0.82)*260;
+      const a=sp*(d.fall&&u>0.82?Math.max(0,1-(u-0.82)*5):1);
+      c.fillStyle='rgba(235,190,110,'+0.85*a+')';c.beginPath();c.arc(x,y,d.sz,0,TAU);c.fill()});
+    c.globalCompositeOperation='lighter';
+    glow(c,60,by-30,38,'230,180,100',0.18*sp);
+    // 森に届いた光
+    if(gw>0){glow(c,W-34,by-8,50,'140,240,140',0.3*gw*(0.8+0.2*Math.sin(t*4)))}
+    c.globalCompositeOperation='source-over';
+    // リンの粒(緑)
+    if(t>=13){const pa=sm(t,13,15);
+      for(let i=0;i<10;i++){const u=((t*0.4+i/10)%1);
+        const x=W-34+Math.sin(i*2.3)*22,y=by-30+u*34;
+        c.fillStyle='rgba(180,255,170,'+0.8*pa*(1-u)+')';c.beginPath();c.arc(x,y,1.6,0,TAU);c.fill()}
+      txt(c,'リン',W-34,by-40,11,'rgba(200,255,190,'+pa+')','center')}
+    // 距離の目安
+    const ra=sm(t,5,6)*(1-sm(t,9,10));
+    if(ra>0)txt(c,'数千km',W/2,by-20,11,'rgba(200,220,240,'+ra+')','center');
+    // 字幕
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,by+80,12,'rgba(240,235,215,'+q+')','center')};
+    cap(0,5,'サハラの砂ぼこりが、風に乗る');
+    cap(5,9,'大西洋をわたっていく');
+    cap(9,13,'アマゾンの森に降りそそぐ');
+    cap(13,19,'砂にふくまれるリンが、土の栄養に');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'衛星の見積もり: 砂は年に約2800万トン',W/2,by+80,12,'rgba(240,248,255,'+b+')','center');
+      txt(c,'砂の動きや量は模式',W/2,by+96,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
