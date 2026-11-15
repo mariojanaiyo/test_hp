@@ -24,6 +24,7 @@
 | zombie | 菌(Ophiocordyceps)に感染したアリは、低い葉の葉脈に正午ごろかみついて死に、あごの筋肉が縮んで死後も固定される | Hughes et al. 2011, BMC Ecol 11:13 | 主張確認済み (2026-11-02、抄録まで)。本文は未入手 |
 | germfree | 腸内細菌のいない無菌マウスは、ふつうのマウスより運動量が多く不安様行動が少なく、脳の遺伝子発現やシナプス関連たんぱく質も違う。幼少期に菌を入れると一部が近づく(マウスのみ) | Diaz Heijtz et al. 2011, PNAS 108(7):3047-3052 | 主張確認済み (2026-11-12、抄録まで) |
 | beaver | ビーバーのダムでできた湿った草地は、岸の草本の種類を33%以上ふやした(ニューヨーク州アディロンダック。1地域) | Wright, Jones & Flecker 2002, Oecologia 132:96-101 | 主張確認済み=抄録まで (2026-11-14) https://scholars.duke.edu/publication/651284 。本文は未確認 |
+| attine | 菌を育てるアリの体の細菌(論文はStreptomycesと同定)が、畑の寄生菌Escovopsisを強く抑え、親から子の巣へ受けつがれる(試験管実験) | Currie et al. 1999, Nature 398(6729):701-704 | 主張確認済み=本文PDFまで (2026-11-15) |
 
 ## 確認メモ
 
@@ -67,3 +68,5 @@
 
 - **acacia** (2026-11-13): 書誌(Palmer, Stanton, Young, Goheen, Pringle, Karban / Science 319(5860):192-195 / DOI 10.1126/science.1151579 / 2008-01-11)を本文PDF(https://tpyoung.ucdavis.edu/sites/g/files/dgvnsk4821/files/inline-files/breakdown%20of%20antplant%20mutualism.pdf)で照合。ケニアKLEEで1995年から大型草食動物(>15kg)を除外、10年で蜜腺・膨らんだトゲが減少、C. mimosae の木は30%以上減、C. sjostedti は倍増、C. mimosae 群れは47%縮小、C. sjostedti の木は成長が遅く8年間の死亡率が約2倍(1750本超の追跡)。「死亡率2倍」は柵の内外の比較ではなくアリ種別の比較と caveat に明記。木の反応は可塑的反応との推測。1調査地。補足資料(SOM)は未確認。状態: 主張確認済み(本文まで)。
   Artifact: https://claude.ai/artifact/1uBfxvqn8PZHvj9oNtSZvQ 録画: shorts_video/acacia.webm YouTube: 未投稿(2026-11-13、toriaezu_test にログインしたブラウザが無かった)
+
+- **attine** (2026-11-15): 書誌(Currie, Scott, Summerbell, Malloch / Nature 398(6729):701-704 / DOI 10.1038/19519 / 1999-04-22)を、論文本文PDF(https://www.insecta.ufv.br/Entomologia/ent/disciplina/ban%20160/AULAP/aula2/Fungusgrowingants.pdf)から抽出したテキストで照合。抄録・本文: 体表の白い粉はStreptomyces属の放線菌、全ての菌食アリで確認、雌の新女王74匹全てにあり雄にはなし、Escovopsisを特異的に抑制(25%の試験で胞子発芽を完全に抑え、残りは伸びを73.9±3.0%抑制)、共生菌の乾燥重量が47.9対5.3mgに。後の研究で菌はPseudonocardia属と修正された(検索要約のみ・論文未確認)→caveatに記載。試験管実験が中心。

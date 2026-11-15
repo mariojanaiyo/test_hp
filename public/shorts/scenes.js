@@ -2027,5 +2027,90 @@ S.push({
   }
 });
 
-window.SCENES=[S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'attine',pin:{t:12,text:'寄生菌を抑えた！'},hook:['アリの畑を守る、','見えない味方は？'],tag:'共生・寄生',dur:24,
+  title:'キノコを育てるアリは、体に「薬を作る細菌」を飼っているのか？',
+  beats:[
+    {t:0,text:'アリは、<b>キノコの畑</b>を育てている'},
+    {t:5,text:'畑には、<b>寄生する菌</b>が忍びよる'},
+    {t:9,text:'アリの体の<b>白い粉</b>は、細菌のかたまり'},
+    {t:13,text:'細菌の<b>薬</b>が、寄生菌だけを抑える'},
+    {t:19,text:'試験管で、寄生菌の伸びを<b>約74%</b>抑えた'}
+  ],
+  more:'ハキリアリなどのアリは、葉を運んでキノコを育て、それを食べています。この畑には、キノコを枯らす寄生菌(エスコボプシス)が入りこみます。1999年の論文は、アリの体の表面にある白い粉が、実は細菌のかたまりだと示しました。この細菌は、ふつうのカビには効かず、畑の寄生菌だけを強く抑える物質を出し、親から子の巣へ受けつがれていました。アリ・キノコ・寄生菌に加えて、第三の協力者がいた、という話です。',
+  caveat:'これは模式図です。アリ・細菌・寄生菌の大きさや数は実際のデータではありません。論文が調べたのは、おもに試験管の中の実験(抑えた割合は平均73.9%、一部は胞子の発芽を完全に止めた)で、巣の中でどれだけ働くかを直接測ったものではありません。論文はこの細菌をストレプトミセス属としましたが、その後の研究で、アリの体の細菌はおもにシュードノカルディア属と考えられています。私が確認できたのは論文本文(PDF)までで、その後の研究は検索結果の要約のみです。',
+  source:{short:'Currie et al. 1999, Nature',cite:'Currie, C.R., Scott, J.A., Summerbell, R.C. & Malloch, D. (1999). Fungus-growing ants use antibiotic-producing bacteria to control garden parasites. Nature, 398(6729), 701-704. doi:10.1038/19519',query:'Fungus-growing ants use antibiotic-producing bacteria to control garden parasites'},
+  init(W,H){const r=rng(512);
+    const para=Array.from({length:18},(_,i)=>({a:-0.9+r()*1.8,d:150+r()*90,t0:4+i*0.3,sp:0.8+r()*0.5,ph:r()*TAU}));
+    const bact=Array.from({length:26},(_,i)=>({a:r()*TAU,d:r(),ph:r()*TAU}));
+    const gard=Array.from({length:34},()=>{const a=r()*TAU,d=Math.sqrt(r());return{x:Math.cos(a)*d*46,y:-Math.abs(Math.sin(a))*d*30,s:2+r()*2.5}});
+    return{para,bact,gard}},
+  draw(c,t,W,H,s){
+    const cx=W/2,by=H*0.5;
+    vgrad(c,0,0,W,H,[[0,'#1b1a12'],[0.5,'#12120c'],[1,'#060605']]);
+    c.fillStyle='#2e2416';c.fillRect(0,by+10,W,H-by);
+    c.save();c.translate(cx,by);c.scale(1.4,1.4);c.translate(-cx,-by);
+    const wc=sm(t,12,14);          // 薬が効く
+    const gx=cx+10,gy=by+8;
+    // 畑(キノコ)
+    const dim=sm(t,6,12)*(1-wc)*0.35;
+    s.gard.forEach(g=>{c.fillStyle='rgba('+Math.round(225-dim*90)+','+Math.round(220-dim*140)+','+Math.round(190-dim*100)+',0.92)';
+      c.beginPath();c.arc(gx+g.x,gy+g.y,g.s,0,TAU);c.fill()});
+    c.globalCompositeOperation='lighter';glow(c,gx,gy-14,50,'200,230,170',0.1+0.18*wc);c.globalCompositeOperation='source-over';
+    // アリ(左)
+    const ax=cx-92,ay=by-6+Math.sin(t*3)*1.2;
+    c.fillStyle='#4a2c1c';
+    c.beginPath();c.ellipse(ax,ay,9,6,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(ax+14,ay-1,6,4.5,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(ax+26,ay-2,5,4,0,0,TAU);c.fill();
+    c.strokeStyle='#4a2c1c';c.lineWidth=1.3;
+    [-4,4,12].forEach(l=>{c.beginPath();c.moveTo(ax+l,ay+3);c.lineTo(ax+l-3,ay+12);c.stroke()});
+    // 体の白い粉(細菌)
+    const wa=sm(t,8,10);
+    if(wa>0){s.bact.forEach(b=>{const x=ax+13+Math.cos(b.a)*b.d*8,y=ay-2+Math.sin(b.a)*b.d*4;
+      c.fillStyle='rgba(245,245,235,'+0.9*wa+')';c.beginPath();c.arc(x,y,1.3,0,TAU);c.fill()});
+      c.globalCompositeOperation='lighter';glow(c,ax+13,ay-2,16,'240,245,255',0.35*wa);c.globalCompositeOperation='source-over'}
+    // 薬の輪(畑のまわり)
+    if(wc>0){const R=mix(30,78,wc);
+      c.strokeStyle='rgba(180,235,255,'+0.6*wc+')';c.lineWidth=2;c.setLineDash([4,5]);
+      c.beginPath();c.ellipse(gx,gy-10,R,R*0.7,0,0,TAU);c.stroke();c.setLineDash([]);
+      c.globalCompositeOperation='lighter';glow(c,gx,gy-10,R*1.1,'140,215,255',0.16*wc);c.globalCompositeOperation='source-over';
+      // アリから輪へ流れる細菌の粒
+      for(let i=0;i<8;i++){const u=((t*0.5+i/8)%1);const x=mix(ax+14,gx-R*0.8,u),y=mix(ay-2,gy-10,u)-Math.sin(u*Math.PI)*10;
+        c.fillStyle='rgba(245,250,255,'+0.7*wc*(1-u)+')';c.beginPath();c.arc(x,y,1.5,0,TAU);c.fill()}}
+    // 寄生菌(赤)
+    s.para.forEach(p=>{if(t<p.t0)return;
+      const a=sm(t,p.t0,p.t0+1);
+      const reach=sm(t,p.t0,p.t0+6)*p.sp;
+      let d=mix(p.d,36,Math.min(reach,1));
+      const push=wc*Math.min(1,Math.max(0,(80-d)/50));
+      d=d+push*70;
+      const px=gx+Math.cos(p.a*0.9)*d+Math.sin(t*2+p.ph)*2,py=gy-10-Math.sin(p.a*0.9+0.2)*d*0.55+Math.cos(t*2+p.ph)*2;
+      const fade=1-wc*sm(t,13,18);
+      c.fillStyle='rgba(255,80,70,'+0.9*a*fade+')';c.beginPath();c.arc(px,py,2.6,0,TAU);c.fill();
+      c.globalCompositeOperation='lighter';glow(c,px,py,7,'255,90,70',0.3*a*fade);c.globalCompositeOperation='source-over'});
+    c.restore();
+    // 凡例
+    const la=sm(t,1,2);
+    c.fillStyle='rgba(225,220,190,'+la+')';c.beginPath();c.arc(W*0.12,by+112,3.2,0,TAU);c.fill();
+    txt(c,'キノコの畑',W*0.12+8,by+112,11,'rgba(235,230,205,'+la+')');
+    const lb=sm(t,5,6);
+    c.fillStyle='rgba(255,80,70,'+lb+')';c.beginPath();c.arc(W*0.42,by+112,3.2,0,TAU);c.fill();
+    txt(c,'寄生菌',W*0.42+8,by+112,11,'rgba(255,200,195,'+lb+')');
+    const lc=sm(t,9,10);
+    c.fillStyle='rgba(245,245,235,'+lc+')';c.beginPath();c.arc(W*0.64,by+112,3.2,0,TAU);c.fill();
+    txt(c,'アリの細菌',W*0.64+8,by+112,11,'rgba(240,245,250,'+lc+')');
+    // 絵の中の字幕
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,by+80,12,'rgba(245,240,215,'+q+')','center')};
+    cap(0,5,'アリはキノコの畑を育てる');
+    cap(5,9,'畑に、寄生する菌が近づく');
+    cap(9,13,'アリの体の白い粉は、細菌');
+    cap(13,19,'細菌の薬が、寄生菌を遠ざける');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'試験管で、寄生菌の伸びを約74%抑えた',W/2,by+80,12,'rgba(235,248,255,'+b+')','center');
+      txt(c,'アリ・細菌・寄生菌の大きさや数は模式',W/2,by+96,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
