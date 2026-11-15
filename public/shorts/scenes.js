@@ -2277,5 +2277,107 @@ S.push({
   }
 });
 
-window.SCENES=[S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'gabi',pin:{t:12,text:'陸がつながった！'},hook:['陸がつながると','動物はどうなる？'],tag:'大陸の接触と動物の交流',dur:24,
+  title:'パナマで北米と南米がつながると、動物が行き来した?(アメリカ大陸の大交流)',
+  beats:[
+    {t:0,text:'北と南の大陸は、<b>海</b>でへだてられていた'},
+    {t:5,text:'パナマの陸が<b>せり上がる</b>(約300万年前)'},
+    {t:12.5,text:'<b>つながった</b>道を、動物が行き来する'},
+    {t:16.5,text:'北→南へ入った属が<b>多め</b>'},
+    {t:20,text:'南米の科の数は、<b>増えて</b>、また落ち着いた'}
+  ],
+  more:'Marshallほか(1982)は、北米と南米の陸の哺乳類の化石の記録をまとめ直しました。パナマの陸橋ができたのは約300万年前で、そのあと北と南で動物が入れ替わりました。論文の抄録によると、南米の陸の哺乳類の科の数は、交流の前の32から39まで増え、現在は35です。北米でも似た動きがあります。著者はこれを、島の種数は入れ替わりながら平衡に近づくというMacArthurとWilsonの理論と合う、と見ています。また、北米から南米に入った属のほうが、逆より多かったと報告しています。',
+  caveat:'これは模式図です。大陸の形、動物の点の数や動きは実際のデータではありません。数字(32→39→35)は論文の抄録からで、本文の表までは照合していません。陸橋ができた時期と、動物が渡った時期は、のちの研究で見直されています(約1000万年前に一部の動物が渡った証拠もあります)。「平衡説と合う」は著者の解釈で、論文自身も、あとの時期の入れ替わりは平衡説で予想される形ではないと述べています。',
+  source:{short:'Marshall et al. 1982, Science',cite:'Marshall, L. G., Webb, S. D., Sepkoski, J. J., Jr., & Raup, D. M. (1982). Mammalian evolution and the Great American Interchange. Science, 215(4538), 1351-1357. doi:10.1126/science.215.4538.1351',query:'Mammalian evolution and the Great American Interchange Marshall Webb Sepkoski Raup 1982'},
+  init(W,H){
+    const r=rng(82153),ns=[],sn=[],lf=[];
+    for(let i=0;i<16;i++)ns.push({u:r(),sp:0.10+r()*0.06,o:(r()-0.5)*22,p:r()*6,st:r()*5});
+    for(let i=0;i<8;i++)sn.push({u:r(),sp:0.09+r()*0.05,o:(r()-0.5)*22,p:r()*6,st:r()*6});
+    for(let i=0;i<30;i++)lf.push({x:r(),y:r(),p:r()*6});
+    return{ns,sn,lf};
+  },
+  draw(c,t,W,H,s){
+    const top=H*0.1,nb=top+98,sT=top+196,bot=top+300,cx=W/2;
+    // 海
+    vgrad(c,0,top-6,W,bot-top+14,[[0,'#0e3a5c'],[0.5,'#12577a'],[1,'#0a2f4d']]);
+    c.strokeStyle='rgba(180,230,255,0.12)';c.lineWidth=1;
+    for(let k=0;k<5;k++){c.beginPath();for(let x=0;x<=W;x+=8){const y=nb+14+k*16+Math.sin(x*0.05+t*1.2+k)*1.5;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
+    // 北の大陸(上)
+    const land=(y0,y1,col,edge)=>{
+      c.fillStyle=col;c.beginPath();c.moveTo(0,y0);c.lineTo(W,y0);
+      c.lineTo(W,y1-6);c.quadraticCurveTo(W*0.78,y1+10,cx+30,y1);c.lineTo(cx-30,y1);c.quadraticCurveTo(W*0.22,y1+10,0,y1-8);c.closePath();c.fill();
+      c.strokeStyle=edge;c.lineWidth=1.2;c.stroke();
+    };
+    land(top-6,nb,'#3a5a2e','rgba(170,230,150,0.5)');
+    // 南の大陸(下): 上下反転で描く
+    c.fillStyle='#2f6a46';c.beginPath();c.moveTo(cx-30,sT);c.lineTo(cx+30,sT);
+    c.quadraticCurveTo(W*0.78,sT-10,W,sT+8);c.lineTo(W,bot+8);c.lineTo(0,bot+8);c.lineTo(0,sT+8);c.quadraticCurveTo(W*0.22,sT-10,cx-30,sT);c.closePath();c.fill();
+    c.strokeStyle='rgba(170,235,170,0.5)';c.lineWidth=1.2;c.stroke();
+    // 木の点
+    s.lf.forEach(p=>{
+      c.fillStyle='rgba(150,220,130,0.35)';
+      c.fillRect(10+p.x*(W-20),top+p.y*70,2,2);
+      c.fillStyle='rgba(130,225,170,0.35)';
+      c.fillRect(10+p.x*(W-20),sT+16+p.y*(bot-sT-24),2,2);
+    });
+    // パナマの陸橋(せり上がる)
+    const rise=sm(t,5,12);
+    const bw=26*rise;
+    if(rise>0.01){
+      const y0=nb-2,y1=sT+2,span=y1-y0,vis=span*rise;
+      // 北と南の両端から伸びてつながる
+      c.fillStyle='#4b6b34';c.beginPath();c.rect(cx-bw/2,y0,bw,vis/2);c.fill();
+      c.fillStyle='#3a7a4e';c.beginPath();c.rect(cx-bw/2,y1-vis/2,bw,vis/2);c.fill();
+      c.strokeStyle='rgba(190,235,160,0.55)';c.lineWidth=1;
+      c.strokeRect(cx-bw/2,y0,bw,vis/2);c.strokeRect(cx-bw/2,y1-vis/2,bw,vis/2);
+    }
+    // 動物(北→南が多い、南→北が少ない)
+    const go=t-12;
+    if(go>0){
+      const span=sT-nb+16;
+      s.ns.forEach(p=>{
+        const k=((go-p.st*0.4)*p.sp);if(k<0)return;
+        const u=k%1.35;const v=clamp(u/1.1);
+        const x=cx+p.o*0.28+Math.sin(t*2+p.p)*2.2,y=nb-8+v*span;
+        const a=u<1.1?1:0;if(!a)return;
+        c.globalCompositeOperation='lighter';glow(c,x,y,8,'255,190,80',0.45);c.globalCompositeOperation='source-over';
+        c.fillStyle='#ffd27a';c.fillRect(x-1.8,y-1.8,3.6,3.6);
+      });
+      s.sn.forEach(p=>{
+        const k=((go-p.st*0.5)*p.sp);if(k<0)return;
+        const u=k%1.5;const v=clamp(u/1.1);
+        const x=cx+p.o*0.28+Math.sin(t*2+p.p)*2.2,y=sT+8-v*span;
+        if(u>=1.1)return;
+        c.globalCompositeOperation='lighter';glow(c,x,y,8,'110,235,230',0.42);c.globalCompositeOperation='source-over';
+        c.fillStyle='#8ff3ea';c.fillRect(x-1.8,y-1.8,3.6,3.6);
+      });
+    }
+    // ラベル
+    txt(c,'北アメリカ',14,top+14,11,'rgba(215,245,200,0.9)','left');
+    txt(c,'南アメリカ',14,bot-6,11,'rgba(210,250,225,0.9)','left');
+    if(t>=5)txt(c,'パナマ',cx+bw/2+8,(nb+sT)/2+4,10.5,'rgba(235,245,200,'+sm(t,5,7)*(1-sm(t,19,19.5))+')','left');
+    if(t<5)txt(c,'海',cx,(nb+sT)/2+4,11,'rgba(190,230,255,0.8)','center');
+    if(t>=12&&t<20){
+      txt(c,'北→南(多い)',W-14,nb+30,10.5,'rgba(255,215,140,'+sm(t,13,14)+')','right');
+      txt(c,'南→北(少ない)',W-14,nb+46,10.5,'rgba(150,245,235,'+sm(t,14,15)+')','right');
+    }
+    // 科の数(抄録の数字): 32 → 39 → 35
+    if(t>=19.5){
+      const a=sm(t,19.5,21),f=sm(t,20,23);
+      const bx=W-150,by=sT-16,sc=0.9;
+      c.fillStyle='rgba(8,28,48,'+0.55*a+')';c.fillRect(bx-8,nb+12,148,sT-nb-24);
+      txt(c,'南米の陸の哺乳類の科',bx+66,nb+26,9.5,'rgba(220,240,255,'+a+')','center');
+      [[32,'前'],[39,'交流後'],[35,'今']].forEach((d,i)=>{
+        const x=bx+4+i*46,h=d[0]*sc*f;
+        c.fillStyle='rgba(150,225,170,'+0.9*a+')';c.fillRect(x,by-h,26,h);
+        txt(c,String(d[0]),x+13,by-h-3,10,'rgba(235,250,235,'+a+')','center');
+        txt(c,d[1],x+13,by+9,9,'rgba(210,230,245,'+a+')','center');
+      });
+    }
+    c.shadowBlur=0;txt(c,'模式図(形・点の数は実測ではない)',W-12,bot-4,9,'rgba(225,238,250,0.85)','right');
+  }
+});
+
+window.SCENES=[S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
