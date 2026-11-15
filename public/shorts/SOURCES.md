@@ -70,3 +70,4 @@
   Artifact: https://claude.ai/artifact/1uBfxvqn8PZHvj9oNtSZvQ 録画: shorts_video/acacia.webm YouTube: 未投稿(2026-11-13、toriaezu_test にログインしたブラウザが無かった)
 
 - **attine** (2026-11-15): 書誌(Currie, Scott, Summerbell, Malloch / Nature 398(6729):701-704 / DOI 10.1038/19519 / 1999-04-22)を、論文本文PDF(https://www.insecta.ufv.br/Entomologia/ent/disciplina/ban%20160/AULAP/aula2/Fungusgrowingants.pdf)から抽出したテキストで照合。抄録・本文: 体表の白い粉はStreptomyces属の放線菌、全ての菌食アリで確認、雌の新女王74匹全てにあり雄にはなし、Escovopsisを特異的に抑制(25%の試験で胞子発芽を完全に抑え、残りは伸びを73.9±3.0%抑制)、共生菌の乾燥重量が47.9対5.3mgに。後の研究で菌はPseudonocardia属と修正された(検索要約のみ・論文未確認)→caveatに記載。試験管実験が中心。
+  Artifact: https://claude.ai/artifact/DRguL8oDqB1rRgW7szXiTL 録画: shorts_video/attine.webm YouTube: 未投稿(2026-11-15、toriaezu_test にログインしたブラウザが無かった)
