@@ -74,3 +74,6 @@
 
 - **dust** (2026-11-16): 書誌(Yu, Chin, Yuan, Bian, Remer, Prospero, Omar, Winker, Yang, Zhang, Zhang, Zhao / Geophys Res Lett 42(6):1984-1991 / DOI 10.1002/2015GL063040 / 2015-03-18)と抄録を Crossref(https://api.crossref.org/works/10.1002/2015GL063040)で確認。主張確認済み=抄録まで: CALIOP 2007-2013、砂の沈着は平均約28 Tg/年(8-48)、リンは約0.022 Tg/年(0.006-0.037)で、水の流れで失われる量と同規模。本文(出版社ページ403)は未確認。論文自身が「森の生産を保つのに必要な量は不明」としており、「森を育てている」は問い型にして caveat に明記。
   Artifact: https://claude.ai/artifact/WjF7mV2EQj1RmfC92wqmo3 録画: shorts_video/dust.webm YouTube: 未投稿(2026-11-16、toriaezu_test にログインしたブラウザが無かった)
+
+- **seabird** (2026-11-17): 書誌(Graham, Wilson, Carr, Hoey, Jennings, MacNeil / Nature 559:250-253 / DOI 10.1038/s41586-018-0202-3 / 2018-07-11オンライン)を、論文本文PDF(https://library.sprep.org/sites/default/files/graham-2018-chagos.pdf)から抽出したテキストで照合。主張確認済み=本文まで: チャゴス諸島の6島(ネズミなし)対6島(ネズミあり)の自然の実験。海鳥密度は1,243対1.6羽/ha(760倍)、窒素入力は190対0.8 kg/ha/年(251倍)、15Nが礁の藻・スポンジ・魚にも、魚の総バイオマス48%増、藻食と生物浸食が3.2・3.8倍。駆除による回復は未検証、レジリエンスは推測と注記。その後の研究は未確認。
+  Artifact: (下記) 録画: shorts_video/seabird.webm YouTube: 未投稿(下記)

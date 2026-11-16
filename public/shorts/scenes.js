@@ -2182,5 +2182,88 @@ S.push({
   }
 });
 
-window.SCENES=[S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'seabird',pin:{t:12,text:'760倍の差！'},hook:['ネズミのいる島では、','サンゴ礁まで変わる？'],tag:'連鎖×島',dur:24,
+  title:'島にネズミがいるかどうかで、まわりのサンゴ礁の魚まで変わるのか？',
+  beats:[
+    {t:0,text:'ネズミのいない島に、<b>海鳥</b>が集まる'},
+    {t:5,text:'鳥のふんの<b>窒素</b>が、海にしみ出す'},
+    {t:9,text:'ネズミのいる島には、<b>海鳥がほとんどいない</b>'},
+    {t:13,text:'海鳥の密度は<b>760倍</b>、窒素は<b>251倍</b>ちがう'},
+    {t:19,text:'まわりの礁の魚は、<b>約48%</b>多かった'}
+  ],
+  more:'インド洋のチャゴス諸島には、ネズミのいる島と、いない島があります。2018年の論文は、似た条件の6島ずつを比べました。ネズミのいない島は、海鳥の密度が760倍、鳥のふんが運ぶ窒素が251倍。その窒素の目印(15N)が、島の土や草だけでなく、まわりの礁の藻やスポンジ、魚にも見つかりました。礁の魚の量は約48%多く、藻を食べる働きは3.2倍でした。陸の鳥が、海の中までつながっている、という話です。',
+  caveat:'これは模式図です。鳥や魚の数・動きは実際のデータではありません。論文は、ネズミのいる島といない島を比べた「自然の実験」で、ネズミを取り除いて変化を追った実験ではありません。島ごとの違いが完全に消えたとは言えません(論文は、大きさや場所などが似た島を選んだとしています)。窒素の量は、鳥の数やふんの量から計算した見積もりです。ネズミの駆除で礁が回復するかは、この論文では確かめていません。私が確認できたのは論文本文(PDF)までで、その後の研究は未確認です。',
+  source:{short:'Graham et al. 2018, Nature',cite:'Graham, N.A.J., Wilson, S.K., Carr, P., Hoey, A.S., Jennings, S. & MacNeil, M.A. (2018). Seabirds enhance coral reef productivity and functioning in the absence of invasive rats. Nature, 559, 250-253. doi:10.1038/s41586-018-0202-3',query:'Seabirds enhance coral reef productivity and functioning in the absence of invasive rats'},
+  init(W,H){const r=rng(2018);
+    const birds=Array.from({length:22},()=>({u0:r(),sp:0.07+r()*0.05,y:r(),ph:r()*TAU,keep:r()<0.04}));
+    const fishA=Array.from({length:15},()=>({x:r(),y:r(),ph:r()*TAU,sz:1+r()*0.8}));
+    return{birds,fishA}},
+  draw(c,t,W,H,s){
+    const by=H*0.46;
+    vgrad(c,0,0,W,H,[[0,'#0c2a4a'],[0.5,'#17466a'],[1,'#06121e']]);
+    c.fillStyle='#0b3350';c.fillRect(0,by+16,W,H-by);
+    c.strokeStyle='rgba(140,200,240,0.12)';c.lineWidth=1;
+    for(let i=0;i<4;i++){const y=by+26+i*14;c.beginPath();for(let x=0;x<=W;x+=8){const yy=y+Math.sin(x*0.05+t*1.5+i)*1.4;x?c.lineTo(x,yy):c.moveTo(x,yy)}c.stroke()}
+    const xa=W*0.26,xb=W*0.74;
+    const rb=sm(t,8,10);               // ネズミの島が見える
+    const island=(x,a,col)=>{c.globalAlpha=a;c.fillStyle=col;
+      c.beginPath();c.moveTo(x-52,by+16);c.quadraticCurveTo(x,by-34,x+52,by+16);c.closePath();c.fill();
+      c.fillStyle='#2f7a3c';c.beginPath();c.ellipse(x,by-6,22,7,0,0,TAU);c.fill();c.globalAlpha=1};
+    island(xa,sm(t,0,1),'#caa86a');
+    island(xb,rb,'#caa86a');
+    // 海鳥(左: たくさん / 右: ほぼいない)
+    const a0=sm(t,0.3,1.5);
+    s.birds.forEach((b,i)=>{
+      const u=(t*b.sp+b.u0)%1;
+      const x=xa-80+u*160,y=by-70+b.y*40-Math.sin(u*Math.PI)*10;
+      const fl=Math.sin(t*9+b.ph)*3;
+      c.strokeStyle='rgba(250,250,250,'+0.9*a0+')';c.lineWidth=1.4;
+      c.beginPath();c.moveTo(x-5,y+fl);c.lineTo(x,y);c.lineTo(x+5,y+fl);c.stroke();
+      if(b.keep&&rb>0){const x2=xb-60+u*120;
+        c.strokeStyle='rgba(250,250,250,'+0.9*rb+')';c.beginPath();c.moveTo(x2-5,y+fl);c.lineTo(x2,y);c.lineTo(x2+5,y+fl);c.stroke()}});
+    // 窒素の粒(左: 島→海 / 右: ほぼなし)
+    const na=sm(t,5,7);
+    if(na>0){for(let i=0;i<22;i++){const u=((t*0.45+i/22)%1);
+      const x=xa+Math.sin(i*2.1)*40*(0.4+u),y=by-4+u*70;
+      c.fillStyle='rgba(170,255,160,'+0.85*na*(1-u*0.6)+')';c.beginPath();c.arc(x,y,1.8,0,TAU);c.fill()}
+      c.globalCompositeOperation='lighter';glow(c,xa,by+40,60,'140,240,140',0.16*na);c.globalCompositeOperation='source-over';
+      txt(c,'窒素',xa,by+92,11,'rgba(200,255,190,'+na+')','center')}
+    if(rb>0&&t>=9){const nb=rb*sm(t,10,12);
+      for(let i=0;i<2;i++){const u=((t*0.3+i/2)%1);
+        c.fillStyle='rgba(170,255,160,'+0.8*nb*(1-u)+')';c.beginPath();c.arc(xb+i*10-5,by-4+u*70,1.8,0,TAU);c.fill()}}
+    // ネズミ(右の島)
+    if(rb>0){for(let i=0;i<4;i++){const x=xb-18+i*12+Math.sin(t*3+i)*3,y=by-2+(i%2)*5;
+      c.fillStyle='rgba(255,90,80,'+rb+')';c.beginPath();c.ellipse(x,y,3.6,2.2,0,0,TAU);c.fill();
+      c.beginPath();c.arc(x+4,y-0.5,1.4,0,TAU);c.fill()}}
+    // サンゴ礁の魚(16秒から: 左が多く大きい / 右が少ない)
+    const fa=sm(t,15.5,17.5);
+    if(fa>0){
+      s.fishA.forEach((f,i)=>{const x=xa-46+f.x*92+Math.sin(t*1.3+f.ph)*5,y=by+100+f.y*34;
+        c.fillStyle='rgba(255,200,90,'+0.9*fa+')';c.beginPath();c.ellipse(x,y,4.2*f.sz,2.2*f.sz,0,0,TAU);c.fill();
+        c.beginPath();c.moveTo(x-4*f.sz,y);c.lineTo(x-7*f.sz,y-2.4);c.lineTo(x-7*f.sz,y+2.4);c.fill()});
+      s.fishA.slice(0,10).forEach((f,i)=>{const x=xb-46+f.x*92+Math.sin(t*1.3+f.ph)*5,y=by+100+f.y*34;
+        c.fillStyle='rgba(255,200,90,'+0.9*fa+')';c.beginPath();c.ellipse(x,y,3.6*f.sz,1.9*f.sz,0,0,TAU);c.fill();
+        c.beginPath();c.moveTo(x-3.6*f.sz,y);c.lineTo(x-6.2*f.sz,y-2.1);c.lineTo(x-6.2*f.sz,y+2.1);c.fill()})}
+    // ラベル
+    const la=sm(t,1,2);
+    txt(c,'ネズミなし',xa,by+52+(t<5?0:0),11.5,'rgba(230,245,255,'+la+')','center');
+    txt(c,'ネズミあり',xb,by+52,11.5,'rgba(255,200,195,'+rb+')','center');
+    // 数字
+    const ba=sm(t,13,14.5)*(1-sm(t,18,19));
+    if(ba>0){txt(c,'海鳥 760倍',xa,by-96,12,'rgba(255,255,255,'+ba+')','center');
+      txt(c,'窒素 251倍',xa,by-80,12,'rgba(200,255,190,'+ba+')','center')}
+    // 字幕
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,by+176,12,'rgba(240,248,255,'+q+')','center')};
+    cap(0,5,'海鳥が、島に集まる');
+    cap(5,9,'ふんの窒素が、海にしみ出す');
+    cap(9,13,'ネズミの島には、海鳥が少ない');
+    cap(13,19,'海鳥の密度は760倍ちがう');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'礁の魚の量は、約48%多かった',W/2,by+176,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'鳥や魚の数・動きは模式',W/2,by+192,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
