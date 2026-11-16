@@ -2379,5 +2379,104 @@ S.push({
   }
 });
 
-window.SCENES=[S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'germfree',pin:{t:12,text:'動きがちがう！'},hook:['腸の菌がいないと','マウスは変わる？'],tag:'腸の菌と脳・行動',dur:24,
+  title:'腸の菌がいないマウスは、行動も脳も変わる?(無菌マウスの比較)',
+  beats:[
+    {t:0,text:'<b>無菌</b>のマウスと、ふつうのマウス'},
+    {t:5,text:'同じ箱で、<b>歩き方</b>を見比べる'},
+    {t:12.5,text:'無菌のほうが<b>活発</b>で、不安っぽさが少ない'},
+    {t:16.5,text:'脳の遺伝子の働きも<b>ちがった</b>'},
+    {t:20,text:'早く菌を入れると、脳の一部は<b>近づいた</b>'}
+  ],
+  more:'Diaz Heijtzほか(2011)は、腸内細菌のいない「無菌」のマウスと、ふつうの腸内細菌をもつマウスを比べました。論文の抄録によると、無菌のマウスのほうが運動量が多く、不安のような行動が少なめでした。運動や不安にかかわる脳の領域では、遺伝子の働き方もちがいました。さらに、生まれてから早い時期に腸内細菌をもたせた無菌マウスでは、線条体のたんぱく質(PSD-95とシナプトフィジン)の量がふつうのマウスに近づきました。著者は、腸内細菌が入ってくると、運動や不安にかかわる神経の回路に影響する信号が始まる、と考えています。',
+  caveat:'これは模式図です。箱の大きさ、動きの軌跡、腸と脳をつなぐ線は、実際のデータや仕組みの証明ではありません。マウスでの1つの研究の抄録にもとづき、本文の数値・方法までは照合していません。人間に当てはめることは、この研究からは言えません。「不安のような行動」はマウスの行動テストでの指標で、感情そのものではありません。のちの研究での再現性や反論は未照合です。',
+  source:{short:'Diaz Heijtz et al. 2011, PNAS',cite:'Diaz Heijtz, R., Wang, S., Anuar, F., Qian, Y., Bjorkholm, B., Samuelsson, A., Hibberd, M. L., Forssberg, H., & Pettersson, S. (2011). Normal gut microbiota modulates brain development and behavior. Proceedings of the National Academy of Sciences, 108(7), 3047-3052. doi:10.1073/pnas.1010529108',query:'Normal gut microbiota modulates brain development and behavior Diaz Heijtz 2011'},
+  init(W,H){
+    const r=rng(20110131),bac=[],nodes=[];
+    for(let i=0;i<22;i++)bac.push({u:r(),sp:0.05+r()*0.05,o:(r()-0.5)*8,p:r()*6});
+    for(let i=0;i<14;i++){const a=r()*TAU,d=Math.sqrt(r())*24;nodes.push({x:Math.cos(a)*d,y:Math.sin(a)*d*0.85,p:r()*6})}
+    return{bac,nodes};
+  },
+  draw(c,t,W,H,s){
+    const top=H*0.1,ay=top+44,ah=122,aw=156,ax=[16,188];
+    vgrad(c,0,top-6,W,300,[[0,'#10202f'],[1,'#0b1622']]);
+    const appear=sm(t,0.3,2);
+    // 無菌=Lissajous(広く速い)、ふつう=壁ぞい(ゆっくり)
+    const posGF=u=>({x:Math.sin(0.9*u+0.5*Math.sin(0.37*u)),y:Math.sin(1.3*u+1.0)});
+    const posSP=u=>{
+      const p=((0.11*u+0.12*Math.sin(0.8*u))%1+1)%1*4,e=Math.floor(p),f=p-e;
+      const q=[[-1,-1],[1,-1],[1,1],[-1,1],[-1,-1]];
+      const a=q[e],b=q[e+1];
+      return{x:mix(a[0],b[0],f)*0.82,y:mix(a[1],b[1],f)*0.82};
+    };
+    const defs=[{fn:posGF,col:'255,200,90',name:'無菌'},{fn:posSP,col:'120,225,215',name:'ふつう'}];
+    defs.forEach((d,i)=>{
+      const x0=ax[i],cx=x0+aw/2,cy=ay+ah/2;
+      c.fillStyle='rgba(20,40,58,'+0.9*appear+')';c.fillRect(x0,ay,aw,ah);
+      c.strokeStyle='rgba(170,210,235,'+0.55*appear+')';c.lineWidth=1.2;c.strokeRect(x0,ay,aw,ah);
+      txt(c,d.name,cx,ay-8,12,'rgba(235,245,255,'+appear+')','center','700');
+      const pt=u=>{const p=d.fn(u);return{x:cx+p.x*(aw/2-12),y:cy+p.y*(ah/2-12)}};
+      if(t>=5){
+        const u=t-5;
+        for(let k=40;k>=1;k--){
+          const uu=u-k*0.15;if(uu<0)continue;const q=pt(uu);
+          c.fillStyle='rgba('+d.col+','+0.30*(1-k/40)+')';c.beginPath();c.arc(q.x,q.y,2.2,0,TAU);c.fill();
+        }
+        const q=pt(u),q2=pt(u+0.05),ang=Math.atan2(q2.y-q.y,q2.x-q.x);
+        c.globalCompositeOperation='lighter';glow(c,q.x,q.y,12,d.col,0.4);c.globalCompositeOperation='source-over';
+        c.save();c.translate(q.x,q.y);c.rotate(ang);
+        c.fillStyle='rgb('+d.col+')';c.beginPath();c.ellipse(0,0,6.5,3.6,0,0,TAU);c.fill();
+        c.beginPath();c.arc(6,0,2.6,0,TAU);c.fill();
+        c.strokeStyle='rgba('+d.col+',0.8)';c.lineWidth=1;c.beginPath();c.moveTo(-6.5,0);c.quadraticCurveTo(-11,3,-14,-1);c.stroke();
+        c.restore();
+      }
+    });
+    // 下の模式図: 腸 → 脳
+    const gy=top+228,bx0=26;
+    const ph=sm(t,14.5,16.5);
+    c.globalAlpha=ph;
+    // 腸(波うつ管)
+    c.strokeStyle='rgba(235,170,140,0.75)';c.lineWidth=9;c.lineCap='round';
+    c.beginPath();for(let x=0;x<=130;x+=4){const y=gy+Math.sin(x*0.09)*9;x?c.lineTo(bx0+x,y):c.moveTo(bx0+x,y)}c.stroke();
+    c.strokeStyle='rgba(60,30,25,0.6)';c.lineWidth=5;
+    c.beginPath();for(let x=0;x<=130;x+=4){const y=gy+Math.sin(x*0.09)*9;x?c.lineTo(bx0+x,y):c.moveTo(bx0+x,y)}c.stroke();
+    // 腸の菌(つぶ)
+    s.bac.forEach(b=>{
+      const x=bx0+((b.u+t*b.sp)%1)*130,y=gy+Math.sin((x-bx0)*0.09)*9+b.o*0.4;
+      c.fillStyle='rgba(150,245,170,0.9)';c.fillRect(x-1.4,y-1.4,2.8,2.8);
+    });
+    txt(c,'腸の菌',bx0+65,gy+26,10.5,'rgba(235,225,215,0.95)','center');
+    // 脳(模式)
+    const bxn=272,byn=gy;
+    c.strokeStyle='rgba(190,200,255,0.6)';c.lineWidth=1.4;c.fillStyle='rgba(60,70,120,0.4)';
+    c.beginPath();c.ellipse(bxn,byn,38,30,0,0,TAU);c.fill();c.stroke();
+    const on=sm(t,16.5,18);
+    s.nodes.forEach((n,i)=>{
+      const pul=0.5+0.5*Math.sin(t*3+n.p);
+      c.globalCompositeOperation='lighter';glow(c,bxn+n.x,byn+n.y,7,'160,170,255',0.15+0.3*on*pul);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba(200,210,255,'+(0.55+0.4*on)+')';c.fillRect(bxn+n.x-1.2,byn+n.y-1.2,2.4,2.4);
+    });
+    // 線条体(最後に強調)
+    const hi=sm(t,20,21.5);
+    if(hi>0){
+      c.strokeStyle='rgba(255,215,120,'+0.9*hi+')';c.lineWidth=1.6;c.beginPath();c.ellipse(bxn+10,byn+4,13,9,0,0,TAU);c.stroke();
+      c.globalCompositeOperation='lighter';glow(c,bxn+10,byn+4,22,'255,200,90',0.35*hi);c.globalCompositeOperation='source-over';
+      txt(c,'線条体',bxn+10,byn-22,10,'rgba(255,225,150,'+hi+')','center');
+    }
+    txt(c,'脳',bxn,byn+41,10.5,'rgba(215,220,255,0.95)','center');
+    // 腸→脳の信号(模式)
+    if(t>=16.5){
+      for(let i=0;i<5;i++){
+        const u=((t*0.35+i/5)%1);
+        const x=bx0+140+u*(bxn-38-bx0-146),y=gy;
+        c.globalCompositeOperation='lighter';glow(c,x,y,6,'255,210,120',0.5*on);c.globalCompositeOperation='source-over';
+      }
+    }
+    c.globalAlpha=1;
+    c.shadowBlur=0;txt(c,'模式図(軌跡・線は実測ではない)',W-12,top+287,9,'rgba(225,238,250,0.85)','right');
+  }
+});
+
+window.SCENES=[S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
