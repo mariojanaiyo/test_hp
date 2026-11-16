@@ -76,4 +76,4 @@
   Artifact: https://claude.ai/artifact/WjF7mV2EQj1RmfC92wqmo3 録画: shorts_video/dust.webm YouTube: 未投稿(2026-11-16、toriaezu_test にログインしたブラウザが無かった)
 
 - **seabird** (2026-11-17): 書誌(Graham, Wilson, Carr, Hoey, Jennings, MacNeil / Nature 559:250-253 / DOI 10.1038/s41586-018-0202-3 / 2018-07-11オンライン)を、論文本文PDF(https://library.sprep.org/sites/default/files/graham-2018-chagos.pdf)から抽出したテキストで照合。主張確認済み=本文まで: チャゴス諸島の6島(ネズミなし)対6島(ネズミあり)の自然の実験。海鳥密度は1,243対1.6羽/ha(760倍)、窒素入力は190対0.8 kg/ha/年(251倍)、15Nが礁の藻・スポンジ・魚にも、魚の総バイオマス48%増、藻食と生物浸食が3.2・3.8倍。駆除による回復は未検証、レジリエンスは推測と注記。その後の研究は未確認。
-  Artifact: (下記) 録画: shorts_video/seabird.webm YouTube: 未投稿(下記)
+  Artifact: https://claude.ai/artifact/8ysrEVN5PoKX5jLXuHJXpU 録画: shorts_video/seabird.webm YouTube: 未投稿(2026-11-17、toriaezu_test にログインしたブラウザが無かった。Browser 1=読めず、2・3=別チャンネル、4=再ログイン要求)
