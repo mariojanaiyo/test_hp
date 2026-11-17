@@ -2478,5 +2478,97 @@ S.push({
   }
 });
 
-window.SCENES=[S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'honeyguide',pin:{t:12,text:'こたえた！'},hook:['野生の鳥は、','人の声に応える？'],tag:'鳥と人の協力',dur:24,
+  title:'ミツオシエは、蜂蜜ハンターを巣へ案内する',
+  beats:[
+    {t:0,text:'<b>ミツオシエ</b>(鳥)と<b>蜂蜜ハンター</b>'},
+    {t:4.5,text:'<b>ほかの音</b>では来にくい'},
+    {t:10,text:'ハンターが<b>特別な呼び声</b>を出すと…'},
+    {t:12.5,text:'鳥が<b>こたえて</b>巣へ案内する'},
+    {t:18,text:'案内される割合が<b>約33→66%</b>'}
+  ],
+  more:'モザンビークの蜂蜜ハンターが出す特別な呼び声を、野生のオオミツオシエに実験で聞かせた研究です。ほかの動物や人の音と比べると、案内してもらえる確率が約33%から約66%、蜂の巣を見つける確率が約17%から約54%に上がりました。著者は、野生動物が人の「協力の合図」に適応的に応えている例だと結論しています。',
+  caveat:'これは模式図です。鳥や人の動き、場所の絵は実測ではありません。数字は論文の抄録にある「約」の値で、モザンビークでの実験の結果です。他の地域でも同じかどうかは、この動画では確かめていません。「鳥が呼び声の意味を理解している」とまでは、この動画は言っていません。',
+  source:{short:'Spottiswoode et al. 2016, Science',cite:'Spottiswoode, C.N., Begg, K.S., Begg, C.M. (2016). Reciprocal signaling in honeyguide-human mutualism. Science, 353(6297), 387. doi:10.1126/science.aaf4885',query:'Reciprocal signaling in honeyguide-human mutualism Spottiswoode 2016'},
+  init(W,H){const r=rng(77);
+    return{
+      stars:mkStars(18,W,H*0.3,5),
+      grass:Array.from({length:40},()=>({x:r()*W,h:3+r()*6,p:r()*6})),
+      bees:Array.from({length:12},()=>({a:r()*TAU,r:4+r()*9,sp:2+r()*3}))
+    }},
+  draw(c,t,W,H,s){
+    const gy=H*0.40;
+    // 夕方の空
+    vgrad(c,0,0,W,gy,[[0,'#1c1830'],[0.55,'#5a3a4a'],[1,'#c98a55']]);
+    stars(c,W,H,s.stars,t,gy*0.45);
+    c.globalCompositeOperation='lighter';glow(c,80,gy-6,70,'255,190,110',0.35);c.globalCompositeOperation='source-over';
+    // 地面
+    vgrad(c,0,gy,W,H*0.62-gy,[[0,'#2a1d1a'],[1,'#120c0b']]);
+    c.strokeStyle='rgba(120,160,80,.55)';c.lineWidth=1;
+    s.grass.forEach(g=>{const sw=Math.sin(t*1.2+g.p)*1.5;c.beginPath();c.moveTo(g.x,gy+2);c.lineTo(g.x+sw,gy+2-g.h);c.stroke()});
+    // アカシア風の木と巣
+    const tx=292;
+    c.strokeStyle='#1d130f';c.fillStyle='#1d130f';c.lineWidth=5;c.lineCap='round';
+    c.beginPath();c.moveTo(tx,gy+2);c.lineTo(tx-2,gy-38);c.stroke();
+    c.lineWidth=3;c.beginPath();c.moveTo(tx-2,gy-34);c.lineTo(tx-34,gy-48);c.moveTo(tx-2,gy-34);c.lineTo(tx+30,gy-50);c.stroke();
+    c.beginPath();c.ellipse(tx-4,gy-56,46,12,0,0,TAU);c.fill();
+    const hx0=tx-24,hy0=gy-38;
+    c.fillStyle='#8a5a22';c.beginPath();c.ellipse(hx0,hy0+6,6,9,0,0,TAU);c.fill();
+    const found=sm(t,17,19);
+    s.bees.forEach(b=>{
+      const x=hx0+Math.cos(t*b.sp+b.a)*b.r,y=hy0+6+Math.sin(t*b.sp*1.3+b.a)*b.r*0.8;
+      c.fillStyle='rgba(255,215,90,'+(0.35+0.55*found)+')';c.fillRect(x-1,y-1,2,2);
+    });
+    if(found>0){c.globalCompositeOperation='lighter';glow(c,hx0,hy0+6,26,'255,200,80',0.35*found);c.globalCompositeOperation='source-over'}
+    // ハンター(位置)
+    const hx=t<12?mix(46,92,t/12):mix(92,224,sm(t,12.5,19.5));
+    const wk=(t<12?1:(t>12.5&&t<19.5?1:0))*Math.sin(t*5);
+    c.strokeStyle='#0d0908';c.fillStyle='#0d0908';c.lineWidth=3;c.lineCap='round';
+    c.beginPath();c.arc(hx,gy-30,4.5,0,TAU);c.fill();
+    c.beginPath();c.moveTo(hx,gy-25);c.lineTo(hx,gy-11);c.stroke();
+    c.beginPath();c.moveTo(hx,gy-11);c.lineTo(hx-4*wk,gy+1);c.moveTo(hx,gy-11);c.lineTo(hx+4*wk,gy+1);c.stroke();
+    c.beginPath();c.moveTo(hx,gy-22);c.lineTo(hx+8,gy-16);c.stroke();
+    // 鳥(位置)
+    const off=hx+28;
+    let bx,by;
+    if(t<4){bx=off+Math.sin(t*2)*4;by=gy-50+Math.sin(t*3)*3}
+    else if(t<10){const u=sm(t,4,9);bx=off-52*u+Math.sin(t*2)*4;by=gy-50-8*u+Math.sin(t*3)*3}
+    else if(t<12.5){const u=sm(t,10,12.4);bx=mix(off-52,off,u);by=gy-58+8*u+Math.sin(t*3)*3}
+    else{const u=sm(t,12.5,19);bx=mix(off,tx-26,u)+Math.sin(t*2)*2;by=mix(gy-50,gy-52,u)-Math.sin(u*Math.PI*6)*4}
+    const flap=Math.sin(t*(t>12.5&&t<19?22:14))*5;
+    c.fillStyle='#f4e7c8';c.strokeStyle='#f4e7c8';c.lineWidth=2;
+    c.beginPath();c.ellipse(bx,by,9,5,0,0,TAU);c.fill();c.beginPath();c.arc(bx+8,by-2,3.2,0,TAU);c.fill();
+    c.beginPath();c.moveTo(bx-1,by);c.lineTo(bx-7,by-flap*1.4-6);c.moveTo(bx+1,by);c.lineTo(bx+7,by-flap*1.4-6);c.stroke();
+    c.globalCompositeOperation='lighter';glow(c,bx,by,13,'255,235,190',0.3);c.globalCompositeOperation='source-over';
+    // 音の輪(ハンターの声)
+    function ring(t0,rgb,w){
+      const d=t-t0;if(d<0||d>1.6)return;
+      const r=6+d*28,a=(1-d/1.6)*0.85;
+      c.strokeStyle='rgba('+rgb+','+a+')';c.lineWidth=w;c.beginPath();c.arc(hx+5,gy-30,r,0,TAU);c.stroke();
+    }
+    ring(5.3,'160,160,170',1.4);ring(7.3,'160,160,170',1.4);
+    ring(10.4,'255,210,110',2);ring(11.2,'255,210,110',2);ring(12,'255,210,110',2.4);ring(12.8,'255,210,110',2);
+    // ラベル
+    if(t>=4.5&&t<9.8)txt(c,'ほかの音',W/2,H*0.08,13,'rgba(200,200,215,'+sm(t,4.5,5.5)*(1-sm(t,9,9.8))+')','center');
+    if(t>=10.2&&t<17)txt(c,'特別な呼び声',W/2,H*0.08,13,'rgba(255,220,140,'+sm(t,10.2,11)*(1-sm(t,16,17))+')','center');
+    txt(c,'模式図',W-12,H*0.6,10,'rgba(225,238,250,.8)','right');
+    // 結果(抄録の数値)
+    const fb=sm(t,17.5,19);
+    if(fb>0){
+      const rows=[['案内された',33,66],['巣を見つけた',17,54]];
+      rows.forEach((rw,i)=>{
+        const y=H*0.455+i*H*0.07;
+        txt(c,rw[0],12,y,11,'rgba(235,230,225,'+fb+')','left');
+        c.fillStyle='rgba(150,150,165,'+0.85*fb+')';c.fillRect(88,y-5,rw[1]*1.9*fb,4.5);
+        c.fillStyle='rgba(255,205,100,'+0.95*fb+')';c.fillRect(88,y+0.5,rw[2]*1.9*fb,4.5);
+        txt(c,'約'+rw[1]+'%',92+rw[1]*1.9,y-3,9.5,'rgba(200,200,215,'+fb+')','left');
+        txt(c,'約'+rw[2]+'%',92+rw[2]*1.9,y+3,9.5,'rgba(255,225,150,'+fb+')','left');
+      });
+      txt(c,'灰=ほかの音 / 金=呼び声(実験)',12,H*0.455+H*0.14+2,9.5,'rgba(225,238,250,'+0.85*fb+')','left');
+    }
+  }
+});
+
+window.SCENES=[S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
