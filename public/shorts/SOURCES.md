@@ -25,6 +25,7 @@
 | germfree | 腸内細菌のいない無菌マウスは、ふつうのマウスより運動量が多く不安様行動が少なく、脳の遺伝子発現やシナプス関連たんぱく質も違う。幼少期に菌を入れると一部が近づく(マウスのみ) | Diaz Heijtz et al. 2011, PNAS 108(7):3047-3052 | 主張確認済み (2026-11-12、抄録まで) |
 | beaver | ビーバーのダムでできた湿った草地は、岸の草本の種類を33%以上ふやした(ニューヨーク州アディロンダック。1地域) | Wright, Jones & Flecker 2002, Oecologia 132:96-101 | 主張確認済み=抄録まで (2026-11-14) https://scholars.duke.edu/publication/651284 。本文は未確認 |
 | attine | 菌を育てるアリの体の細菌(論文はStreptomycesと同定)が、畑の寄生菌Escovopsisを強く抑え、親から子の巣へ受けつがれる(試験管実験) | Currie et al. 1999, Nature 398(6729):701-704 | 主張確認済み=本文PDFまで (2026-11-15) |
+| janzen | 同じ種の近くや密集した所では、種と芽の生存が低い傾向(過去40年あまりの実験のメタ解析)。原因が天敵と決めたわけではない | Comita et al. 2014, J Ecol 102(4):845-856 | 主張確認済み (2026-11-18、抄録まで) |
 
 ## 確認メモ
 
@@ -77,3 +78,5 @@
 
 - **seabird** (2026-11-17): 書誌(Graham, Wilson, Carr, Hoey, Jennings, MacNeil / Nature 559:250-253 / DOI 10.1038/s41586-018-0202-3 / 2018-07-11オンライン)を、論文本文PDF(https://library.sprep.org/sites/default/files/graham-2018-chagos.pdf)から抽出したテキストで照合。主張確認済み=本文まで: チャゴス諸島の6島(ネズミなし)対6島(ネズミあり)の自然の実験。海鳥密度は1,243対1.6羽/ha(760倍)、窒素入力は190対0.8 kg/ha/年(251倍)、15Nが礁の藻・スポンジ・魚にも、魚の総バイオマス48%増、藻食と生物浸食が3.2・3.8倍。駆除による回復は未検証、レジリエンスは推測と注記。その後の研究は未確認。
   Artifact: https://claude.ai/artifact/8ysrEVN5PoKX5jLXuHJXpU 録画: shorts_video/seabird.webm YouTube: 未投稿(2026-11-17、toriaezu_test にログインしたブラウザが無かった。Browser 1=読めず、2・3=別チャンネル、4=再ログイン要求)
+
+- **janzen** (2026-11-18): 書誌(Comita ほか / J Ecol 102(4):845-856 / DOI 10.1111/1365-2745.12232 / 2014-06-23)と抄録を USU Digital Commons(https://digitalcommons.usu.edu/biology_facpub/1551)で照合。同種の近く・高密度で生存が低い傾向を支持、効果は種より芽で強い、緯度では説明できない、を確認。研究数と本文は未確認。PubMed は cookie で開けず。

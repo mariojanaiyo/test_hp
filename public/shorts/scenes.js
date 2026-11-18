@@ -2265,5 +2265,83 @@ S.push({
   }
 });
 
-window.SCENES=[S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'janzen',pin:{t:12,text:'近いほど枯れた！'},hook:['親の木のそばでは、','なぜ芽が育たない？'],tag:'連鎖×森',dur:24,
+  title:'親の木の足もとでは、なぜ子の木が育ちにくいのか？',
+  beats:[
+    {t:0,text:'親の木から、<b>種</b>が落ちる'},
+    {t:5,text:'芽が出る。<b>近くにも、遠くにも</b>'},
+    {t:9,text:'その木を好む<b>虫や病原菌</b>が、親の足もとに多い'},
+    {t:13,text:'<b>近い芽ほど</b>、生き残りにくかった'},
+    {t:19,text:'遠くの芽は残り、<b>森にいろいろな木</b>が混ざる？'}
+  ],
+  more:'「ジャンツェン・コンネル仮説」は、親の木の近くや同じ種が密集した所では、その種を狙う虫や病原菌のせいで種や芽が死にやすく、結果として一種だけが森を占めず、多様な木が共存できる、という考えです。2014年の論文は、この仮説を調べた過去40年あまりの実験を集めて統合しました。結果は、同じ種の近くや密度の高い所で、種や芽の生存が低いという傾向を支持するものでした。効果は、芽の段階のほうが種の段階より強かったそうです。',
+  caveat:'これは模式図です。木・虫・芽の数や動きは実際のデータではありません。論文が示したのは「近くや密集した所で生存が低い」という傾向で、原因が天敵だと決めたわけではなく、同じ種どうしの競争など他の説明を除く必要があるとしています。効果の強さは研究ごとに大きくばらつき、熱帯のほうが強いという予想は支持されませんでした。この仕組みが実際に種の多様性を保っているかは、まだ検証が必要とされています。私が確認できたのは抄録(公開された要約)までで、本文は未確認です。',
+  source:{short:'Comita et al. 2014, J Ecol',cite:'Comita, L.S., Queenborough, S.A., Murphy, S.J., Eck, J.L., Xu, K., Krishnadas, M., Beckman, N. & Zhu, Y. (2014). Testing predictions of the Janzen-Connell hypothesis: a meta-analysis of experimental evidence for distance- and density-dependent seed and seedling survival. Journal of Ecology, 102(4), 845-856. doi:10.1111/1365-2745.12232',query:'Testing predictions of the Janzen-Connell hypothesis meta-analysis distance- and density-dependent seed and seedling survival'},
+  init(W,H){const r=rng(1970);
+    const seeds=Array.from({length:26},()=>{const d=(r()<0.5?-1:1)*(10+r()*r()*140);return{dx:d,u0:r()*0.5,sp:0.5+r()*0.3,sp2:r()}});
+    const pests=Array.from({length:16},()=>({a:r()*TAU,ph:r()*TAU,rad:r()}));
+    return{seeds,pests}},
+  draw(c,t,W,H,s){
+    const by=H*0.5,cx=W/2;
+    vgrad(c,0,0,W,H,[[0,'#0f2a1c'],[0.55,'#1a4a2c'],[1,'#07140c']]);
+    c.fillStyle='#2a1f14';c.fillRect(0,by,W,H-by);
+    c.fillStyle='#3b7a3a';c.fillRect(0,by-2,W,4);
+    // 親の木
+    c.fillStyle='#5a3a22';c.fillRect(cx-5,by-92,10,92);
+    glow(c,cx,by-112,70,'60,160,70',0.5);
+    c.fillStyle='#2f8a44';c.beginPath();c.ellipse(cx,by-112,50,34,0,0,TAU);c.fill();
+    c.fillStyle='#3aa352';c.beginPath();c.ellipse(cx-18,by-120,28,20,0,0,TAU);c.fill();
+    // 種が落ちて芽になる
+    const sprout=sm(t,5,6.5);
+    const kill=sm(t,10,12.5);           // 近い芽が枯れる
+    const grow=sm(t,13,19);
+    s.seeds.forEach((q,i)=>{
+      const x=cx+q.dx,dist=Math.abs(q.dx);
+      const near=dist<62;
+      const fall=clamp((t-q.u0*4)/(1.5+q.sp2*1.5));
+      if(t<5){
+        const y=mix(by-100,by+4+(i%4)*4,fall*fall);
+        const xx=mix(cx+q.dx*0.2,x,fall);
+        c.fillStyle='rgba(240,210,120,0.95)';c.beginPath();c.arc(xx,y,2,0,TAU);c.fill();
+        return}
+      const y=by+4+(i%4)*4;
+      const hue=near?[110,220,110]:[[110,220,110],[230,200,90],[120,200,240],[240,150,200]][i%4];
+      const k=near?kill:0;
+      const h=(7+sprout*5+(near?0:grow*10))*(1-k*0.8);
+      const col=near?lerpColor(hue,[120,80,50],k):'rgb('+hue.join(',')+')';
+      c.strokeStyle=col;c.lineWidth=1.6;c.lineCap='round';
+      c.beginPath();c.moveTo(x,y);c.lineTo(x,y-h*sprout);c.stroke();
+      c.fillStyle=col;c.beginPath();c.ellipse(x-3,y-h*sprout,3,1.6,-0.5,0,TAU);c.ellipse(x+3,y-h*sprout,3,1.6,0.5,0,TAU);c.fill();
+      if(near&&k>0.5&&t>=12){const a=sm(t,12,13);c.strokeStyle='rgba(255,110,90,'+0.9*a+')';c.lineWidth=1.3;
+        c.beginPath();c.moveTo(x-3,y-12);c.lineTo(x+3,y-5);c.moveTo(x+3,y-12);c.lineTo(x-3,y-5);c.stroke()}
+    });
+    // 虫・病原菌(親の足もとに集まる)
+    const pa=sm(t,8.5,10)*(1-sm(t,19,20.5)*0.6);
+    if(pa>0){
+      s.pests.forEach(p=>{const rr=18+p.rad*58+Math.sin(t*2+p.ph)*4;
+        const x=cx+Math.cos(p.a)*rr*(p.a>Math.PI?-1:1),y=by+8+Math.abs(Math.sin(p.a))*14+Math.sin(t*3+p.ph)*2;
+        c.globalCompositeOperation='lighter';glow(c,x,y,8,'255,80,70',0.7*pa);c.globalCompositeOperation='source-over';
+        c.fillStyle='rgba(255,120,100,'+pa+')';c.beginPath();c.arc(x,y,1.8,0,TAU);c.fill()});
+      txt(c,'虫・病原菌',cx,by+36,11,'rgba(255,190,180,'+pa+')','center')}
+    // 距離の目安
+    const ra=sm(t,6,7.5)*(1-sm(t,18,19));
+    if(ra>0){c.strokeStyle='rgba(255,255,255,'+0.3*ra+')';c.lineWidth=1;c.setLineDash([3,4]);
+      c.beginPath();c.moveTo(cx-62,by+60);c.lineTo(cx-62,by+8);c.moveTo(cx+62,by+60);c.lineTo(cx+62,by+8);c.stroke();c.setLineDash([]);
+      txt(c,'近い',cx,by+56,11,'rgba(255,255,255,'+0.8*ra+')','center');
+      txt(c,'遠い',cx-112,by+56,11,'rgba(255,255,255,'+0.8*ra+')','center');
+      txt(c,'遠い',cx+112,by+56,11,'rgba(255,255,255,'+0.8*ra+')','center')}
+    // 字幕
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,by+176,12,'rgba(240,248,255,'+q+')','center')};
+    cap(0,5,'親の木から、種が落ちる');
+    cap(5,9,'近くにも、遠くにも芽が出る');
+    cap(9,13,'足もとには、虫や病原菌が多い');
+    cap(13,19,'近い芽ほど、生き残りにくかった');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'遠くの芽が残り、いろいろな木が混ざる？',W/2,by+176,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'木・虫・芽の数や動きは模式',W/2,by+192,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
