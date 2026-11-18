@@ -80,3 +80,4 @@
   Artifact: https://claude.ai/artifact/8ysrEVN5PoKX5jLXuHJXpU 録画: shorts_video/seabird.webm YouTube: 未投稿(2026-11-17、toriaezu_test にログインしたブラウザが無かった。Browser 1=読めず、2・3=別チャンネル、4=再ログイン要求)
 
 - **janzen** (2026-11-18): 書誌(Comita ほか / J Ecol 102(4):845-856 / DOI 10.1111/1365-2745.12232 / 2014-06-23)と抄録を USU Digital Commons(https://digitalcommons.usu.edu/biology_facpub/1551)で照合。同種の近く・高密度で生存が低い傾向を支持、効果は種より芽で強い、緯度では説明できない、を確認。研究数と本文は未確認。PubMed は cookie で開けず。
+  Artifact: https://claude.ai/artifact/1jNoQts82YYg367kJX2EMp 録画: shorts_video/janzen.webm YouTube: 未投稿(2026-11-18、toriaezu_test にログインしたブラウザが無かった。3台とも別チャンネル)
