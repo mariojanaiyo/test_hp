@@ -2570,5 +2570,86 @@ S.push({
   }
 });
 
-window.SCENES=[S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'salmon',pin:{t:12,text:'森にとけた！'},hook:['サケの体が、','森の木になる？'],tag:'海と森のつながり',dur:24,
+  title:'サケがはこぶ海の窒素は、川ぞいの森に入る',
+  beats:[
+    {t:0,text:'海で育った<b>サケ</b>が川をのぼる'},
+    {t:5,text:'産卵して<b>力つきる</b>'},
+    {t:9,text:'体の<b>窒素</b>が川と土にとけ出す'},
+    {t:12.5,text:'川ぞいの木が<b>それを吸う</b>'},
+    {t:18,text:'トウヒの葉の窒素の<b>約24%</b>がサケ由来'}
+  ],
+  more:'アラスカ南東部の2つの川で、窒素の同位体を使って調べた研究です。サケが産卵する場所の近くの木や草は、葉の窒素の約22〜24%をサケから得ていました。ベイトウヒは、産卵場所の近くでは幹が太くなる速さが約3倍以上でした。著者は、直径50cmに達するのに産卵場所で約86年、サケのいない対照地点で約307年かかる計算だとしています。',
+  caveat:'これは模式図です。サケや木の絵は実測ではなく、数字は論文の本文の値(約)です。調べたのは2つの川で、各川の産卵場所と対照地点を1か所ずつ比べたものです。葉の窒素の同位体比と木の成長の速さは直接は対応しておらず、「サケが木を育てた」という因果は著者の推定の部分があります。川の環境へのよい循環(大きな倒木が増えてサケの住みかが良くなる)も、実測ではなく推定です。',
+  source:{short:'Helfield & Naiman 2001, Ecology',cite:'Helfield, J.M., Naiman, R.J. (2001). Effects of salmon-derived nitrogen on riparian forest growth and implications for stream productivity. Ecology, 82(9), 2403-2409.',query:'Effects of salmon-derived nitrogen on riparian forest growth and implications for stream productivity Helfield Naiman 2001'},
+  init(W,H){const r=rng(31);
+    return{
+      fish:Array.from({length:16},()=>({u:r(),sp:0.05+r()*0.04,o:(r()-0.5)*14,p:r()*6})),
+      n:Array.from({length:46},()=>({u:r(),side:r()<0.5?-1:1,d:r(),p:r()*6,o:r()}))
+    }},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.58;
+    vgrad(c,0,top-4,W,bot-top+8,[[0,'#0e2236'],[1,'#10261c']]);
+    // 川の中心線(上=海 → 下=上流ではなく、手前から奥へ)
+    const rv=u=>[mix(180,150,u)+Math.sin(u*5)*14,mix(bot-6,top+34,u)];
+    // 木(左=サケがいる側、右=いない対照側の表示用)
+    const feed=sm(t,12,18);
+    const trees=[];
+    for(let i=0;i<7;i++){const u=0.1+i*0.13,[rx,ry]=rv(u);trees.push([rx-54-(i%2)*14,ry,1,i]);}
+    for(let i=0;i<4;i++){const u=0.14+i*0.2,[rx,ry]=rv(u);trees.push([rx+60+(i%2)*10,ry,0,i]);}
+    trees.sort((a,b)=>a[1]-b[1]).forEach(([x,y,fed,i])=>{
+      const k=fed?1+0.55*feed:0.9;
+      const h=(14+i*1.2)*k;
+      c.fillStyle='#2a1d12';c.fillRect(x-1,y-4,2,5);
+      c.fillStyle=fed?lerpColor([28,74,50],[46,130,78],feed):'#1d4a35';
+      c.beginPath();c.moveTo(x,y-4-h);c.lineTo(x-h*0.38,y-3);c.lineTo(x+h*0.38,y-3);c.fill();
+    });
+    // 川
+    c.strokeStyle='#244e74';c.lineWidth=16;c.lineCap='round';c.beginPath();
+    for(let i=0;i<=24;i++){const [x,y]=rv(i/24);i?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+    c.strokeStyle='#2d6296';c.lineWidth=10;c.beginPath();
+    for(let i=0;i<=24;i++){const [x,y]=rv(i/24);i?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+    // サケ: 手前から奥へのぼる。5〜9秒で産卵地点に集まり、色が薄れる
+    const spawn=sm(t,5,9);
+    s.fish.forEach(f=>{
+      const u=clamp(f.u*0.15+sm(t,0,5.5)*0.65+ (t>5?0.05:0));
+      const [x,y]=rv(u);
+      const wob=Math.sin(t*6+f.p)*1.5;
+      const al=1-0.7*sm(t,8,12);
+      c.fillStyle='rgba(255,140,110,'+al+')';
+      c.beginPath();c.ellipse(x+f.o*0.4+wob,y+f.o*0.3,4.5,1.8,0.9,0,TAU);c.fill();
+    });
+    // 窒素の粒(金)が川から木へ
+    const rel=sm(t,8.5,12);
+    s.n.forEach(q=>{
+      const [rx,ry]=rv(0.35+q.u*0.4);
+      const tx=rx+q.side*(48+q.d*20),ty=ry-8;
+      const m=sm(t,9+q.o*3,12.5+q.o*3);
+      const x=mix(rx,tx,m),y=mix(ry,ty,m)-Math.sin(m*Math.PI)*8;
+      const a=rel*(q.side<0?0.95:0.12)*(0.6+0.4*Math.sin(t*3+q.p));
+      c.globalCompositeOperation='lighter';glow(c,x,y,5,'255,210,100',a);c.globalCompositeOperation='source-over';
+    });
+    c.globalCompositeOperation='lighter';
+    const [px,py]=rv(0.5);
+    glow(c,px,py,34,'255,200,90',0.28*sm(t,11,13)*(1-sm(t,16,19)));
+    c.globalCompositeOperation='source-over';
+    if(t<5)txt(c,'海から川へ',W/2,H*0.135,13,'rgba(200,225,245,'+sm(t,0,1)+')','center');
+    if(t>=12&&t<18)txt(c,'窒素が木へ',W/2,H*0.135,13,'rgba(255,225,150,'+sm(t,12,13)*(1-sm(t,17,18))+')','center');
+    txt(c,'模式図',W-12,H*0.6,10,'rgba(225,238,250,.8)','right');
+    const fb=sm(t,18,20);
+    if(fb>0){
+      const rows=[['産卵地点の近く',86,'#ffcc66'],['サケのいない地点',307,'#9aa0b0']];
+      txt(c,'直径50cmに達する年数(推定)',12,H*0.465,10.5,'rgba(235,235,240,'+fb+')','left');
+      rows.forEach((rw,i)=>{
+        const y=H*0.51+i*H*0.045;
+        txt(c,rw[0],12,y,10,'rgba(235,230,225,'+fb+')','left');
+        c.globalAlpha=0.95*fb;c.fillStyle=rw[2];c.fillRect(108,y-5,rw[1]*0.55*fb,5);c.globalAlpha=1;
+        txt(c,'約'+rw[1]+'年',112+rw[1]*0.55*fb,y,9.5,'rgba(235,235,240,'+fb+')','left');
+      });
+    }
+  }
+});
+
+window.SCENES=[S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
