@@ -2640,7 +2640,7 @@ S.push({
     const fb=sm(t,18,20);
     if(fb>0){
       const rows=[['産卵地点の近く',86,'#ffcc66'],['サケのいない地点',307,'#9aa0b0']];
-      txt(c,'直径50cmに達する年数(推定)',12,H*0.465,10.5,'rgba(235,235,240,'+fb+')','left');
+      txt(c,'直径50cmに達する年数(推定)',12,H*0.49,10.5,'rgba(235,235,240,'+fb+')','left');
       rows.forEach((rw,i)=>{
         const y=H*0.51+i*H*0.045;
         txt(c,rw[0],12,y,10,'rgba(235,230,225,'+fb+')','left');
@@ -2651,5 +2651,93 @@ S.push({
   }
 });
 
-window.SCENES=[S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+// ---- ヘリコニウス(蝶の羽の柄の遺伝子) ----
+function butterfly(c,x,y,sc,flap,bandRGB,bandA,baseRGB){
+  const f=0.35+0.65*Math.abs(Math.cos(flap));
+  c.save();c.translate(x,y);c.scale(sc,sc);
+  [-1,1].forEach(d=>{
+    c.save();c.scale(d*f,1);
+    c.fillStyle='rgb('+baseRGB+')';c.shadowColor='rgba('+bandRGB+',0.6)';c.shadowBlur=8;
+    c.beginPath();c.ellipse(10,-6,11,6.5,-0.5,0,TAU);c.fill();
+    c.beginPath();c.ellipse(8,6,7,5,0.5,0,TAU);c.fill();
+    c.shadowBlur=0;
+    c.fillStyle='rgba('+bandRGB+','+bandA+')';
+    c.beginPath();c.ellipse(11,-6,6.5,2.4,-0.5,0,TAU);c.fill();
+    c.fillStyle='rgba(245,245,235,.75)';
+    c.beginPath();c.arc(17,-9,0.9,0,TAU);c.arc(15,-11,0.9,0,TAU);c.fill();
+    c.restore();
+  });
+  c.strokeStyle='#e8e0d0';c.lineWidth=1.6;c.lineCap='round';
+  c.beginPath();c.moveTo(0,-9);c.lineTo(0,9);c.stroke();
+  c.lineWidth=0.8;c.beginPath();c.moveTo(0,-9);c.lineTo(-4,-15);c.moveTo(0,-9);c.lineTo(4,-15);c.stroke();
+  c.restore();
+}
+S.push({
+  id:'heliconius',pin:{t:13,text:'柄が移った！'},hook:['ちがう種から、','羽の柄を借りた？'],tag:'種の境界でおきること',dur:24,
+  title:'ヘリコニウスの蝶は、種のあいだで羽の柄の遺伝子をやりとりしている',
+  beats:[
+    {t:0,text:'同じ森にすむ、近い<b>3種の蝶</b>'},
+    {t:5,text:'羽の<b>赤い柄</b>は、ゲノムのある領域で決まる'},
+    {t:9,text:'種のあいだで<b>交雑</b>が起きる'},
+    {t:12.5,text:'その領域が、となりの種に<b>うつった</b>形跡'},
+    {t:18,text:'ゲノム全体では<b>約2〜5%</b>が交換と推定'}
+  ],
+  more:'ヘリコニウスは、毒をもつ南米の蝶です。2012年、研究チームはHeliconius melpomeneのゲノムを読み、H. melpomene・H. timareta・H. elevatus の3種を調べました。赤い柄を決める領域では、遺伝子の系統が「種」ではなく「柄」ごとにまとまり、種のあいだで遺伝子が移ったと考えるのが最も自然だと報告しています。ゲノム全体では、2〜5%ほどが交換されたと見積もられました。',
+  caveat:'これは模式図です。蝶・遺伝子・うつる向きは単純化した絵で、実測ではありません。論文は「交雑による遺伝子の移動が最もよく説明できる」という推定で、直接の証明ではありません。黄色の柄の領域では、2つの比較のうち片方で有意ではありませんでした。ゲノムの約4%の領域を調べた解析も含みます。2〜5%はD統計からの見積もりです。',
+  source:{short:'Heliconius Genome Consortium 2012, Nature',cite:'The Heliconius Genome Consortium (2012). Butterfly genome reveals promiscuous exchange of mimicry adaptations among species. Nature, 487(7405), 94-98. doi:10.1038/nature11041',query:'Butterfly genome reveals promiscuous exchange of mimicry adaptations among species'},
+  init(W,H){const r=rng(41);
+    return{
+      sp:Array.from({length:26},()=>({a:r(),o:r(),p:r()*6,y:(r()-0.5)*18}))
+    }},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.58;
+    vgrad(c,0,top-4,W,bot-top+8,[[0,'#10202c'],[1,'#0d2a22']]);
+    // 近づいて出会う(5〜10秒)→ 離れる
+    const meet=sm(t,4.5,9.5)*(1-sm(t,16,20)*0.6);
+    const yb=top+(bot-top)*0.30;
+    const lx=mix(88,138,meet),rx=mix(272,222,meet);
+    const swap=sm(t,14,17.5);
+    const bandL=[mix(240,236,swap),mix(205,64,swap),mix(80,52,swap)].map(Math.round).join(',');
+    butterfly(c,lx,yb+Math.sin(t*1.3)*3,1.9,t*9,bandL,0.95,'28,24,30');
+    butterfly(c,rx,yb+Math.cos(t*1.2)*3,1.9,t*9+1.7,'236,64,52',0.95,'28,24,30');
+    txt(c,'H. melpomene',88,yb+36,9.5,'rgba(225,235,245,.8)','center',600);
+    txt(c,'H. timareta',272,yb+36,9.5,'rgba(225,235,245,.8)','center',600);
+    // 染色体(ゲノムの1本)を模した棒。赤い領域=柄を決める領域
+    const by=top+(bot-top)*0.70;
+    const bw=130,lx0=23,rx0=207,seg=[0.58,0.78];
+    const hi=sm(t,5,7);
+    [[lx0,0],[rx0,1]].forEach(([x0,isR])=>{
+      c.fillStyle='rgba(120,140,160,.35)';c.fillRect(x0,by-4,bw,8);
+      const col=isR?'rgba(236,64,52,':'rgba('+bandL+',';
+      const a=isR?0.55+0.45*hi:(0.35+0.45*hi);
+      c.fillStyle=col+a+')';c.fillRect(x0+bw*seg[0],by-4,bw*(seg[1]-seg[0]),8);
+      c.strokeStyle='rgba(200,215,230,.4)';c.lineWidth=1;c.strokeRect(x0,by-4,bw,8);
+    });
+    if(t>=5&&t<12)txt(c,'柄を決める領域',W/2,by+22,10,'rgba(255,215,200,'+sm(t,5,6)*(1-sm(t,11,12))+')','center');
+    // 赤い領域が右の棒から左の棒へうつる粒
+    const mv=sm(t,12.5,16.5);
+    c.globalCompositeOperation='lighter';
+    s.sp.forEach(q=>{
+      const m=clamp((mv*1.3)-q.o*0.3);
+      if(m<=0||m>=1)return;
+      const sx=rx0+bw*mix(seg[0],seg[1],q.a),ex=lx0+bw*mix(seg[0],seg[1],q.a);
+      const x=mix(sx,ex,m),y=by+q.y*Math.sin(m*Math.PI)*-1.2-Math.sin(m*Math.PI)*16;
+      glow(c,x,y,6,'255,110,90',0.9*Math.sin(m*Math.PI)*(0.7+0.3*Math.sin(t*5+q.p)));
+    });
+    glow(c,lx0+bw*0.68,by,28,'255,110,90',0.55*sm(t,15.5,16.8)*(1-sm(t,18,20)));
+    c.globalCompositeOperation='source-over';
+    txt(c,'模式図',W-12,H*0.6,10,'rgba(225,238,250,.8)','right');
+    // 結果の表示
+    const fb=sm(t,18.5,20.5);
+    if(fb>0){
+      txt(c,'ゲノム全体で入れ替わった割合(推定)',12,H*0.49,10.5,'rgba(235,235,240,'+fb+')','left');
+      const y=H*0.53,w=300;
+      c.fillStyle='rgba(120,140,160,'+0.4*fb+')';c.fillRect(30,y-5,w,10);
+      c.fillStyle='rgba(255,130,100,'+0.95*fb+')';c.fillRect(30+w*0.02,y-5,w*0.03*fb,10);
+      txt(c,'約2〜5%',30,y+16,10.5,'rgba(255,200,180,'+fb+')','left');
+    }
+  }
+});
+
+window.SCENES=[S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
