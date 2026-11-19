@@ -26,6 +26,7 @@
 | beaver | ビーバーのダムでできた湿った草地は、岸の草本の種類を33%以上ふやした(ニューヨーク州アディロンダック。1地域) | Wright, Jones & Flecker 2002, Oecologia 132:96-101 | 主張確認済み=抄録まで (2026-11-14) https://scholars.duke.edu/publication/651284 。本文は未確認 |
 | attine | 菌を育てるアリの体の細菌(論文はStreptomycesと同定)が、畑の寄生菌Escovopsisを強く抑え、親から子の巣へ受けつがれる(試験管実験) | Currie et al. 1999, Nature 398(6729):701-704 | 主張確認済み=本文PDFまで (2026-11-15) |
 | janzen | 同じ種の近くや密集した所では、種と芽の生存が低い傾向(過去40年あまりの実験のメタ解析)。原因が天敵と決めたわけではない | Comita et al. 2014, J Ecol 102(4):845-856 | 主張確認済み (2026-11-18、抄録まで) |
+| shark | 大型のサメの減少(35年)のあと、獲物14種中12種が増え、エイを通じてホタテ漁が終わったと報告された。2016年の再検討は時期が合わないと反論 | Myers et al. 2007, Science 315:1846 / Grubbs et al. 2016, Sci Rep 6:20970 | 主張確認済み=抄録まで (2026-11-19) |
 
 ## 確認メモ
 
@@ -81,3 +82,5 @@
 
 - **janzen** (2026-11-18): 書誌(Comita ほか / J Ecol 102(4):845-856 / DOI 10.1111/1365-2745.12232 / 2014-06-23)と抄録を USU Digital Commons(https://digitalcommons.usu.edu/biology_facpub/1551)で照合。同種の近く・高密度で生存が低い傾向を支持、効果は種より芽で強い、緯度では説明できない、を確認。研究数と本文は未確認。PubMed は cookie で開けず。
   Artifact: https://claude.ai/artifact/1jNoQts82YYg367kJX2EMp 録画: shorts_video/janzen.webm YouTube: 未投稿(2026-11-18、toriaezu_test にログインしたブラウザが無かった。3台とも別チャンネル)
+
+- **shark** (2026-11-19): 書誌(Myers, Baum, Shepherd, Powers, Peterson / Science 315(5820):1846–1850 / DOI 10.1126/science.1138657 / PMID 17395829 / 2007)と抄録を Europe PMC(https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1126/science.1138657)で確認。反論の Grubbs ほか(Sci Rep 6:20970, PMID 26876514, 2016)の抄録も Europe PMC で確認(時期が合わない・食性データも連鎖を支持せず)。本文は未確認(PubMed/PDF は開けず)。議論中の話として caveat に両論を書いた。

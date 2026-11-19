@@ -2343,5 +2343,67 @@ S.push({
   }
 });
 
-window.SCENES=[S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'shark',pin:{t:12,text:'ホタテが消えた！'},hook:['サメが減ると、','ホタテが消える？'],tag:'連鎖×海',dur:24,
+  title:'大型のサメが減ると、海底のホタテまで影響を受けるのか？',
+  beats:[
+    {t:0,text:'沖には、<b>大型のサメ</b>がいる'},
+    {t:5,text:'35年で、サメは<b>減っていった</b>'},
+    {t:9,text:'エイが増え、<b>ホタテを食べる</b>'},
+    {t:13,text:'100年続いた<b>ホタテ漁が終わった</b>'},
+    {t:19,text:'後の再検討は<b>時期が合わない</b>と指摘'}
+  ],
+  more:'2007年の論文は、アメリカ東海岸の沿岸で、エイやサメを食べる大型のサメ11種が35年にわたって減る一方、その獲物14種のうち12種が増えたと報告しました。その影響は、ウシバナトビエイ(cownose ray)を通じてホタテにまで及び、エイの食べる量が増えて、100年続いたホタテ漁が終わった、という筋書きです。ただし2016年の再検討は、サメの減少とエイの増加、エイの増加とホタテの減少の時期が合わないと指摘しています。',
+  caveat:'これは模式図です。サメ・エイ・ホタテの数や動きは実際のデータではありません。この連鎖は議論が続いていて、2016年の再検討論文(Grubbs ほか, Scientific Reports)は、サメの減少がエイの急増と重ならず、ホタテやカキの減少はエイの増加より何十年も前に始まっていたとして、原因が違う可能性を示しました。ですのでこの動画は「そう報告された」話であり、確定した事実とは言えません。私が確認できたのは両論文の抄録(要約)までで、本文は未確認です。',
+  source:{short:'Myers et al. 2007, Science',cite:'Myers, R.A., Baum, J.K., Shepherd, T.D., Powers, S.P. & Peterson, C.H. (2007). Cascading effects of the loss of apex predatory sharks from a coastal ocean. Science, 315(5820), 1846-1850. doi:10.1126/science.1138657 / 反論: Grubbs, R.D. et al. (2016). Critical assessment and ramifications of a purported marine trophic cascade. Scientific Reports, 6, 20970.',query:'Cascading effects of the loss of apex predatory sharks from a coastal ocean'},
+  init(W,H){const r=rng(2007);
+    const rays=Array.from({length:14},()=>({x:r(),ph:r()*TAU,u:r()}));
+    const scal=Array.from({length:18},()=>({x:r(),y:r(),u:r()}));
+    return{rays,scal}},
+  draw(c,t,W,H,s){
+    const fy=H*0.5;
+    vgrad(c,0,0,W,H,[[0,'#0e3556'],[0.5,'#12486b'],[1,'#06121e']]);
+    c.fillStyle='#3a3226';c.fillRect(0,fy+60,W,H-fy);
+    c.strokeStyle='rgba(140,200,240,0.1)';c.lineWidth=1;
+    for(let i=0;i<4;i++){const y=fy-70+i*14;c.beginPath();for(let x=0;x<=W;x+=8){const yy=y+Math.sin(x*0.05+t*1.4+i)*1.4;x?c.lineTo(x,yy):c.moveTo(x,yy)}c.stroke()}
+    // サメ(5秒から減る)
+    const sa=1-sm(t,5,9)*0.92;
+    const fin=(x,y,k,a)=>{c.fillStyle='rgba(190,205,220,'+a+')';c.beginPath();
+      c.ellipse(x,y,22*k,6*k,0,0,TAU);c.fill();
+      c.beginPath();c.moveTo(x-4*k,y-4*k);c.lineTo(x,y-14*k);c.lineTo(x+7*k,y-4*k);c.fill();
+      c.beginPath();c.moveTo(x-20*k,y);c.lineTo(x-30*k,y-8*k);c.lineTo(x-28*k,y+6*k);c.fill()};
+    for(let i=0;i<4;i++){const u=(t*0.04+i*0.27)%1;const x=-30+u*(W+60),y=fy-40+i*22+Math.sin(t*1.2+i)*3;
+      fin(x,y,1,Math.min(1,sa*(i==0?1:1-0.0))*(i<1?1:sa))}
+    // エイ(8秒から増える)
+    const ra=sm(t,7,10.5);
+    s.rays.forEach((q,i)=>{const n=i/14;if(n>ra)return;
+      const x=((q.x+t*0.02*(1+q.u))%1)*W,y=fy+30+Math.sin(t*1.5+q.ph)*4+q.u*18;
+      c.fillStyle='rgba(215,175,120,0.92)';c.beginPath();
+      c.moveTo(x-9,y);c.quadraticCurveTo(x,y-5+Math.sin(t*4+q.ph)*2,x+9,y);c.quadraticCurveTo(x,y+4,x-9,y);c.fill();
+      c.strokeStyle='rgba(215,175,120,0.9)';c.beginPath();c.moveTo(x-9,y);c.lineTo(x-15,y+3);c.stroke()});
+    // ホタテ(10秒から消える)
+    const kill=sm(t,10,14);
+    s.scal.forEach((q,i)=>{const x=10+q.x*(W-20),y=fy+68+q.y*34;
+      if(q.u<kill*0.95)return;
+      c.fillStyle='rgba(255,200,150,0.95)';c.beginPath();c.ellipse(x,y,5,3.6,0,Math.PI,TAU);c.fill();
+      c.fillStyle='rgba(240,170,120,0.95)';c.beginPath();c.ellipse(x,y,5,2,0,0,Math.PI);c.fill()});
+    // ラベル
+    const la=sm(t,1,2);
+    txt(c,'大型のサメ',W*0.2,fy-86,11,'rgba(220,235,250,'+la*sa+')','center');
+    const lb=sm(t,9.5,11);
+    txt(c,'エイ',W*0.2,fy+16,11,'rgba(255,225,180,'+lb+')','center');
+    txt(c,'ホタテ',W*0.8,fy+112,11,'rgba(255,215,180,0.9)','center');
+    // 字幕
+    const cap=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,fy+176,12,'rgba(240,248,255,'+q+')','center')};
+    cap(0,5,'沖には、大型のサメがいる');
+    cap(5,9,'35年で、サメは減っていった');
+    cap(9,13,'エイが増え、ホタテを食べる');
+    cap(13,19,'100年続いたホタテ漁が終わった');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'後の再検討:時期が合わないとの指摘も',W/2,fy+176,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'サメ・エイ・ホタテの数や動きは模式',W/2,fy+192,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();

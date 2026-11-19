@@ -27,5 +27,6 @@
 | 20 | サハラの砂は、海を越えて森を育てる？ | CALIPSO衛星の観測で、アフリカの砂ぼこりが年に約2800万トンアマゾンへ降り、リンは約2.2万トン(失われる量と同規模) | B,A,G | 16 | 公開(2026-11-16。候補が尽きたため補充して選定。主張確認済み=抄録まで(Crossref)。本文は未確認。森が実際にこの砂で育つとまでは示していないと注記。Artifact: https://claude.ai/artifact/WjF7mV2EQj1RmfC92wqmo3 。YouTube 未投稿: toriaezu_test にログインしたブラウザが無かった(Browser 1〜4 とも別チャンネルかチャンネル無し)。録画: shorts_video/dust.webm) | Yu et al. 2015, Geophys Res Lett 42:1984 |
 | 21 | ネズミのいる島では、サンゴ礁まで変わる？ | ネズミのいない島は海鳥760倍・窒素251倍、礁の魚の量は約48%多い(チャゴス諸島の自然の実験) | A,F,G | 17 | 公開(2026-11-17。候補が尽きたため補充して選定。主張確認済み=論文本文PDFまで。自然の実験で駆除の効果は未検証と注記。Artifact: https://claude.ai/artifact/8ysrEVN5PoKX5jLXuHJXpU 。YouTube 未投稿: toriaezu_test にログインしたブラウザが無かった。録画: shorts_video/seabird.webm) | Graham et al. 2018, Nature 559:250 |
 | 22 | 親の木の足もとで、なぜ芽が育たない？ | 同じ種の近く・密集地で種と芽の生存が低い(ジャンツェン・コンネル仮説。過去40年あまりの実験のメタ解析) | A,E,G | 16 | 公開(2026-11-18。候補が尽きたため補充して選定。主張確認済み=抄録まで(USU Digital Commons)。本文・研究数は未確認。原因が天敵と決めたわけではないと注記。Artifact: https://claude.ai/artifact/1jNoQts82YYg367kJX2EMp 。YouTube 未投稿: toriaezu_test にログインしたブラウザが無かった(3台とも別チャンネル)。録画: shorts_video/janzen.webm) | Comita et al. 2014, J Ecol 102:845 |
+| 23 | サメが減ると、ホタテが消える？ | 大型のサメ減少→エイ増加→ホタテ漁終了の連鎖(米東海岸)。2016年に再検討論文が時期のズレを指摘(議論中) | A,E,G | 15 | 公開(2026-11-19。候補が尽きたため補充して選定。主張確認済み=両論文の抄録まで。議論中と注記。YouTube 投稿は下記) | Myers et al. 2007, Science 315:1846 |
 
 採点の内訳(軸の適合 / 映像 / 確かさ / センターピン / 新規性)は、選定したときに該当行へ追記する。
