@@ -87,3 +87,4 @@
 
 - **giants** (2026-11-20): 書誌(Doughty, Roman, Faurby, Wolf, Haque, Bakker, Malhi, Dunning, Svenning / PNAS 113(4):868-873 / DOI 10.1073/pnas.1502549112 / 2016。巻ページは検索結果、DOI・著者は PDF で確認)と、抄録・本文の主要部分を著者掲載の PDF(https://joeroman.com/wp-content/uploads/2016/01/Doughty-with-supplement.pdf)で確認。陸約8%・海約5%・リン(海→陸)4%未満はいずれも推定値。仮定(海鳥ふんの20%が陸へ等)と熱帯の過小評価の可能性を本文で確認。補足資料は未確認。なお先に選んだミツバチのダンス(Riley 2005)は、抄録の結果部分を直接開けず落選(BACKLOG 24)。
 
+- **salmon** (2026-11-21): 書誌(Helfield & Naiman / Ecology 82(9):2403-2409 / 2001)を著者掲載の本文PDF(https://www.biol.wwu.edu/hooper/Helfield&Naiman2001Ecol_Salmon-derivedN&ForestGrowth.pdf)で照合。主張確認済み=本文まで。葉の窒素の約24%(16-32)が海由来、川から25m以内のトウヒの年間幹断面積成長が3倍以上、直径50cmまで約86年と約307年。アラスカ・チチャゴフ島の2つの川(Kadashan, Indian)の比較で、観察でありサケを操作した実験ではない。動画はヒグマには触れていない。

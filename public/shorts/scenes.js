@@ -2475,5 +2475,70 @@ S.push({
   }
 });
 
-window.SCENES=[S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+
+S.push({
+  id:'salmon',pin:{t:12,text:'3倍以上！'},hook:['サケが死ぬと、','川辺の木が育つ？'],tag:'生態系',dur:24,
+  title:'サケが川で死ぬと、川辺の森はどうなるのか？',
+  beats:[
+    {t:0,text:'サケは海で育ち、<b>川をのぼって</b>産卵する'},
+    {t:5,text:'産卵を終えたサケは<b>川で死ぬ</b>'},
+    {t:8,text:'体の<b>窒素</b>が、土から木の根へ'},
+    {t:12,text:'サケの川辺のトウヒは、幹が<b>3倍以上</b>太った'},
+    {t:19,text:'海の栄養が、<b>森を育てている</b>？'}
+  ],
+  more:'アラスカ南東部の2つの川で、サケが産卵する川辺と、そうでない場所のシトカトウヒを比べた研究です。サケの体の窒素は海の成分に特有の同位体比をもつため、葉の窒素の約24%(16〜32%)が海由来と見積もられました。川から25m以内のトウヒは、年あたりの幹の断面積の増え方が、サケのいない場所の3倍以上でした。直径50cmに達するまでの年数は、約86年と約307年と見積もられています。',
+  caveat:'これは模式図です。木の大きさや粒の動きは実際のデータではありません。論文は、サケのいる場所といない場所を比べた観察で、サケを入れる・除くといった実験ではありません。調べたのはアラスカの2つの川で、サケ以外の違い(光や木どうしの競争)も効いている可能性があり、著者もばらつきを認めています。私が確認できたのは論文本文(著者掲載PDF)までで、他の地域で同じ結果になるかは未確認です。',
+  source:{short:'Helfield & Naiman 2001, Ecology',cite:'Helfield, J.M. & Naiman, R.J. (2001). Effects of salmon-derived nitrogen on riparian forest growth and implications for stream productivity. Ecology, 82(9), 2403-2409.',query:'Effects of salmon-derived nitrogen on riparian forest growth and implications for stream productivity'},
+  init(W,H){const r=rng(2001);
+    const fish=Array.from({length:9},()=>({u:r(),y:r(),sp:0.7+r()*0.6}));
+    const nut=Array.from({length:26},()=>({x:r(),u:r(),sp:0.6+r()*0.6}));
+    return{fish,nut}},
+  draw(c,t,W,H,s){
+    const top=H*0.12,gy=H*0.40,bot=H*0.56,mid=W/2;
+    c.fillStyle='#06100c';c.fillRect(0,0,W,H);
+    vgrad(c,0,top,W,gy-top,[[0,'#0a1a2a'],[1,'#143024']]);
+    c.fillStyle='#1c2a1a';c.fillRect(0,gy,W,bot-gy);
+    // 川(下の帯)
+    const ry=gy+14,rh=22;
+    vgrad(c,0,ry,W,rh,[[0,'#1a5a78'],[1,'#0f3a52']]);
+    c.fillStyle='rgba(255,255,255,0.12)';c.fillRect(mid-0.5,top,1,bot-top);
+    // 木の成長(右は3倍以上太る)
+    const g=sm(t,8,13);
+    const drawTree=(x,h,w)=>{c.fillStyle='#4a3420';c.fillRect(x-w/2,gy-h*0.25,w,h*0.25+2);
+      c.fillStyle='#1f5a32';
+      for(let k=0;k<3;k++){const yy=gy-h*0.25-k*h*0.22,ww=h*0.34*(1-k*0.22);
+        c.beginPath();c.moveTo(x-ww,yy);c.lineTo(x,yy-h*0.34);c.lineTo(x+ww,yy);c.fill()}};
+    const xs=[0.2,0.5,0.8];
+    xs.forEach(f=>{drawTree(mid*f,38+g*4,3+g*0.5);drawTree(mid+mid*f,38+g*38,3+g*7)});
+    // サケ(右側の川をのぼる→死ぬ)
+    const alive=1-sm(t,4.5,6.5);
+    s.fish.forEach((q,i)=>{const u=((t*0.12*q.sp+q.u)%1);
+      const x=mid+8+u*(mid-16),y=ry+4+q.y*(rh-10);
+      const a=alive>0.02?alive:0.5*(1-sm(t,9,12));
+      if(t>9&&alive<=0.02&&a<=0.01)return;
+      const px=alive>0.02?x:mid+8+((i*37)%100)/100*(mid-16);
+      c.globalCompositeOperation='lighter';glow(c,px,y,5,alive>0.02?'255,150,120':'200,170,160',0.8*a);c.globalCompositeOperation='source-over'});
+    // 窒素の粒: 川→土→木
+    const nu=sm(t,7.5,9)*(1-sm(t,17,19));
+    if(nu>0)s.nut.forEach(q=>{const u=(t*0.14*q.sp+q.u)%1;
+      const x=mid+10+q.x*(mid-20),y=mix(ry+6,gy-40*(1+g*0.8),u);
+      c.globalCompositeOperation='lighter';glow(c,x,y,5,'140,255,190',0.7*nu*(1-u*0.5));c.globalCompositeOperation='source-over'});
+    // ラベル
+    txt(c,'サケのいない場所',mid*0.5,top+14,11,'rgba(200,215,200,0.85)','center');
+    txt(c,'サケが産卵する川',mid*1.5,top+14,11,'rgba(255,200,180,0.9)','center');
+    const cp=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,bot+60,12,'rgba(240,248,255,'+q+')','center')};
+    cp(0,5,'サケは海から川をのぼる');
+    cp(5,8,'産卵を終えて、川で死ぬ');
+    cp(8,12,'体の窒素が、土から木へ');
+    const na=sm(t,12,13.5);
+    if(na>0){txt(c,'幹の太り 3倍以上',mid*1.5,bot+14,13,'rgba(255,225,160,'+na+')','center');
+      txt(c,'葉の窒素 約24%が海由来',mid*1.5,bot+32,11,'rgba(180,255,210,'+na+')','center')}
+    if(t>=13.5&&t<19)cp(13.5,19.01,'サケのいる川辺のトウヒは、よく育った');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'海の栄養が、森を育てている？',W/2,bot+60,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'木や粒は模式。比べた観察で、実験ではない',W/2,bot+76,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
