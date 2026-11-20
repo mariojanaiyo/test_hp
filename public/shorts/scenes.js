@@ -2405,5 +2405,75 @@ S.push({
   }
 });
 
-window.SCENES=[S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'giants',pin:{t:12,text:'ほとんど途切れた！'},hook:['大きな動物が消えると、','栄養の流れは？'],tag:'地球×生物',dur:24,
+  title:'クジラや大型動物が減ると、栄養を運ぶ力はどうなるのか？',
+  beats:[
+    {t:0,text:'クジラは深い海の<b>栄養</b>を海面へ運ぶ'},
+    {t:5,text:'海鳥やサケは<b>海から陸</b>へ、大型動物は陸を<b>広く</b>運ぶ'},
+    {t:9,text:'クジラが減り、大型動物が絶え、<b>運ぶ力が落ちた</b>'},
+    {t:13,text:'運ぶ力は<b>陸で約8%、海で約5%</b>と見積もられた'},
+    {t:19,text:'栄養の流れが<b>途切れて</b>いる？'}
+  ],
+  more:'2016年の論文は、約150種の大型哺乳類が絶滅した陸と、数が大きく減ったクジラの海で、動物が栄養を運ぶ力がどう変わったかを世界規模で見積もりました。栄養が集まった場所から外へ広げる力は、絶滅前に比べて陸で約8%、海で約5%まで下がったと推定されています。リンについては、海鳥とサケなどが海から陸へ運んでいた量が、過去のおよそ1億5000万kg/年から、その4%未満になったと見積もっています。',
+  caveat:'これは模式図です。粒の数や動きは実際のデータではありません。論文の数字は、体の大きさや個体数などから計算した推定値で、実測ではありません。たとえば海鳥のふんの2割が陸に届く、といった仮定も含み、著者は、データの足りない地域(熱帯のサケ類など)は過小評価の可能性があるとしています。陸の数字には、気候など他の要因を除いていない面もあります。私が確認できたのは抄録と本文の主要部分までで、補足資料は未確認です。',
+  source:{short:'Doughty et al. 2016, PNAS',cite:'Doughty, C.E., Roman, J., Faurby, S., Wolf, A., Haque, A., Bakker, E.S., Malhi, Y., Dunning, J.B. Jr. & Svenning, J.-C. (2016). Global nutrient transport in a world of giants. Proceedings of the National Academy of Sciences, 113(4), 868-873. doi:10.1073/pnas.1502549112',query:'Global nutrient transport in a world of giants Doughty'},
+  init(W,H){const r=rng(2016);
+    const up=Array.from({length:22},()=>({x:r(),u:r(),sp:0.5+r()*0.5}));
+    const sea=Array.from({length:16},()=>({u:r(),y:r(),sp:0.5+r()*0.5}));
+    const land=Array.from({length:22},()=>({a:r()*TAU,u:r(),d:r()}));
+    return{up,sea,land}},
+  draw(c,t,W,H,s){
+    const top=H*0.12,seaY=H*0.28,shore=W*0.58,bot=H*0.56;
+    c.fillStyle='#050a12';c.fillRect(0,0,W,H);
+    const loss=sm(t,8,13);              // 運ぶ力が落ちる(1→0.07)
+    const cap=1-loss*0.93;
+    vgrad(c,0,top,shore,bot-top,[[0,'#0e3a5c'],[0.5,'#0b2a46'],[1,'#050f1c']]);
+    c.fillStyle='#1d3a22';c.fillRect(shore,seaY-8,W-shore,bot-seaY+8);
+    c.fillStyle='#2f6a34';c.fillRect(shore,seaY-10,W-shore,4);
+    vgrad(c,0,top,W,seaY-top-8,[[0,'#0a1630'],[1,'#13304a']]);
+    c.fillStyle='#0a1630';c.fillRect(shore,top,W-shore,seaY-top-10);
+    c.fillStyle='#13304a';c.fillRect(0,seaY-14,shore,6);
+    // 深い所の栄養が上へ(クジラ)
+    s.up.forEach((q,i)=>{if(i/22>cap)return;
+      const u=(t*0.1*q.sp+q.u)%1;const x=q.x*(shore-20)+10,y=mix(bot-8,seaY+4,u);
+      c.globalCompositeOperation='lighter';glow(c,x,y,6,'255,220,120',0.7);c.globalCompositeOperation='source-over'});
+    // クジラ
+    const wy=mix(bot-40,seaY+20,0.5+0.5*Math.sin(t*0.9));
+    c.fillStyle='rgba(120,160,200,'+(0.4+0.6*cap)+')';c.beginPath();c.ellipse(shore*0.5,wy,30,9,0,0,TAU);c.fill();
+    c.beginPath();c.moveTo(shore*0.5-28,wy);c.lineTo(shore*0.5-42,wy-9);c.lineTo(shore*0.5-40,wy+6);c.fill();
+    // 海→陸(海鳥・サケ)
+    s.sea.forEach((q,i)=>{if(i/16>cap)return;
+      const u=(t*0.12*q.sp+q.u)%1;const p=polyAt([[shore*0.5,seaY+6],[shore-4,seaY-30],[shore+40,seaY-18]],u);
+      c.globalCompositeOperation='lighter';glow(c,p[0],p[1],6,'140,255,200',0.7);c.globalCompositeOperation='source-over'});
+    // 陸の大型動物が運ぶ(外へ広がる)
+    s.land.forEach((q,i)=>{if(i/22>cap)return;
+      const u=(t*0.1+q.u)%1;const cx=shore+(W-shore)*0.3,cy=seaY+30;
+      const x=cx+Math.cos(q.a)*(u*(W-shore)*0.55+q.d*10),y=cy+Math.sin(q.a)*u*38;
+      if(x<shore+2||x>W-2)return;
+      c.globalCompositeOperation='lighter';glow(c,x,y,5,'255,200,120',0.6*(1-u));c.globalCompositeOperation='source-over'});
+    // 大型動物の影
+    const bigA=1-sm(t,8,11)*0.9;
+    c.fillStyle='rgba(210,180,140,'+bigA+')';c.beginPath();c.ellipse(shore+(W-shore)*0.3,seaY+14,14,8,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(shore+(W-shore)*0.3+13,seaY+8,4,3.5,0,0,TAU);c.fill();
+    // ラベル
+    txt(c,'クジラ',shore*0.5,bot+14,11,'rgba(200,225,250,0.9)','center');
+    txt(c,'海',shore*0.2,top+12,11,'rgba(180,210,240,0.8)','center');
+    txt(c,'陸',shore+(W-shore)*0.5,top+12,11,'rgba(200,230,200,0.8)','center');
+    // 数字(ピン)
+    const na=sm(t,12,13.5);
+    if(na>0){txt(c,'陸 約8%',shore+(W-shore)*0.5,bot+14,13,'rgba(255,200,140,'+na+')','center');
+      txt(c,'海 約5%',shore*0.5,bot+32,13,'rgba(255,225,160,'+na+')','center')}
+    const cp=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,bot+86,12,'rgba(240,248,255,'+q+')','center')};
+    cp(0,5,'クジラは深い海の栄養を海面へ運ぶ');
+    cp(5,9,'海鳥やサケは海から陸へ運ぶ');
+    cp(9,13,'クジラが減り、大型動物が絶えた');
+    cp(13,19,'運ぶ力は、陸で約8%、海で約5%');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'栄養の流れが、途切れている？',W/2,bot+86,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'粒の動きは模式。数字は推定値',W/2,bot+102,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+window.SCENES=[S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();

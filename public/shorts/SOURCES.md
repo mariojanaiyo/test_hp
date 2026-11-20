@@ -84,3 +84,6 @@
   Artifact: https://claude.ai/artifact/1jNoQts82YYg367kJX2EMp 録画: shorts_video/janzen.webm YouTube: 未投稿(2026-11-18、toriaezu_test にログインしたブラウザが無かった。3台とも別チャンネル)
 
 - **shark** (2026-11-19): 書誌(Myers, Baum, Shepherd, Powers, Peterson / Science 315(5820):1846–1850 / DOI 10.1126/science.1138657 / PMID 17395829 / 2007)と抄録を Europe PMC(https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1126/science.1138657)で確認。反論の Grubbs ほか(Sci Rep 6:20970, PMID 26876514, 2016)の抄録も Europe PMC で確認(時期が合わない・食性データも連鎖を支持せず)。本文は未確認(PubMed/PDF は開けず)。議論中の話として caveat に両論を書いた。
+
+- **giants** (2026-11-20): 書誌(Doughty, Roman, Faurby, Wolf, Haque, Bakker, Malhi, Dunning, Svenning / PNAS 113(4):868-873 / DOI 10.1073/pnas.1502549112 / 2016。巻ページは検索結果、DOI・著者は PDF で確認)と、抄録・本文の主要部分を著者掲載の PDF(https://joeroman.com/wp-content/uploads/2016/01/Doughty-with-supplement.pdf)で確認。陸約8%・海約5%・リン(海→陸)4%未満はいずれも推定値。仮定(海鳥ふんの20%が陸へ等)と熱帯の過小評価の可能性を本文で確認。補足資料は未確認。なお先に選んだミツバチのダンス(Riley 2005)は、抄録の結果部分を直接開けず落選(BACKLOG 24)。
+
