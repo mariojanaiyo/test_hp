@@ -34,6 +34,12 @@ function txt(c,s,x,y,size,color,align,weight){
   c.font=(weight||700)+' '+size+'px "Noto Sans JP",sans-serif';c.fillStyle=color;c.textAlign=align||'left';c.textBaseline='middle';c.fillText(s,x,y);
 }
 
+function fish(c,x,y,sc,dir,col){
+  c.save();c.translate(x,y);c.scale(sc*dir,sc);c.fillStyle=col;
+  c.beginPath();c.ellipse(0,0,7,3,0,0,TAU);c.fill();
+  c.beginPath();c.moveTo(-6,0);c.lineTo(-11,-3.5);c.lineTo(-11,3.5);c.closePath();c.fill();
+  c.restore();
+}
 // ---- 動物シルエット ----
 function elk(c,x,y,sc,dir,ph,head,col){
   c.save();c.translate(x,y);c.scale(sc*dir,sc);
@@ -2739,5 +2745,70 @@ S.push({
   }
 });
 
-window.SCENES=[S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'lake',pin:{t:13,text:'水が澄んだ！'},hook:['大きな魚を入れると、','湖の水が澄む？'],tag:'食う・食われるの連鎖',dur:24,
+  title:'湖では、大きな魚の増減が、藻の量まで変えうる',
+  beats:[
+    {t:0,text:'緑にごった湖。小魚が<b>ミジンコ</b>を食べている'},
+    {t:5,text:'そこへ、小魚を食べる<b>大きな魚</b>が増える'},
+    {t:9,text:'小魚が<b>減る</b>'},
+    {t:12.5,text:'ミジンコが<b>増えて大きく</b>なり、藻を食べる'},
+    {t:18,text:'<b>4段</b>のつながりが、上から下へ伝わる'}
+  ],
+  more:'1985年、Carpenter らは湖の生態系を「大きな魚→小魚→動物プランクトン→植物プランクトン」の4段で整理しました。大きな魚が増えると小魚が減り、小魚に食べられていた大きめの動物プランクトンが増えて、藻(植物プランクトン)が食べられて減る、という流れです。小魚を取り除いた複数の湖で、プランクトンが大きくなり、藻が減り、水の透明度が上がった例が集められています。栄養分(リン)の量が土台であることは変わらず、食物網の効果とは「補い合う」関係だと著者は述べています。',
+  caveat:'これは模式図です。魚・プランクトンの数や動きは単純化した絵で、実測ではありません。論文は、シミュレーションと過去の実験をまとめた概念的な総説で、藻の生産量はこの連鎖で増えることも減ることもあると述べています。栄養分が上限をきめ、効果が出るまでにも時間差があります。',
+  source:{short:'Carpenter, Kitchell & Hodgson 1985, BioScience',cite:'Carpenter, S. R., Kitchell, J. F., & Hodgson, J. R. (1985). Cascading trophic interactions and lake productivity. BioScience, 35(10), 634-639.',query:'Cascading trophic interactions and lake productivity Carpenter Kitchell Hodgson 1985'},
+  init(W,H){const r=rng(77);
+    return{
+      sf:Array.from({length:8},()=>({x:r()*W,y:r(),sp:14+r()*14,o:r(),p:r()*6})),
+      zo:Array.from({length:34},()=>({x:r()*W,y:r(),o:r(),p:r()*6})),
+      ph:Array.from({length:140},()=>({x:r()*W,y:r(),o:r(),p:r()*6}))
+    }},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.44,h=bot-top;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    vgrad(c,0,top,W,h,[[0,'#123a4a'],[1,'#0a2230']]);
+    const algae=1-0.85*sm(t,12,18);
+    c.fillStyle='rgba(70,160,70,'+(0.42*algae)+')';c.fillRect(0,top,W,h);
+    // 植物プランクトン
+    s.ph.forEach(q=>{
+      if(q.o>algae)return;
+      const x=(q.x+Math.sin(t*0.5+q.p)*6+W)%W,y=top+6+q.y*(h-12);
+      c.fillStyle='rgba(120,210,90,.75)';c.fillRect(x,y,2,2);
+    });
+    // 動物プランクトン(大きくなり、増える)
+    const zg=sm(t,11,17),zs=mix(1.5,3.2,zg),zc=mix(0.35,1,zg);
+    c.globalCompositeOperation='lighter';
+    s.zo.forEach(q=>{
+      if(q.o>zc)return;
+      const x=(q.x+t*4*(q.p-3)/3+W*2)%W,y=top+8+q.y*(h-16)+Math.sin(t*1.4+q.p)*4;
+      glow(c,x,y,zs*3.2,'255,230,170',0.55);
+      c.fillStyle='rgba(255,236,190,.95)';c.beginPath();c.ellipse(x,y,zs,zs*0.8,0,0,TAU);c.fill();
+    });
+    c.globalCompositeOperation='source-over';
+    // 小魚
+    s.sf.forEach(q=>{
+      const a=1-sm(t,9+q.o*3.5,10.2+q.o*3.5);
+      if(a<=0)return;
+      const x=(q.x+t*q.sp)%(W+40)-20,y=top+14+q.y*(h-28)+Math.sin(t*2+q.p)*3;
+      fish(c,x,y,0.9,1,'rgba(200,225,235,'+a+')');
+    });
+    // 大きな魚(5〜9秒に入ってきて、そのあと泳ぎ回る)
+    const bx0=mix(-40,170,sm(t,5,9));
+    const bx=t<9?bx0:170+Math.sin((t-9)*0.7)*70,by=top+h*0.5+Math.sin(t*0.9)*12;
+    if(t>=4.5)fish(c,bx,by,2.6,t<9?1:Math.cos((t-9)*0.7)>=0?1:-1,'rgba(255,170,90,'+sm(t,4.5,5.5)+')');
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+    // 4段のつながり
+    const y0=H*0.485,gap=H*0.043,fb=sm(t,17,19);
+    const rows=[['大きな魚','rgba(255,170,90,','↑'],['小魚','rgba(200,225,235,','↓'],['動物プランクトン','rgba(255,236,190,','↑'],['藻(植物プランクトン)','rgba(120,210,90,','↓']];
+    rows.forEach((r,i)=>{
+      const a=sm(t,4+i*0.1,5)*0.9+0.1;
+      c.fillStyle=r[1]+a+')';c.beginPath();c.arc(34,y0+i*gap,4,0,TAU);c.fill();
+      txt(c,r[0],48,y0+i*gap,11,'rgba(235,238,245,'+a+')','left',600);
+      if(fb>0)txt(c,r[2]+(r[2]==='↑'?' 増える':' 減る'),W-30,y0+i*gap,11,r[1]+fb+')','right',700);
+    });
+  }
+});
+
+window.SCENES=[S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
