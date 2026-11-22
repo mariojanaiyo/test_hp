@@ -2810,5 +2810,83 @@ S.push({
   }
 });
 
-window.SCENES=[S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'sanction',pin:{t:12,text:'はんぶんに減った！'},hook:['働かない菌には、','豆が罰を与える？'],tag:'マメ科 × 根粒菌の取り引き',dur:24,
+  title:'ダイズは、窒素を作らない根粒菌の子孫を減らしていた',
+  beats:[
+    {t:0,text:'ダイズの根のこぶ(<b>根粒</b>)に、菌がすむ'},
+    {t:4,text:'菌は空気の<b>窒素</b>を、豆の栄養に変える'},
+    {t:7,text:'片方の根だけ、窒素の無い空気に<b>かえる</b>'},
+    {t:12,text:'働けない根粒の菌は、<b>約半分</b>に'},
+    {t:18,text:'豆が<b>働かない菌をえらんで</b>罰する？'}
+  ],
+  more:'マメ科の根には、窒素を栄養に変える根粒菌がすみます。菌は働くのにコストがかかるため、サボる菌が得をしてしまわないかが謎でした。2003年、Kiers らは、ダイズの根の片側だけを窒素のない空気(アルゴンと酸素)に置いて、菌が窒素を作れない状態にしました。すると、その根粒の菌の子孫の数は約50%減ったと報告しています。豆が、働かない菌に不利になるようにしている「制裁」で、この助け合いが保たれているのではないか、という考えです。',
+  caveat:'これは模式図です。根粒・菌の数や動きは単純化した絵で、実測ではありません。実験は、ダイズと根粒菌の1組での結果です。窒素のない空気という人工的な条件で働けなくしたもので、自然のサボり菌を調べたものではありません。「約50%減」は抄録の値で、仕組みは酸素の供給の減少が関わるかもしれない、という著者の示唆です。ほかの共生にもあてはまるかは未確認です。',
+  source:{short:'Kiers et al. 2003, Nature',cite:'Kiers, E. T., Rousseau, R. A., West, S. A., & Denison, R. F. (2003). Host sanctions and the legume-rhizobium mutualism. Nature, 425(6953), 78-81. doi:10.1038/nature01931',query:'Host sanctions and the legume-rhizobium mutualism Kiers 2003'},
+  init(W,H){const r=rng(88);
+    const mk=()=>Array.from({length:3},()=>Array.from({length:12},()=>({a:r()*TAU,d:r(),o:r(),p:r()*6})));
+    return{L:mk(),R:mk()}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.50,h=bot-top;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    vgrad(c,0,top,W,h,[[0,'#2a2018'],[1,'#17110c']]);
+    // 茎と根
+    const cx=W/2,sy=top+8,ry=top+h*0.2;
+    c.strokeStyle='rgb(110,170,90)';c.lineWidth=3;c.lineCap='round';
+    c.beginPath();c.moveTo(cx,sy);c.lineTo(cx,ry);c.stroke();
+    c.strokeStyle='rgb(150,115,80)';c.lineWidth=2;
+    const nod=[[[78,top+h*0.45],[112,top+h*0.62],[62,top+h*0.78]],[[282,top+h*0.45],[248,top+h*0.62],[298,top+h*0.78]]];
+    [0,1].forEach(k=>{
+      const sg=k?1:-1;
+      c.beginPath();c.moveTo(cx,ry);c.quadraticCurveTo(cx+sg*50,ry+6,cx+sg*86,top+h*0.34);
+      c.lineTo(nod[k][0][0],nod[k][0][1]);c.stroke();
+      c.beginPath();c.moveTo(cx+sg*86,top+h*0.34);c.lineTo(nod[k][1][0],nod[k][1][1]);c.stroke();
+      c.beginPath();c.moveTo(nod[k][0][0],nod[k][0][1]);c.lineTo(nod[k][2][0],nod[k][2][1]);c.stroke();
+    });
+    // 空気の表示(右だけ窒素ぬき)
+    const lab=sm(t,6,7.5);
+    txt(c,'ふつうの空気',82,bot-4,10.5,'rgba(190,230,255,'+(0.35+0.6*lab)+')','center',600);
+    txt(c,lab>0.5?'N₂ぬき(Ar+O₂)':'ふつうの空気',278,bot-4,10.5,'rgba(255,200,170,'+(0.35+0.6*lab)+')','center',600);
+    c.strokeStyle='rgba(255,255,255,'+0.25*lab+')';c.setLineDash([3,4]);c.lineWidth=1;
+    c.beginPath();c.moveTo(cx,top+h*0.3);c.lineTo(cx,bot-4);c.stroke();c.setLineDash([]);
+    // 根粒と菌
+    const stop=sm(t,7,9);
+    const dec=sm(t,9,13.5);
+    c.globalCompositeOperation='lighter';
+    [0,1].forEach(k=>{
+      const arr=k?s.R:s.L;
+      nod[k].forEach((p,i)=>{
+        const fix=k?1-stop:1;
+        const pulse=0.6+0.4*Math.sin(t*3+i);
+        glow(c,p[0],p[1],26,'110,255,170',0.5*fix*pulse);
+        arr[i].forEach(q=>{
+          if(k&&q.o<0.5*dec)return;
+          const x=p[0]+Math.cos(q.a+t*0.3*(q.p-3))*q.d*9,y=p[1]+Math.sin(q.a+t*0.3*(q.p-3))*q.d*9;
+          glow(c,x,y,3.4,k&&stop>0.5?'255,160,120':'140,255,190',0.9);
+        });
+      });
+    });
+    c.globalCompositeOperation='source-over';
+    nod.forEach((g,k)=>g.forEach(p=>{
+      c.strokeStyle=k&&stop>0.5?'rgba(210,150,120,.85)':'rgba(160,230,180,.85)';c.lineWidth=1.5;
+      c.beginPath();c.arc(p[0],p[1],13,0,TAU);c.stroke();
+    }));
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+    // 結果の表示
+    const fb=sm(t,17,19.5);
+    if(fb>0){
+      const y0=H*0.56,w=190;
+      txt(c,'菌の子孫の数(約値・抄録)',12,y0-14,10.5,'rgba(235,235,240,'+fb+')','left');
+      [['ふつう',1,'110,255,170'],['窒素ぬき',0.5,'255,160,120']].forEach((r,i)=>{
+        const y=y0+10+i*24;
+        txt(c,r[0],12,y,10.5,'rgba(235,238,245,'+fb+')','left',600);
+        c.fillStyle='rgba(120,140,160,'+0.35*fb+')';c.fillRect(80,y-5,w,10);
+        c.fillStyle='rgba('+r[2]+','+0.95*fb+')';c.fillRect(80,y-5,w*r[1]*fb,10);
+      });
+      txt(c,'約50%減',W-12,y0+34,11,'rgba(255,200,180,'+fb+')','right');
+    }
+  }
+});
+
+window.SCENES=[S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
