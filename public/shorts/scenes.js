@@ -2888,5 +2888,97 @@ S.push({
   }
 });
 
-window.SCENES=[S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'attine',pin:{t:12,text:'ねらい撃ち！'},hook:['アリの畑を守るのは、','体の細菌？'],tag:'アリ × 菌 × 細菌の共生',dur:24,
+  title:'菌を育てるアリは、体に抗生物質の細菌をまとっていた',
+  beats:[
+    {t:0,text:'ハキリアリの仲間は、<b>菌の畑</b>を育てて食べる'},
+    {t:4,text:'畑には、<b>寄生する菌</b>(エスコボプシス)も入りこむ'},
+    {t:8,text:'アリの体の表面に、<b>放線菌</b>(ストレプトマイセス)がすむ'},
+    {t:12,text:'その菌が<b>抗生物質</b>で、寄生菌を狙っておさえる'},
+    {t:18,text:'細菌は<b>親から子の巣へ</b>受けつがれる？'}
+  ],
+  more:'菌の畑を育てて食べるアリ(attine アリ)の畑には、エスコボプシスという寄生菌が入りこみます。1999年、Currie らは、アリの体の表面にすむストレプトマイセス属の細菌が、この寄生菌の成長をおさえる抗生物質を出すと報告しました。この細菌は調べた限りのすべての種にいて、親の巣から子の巣へ受けつがれ、畑の菌の成長を助ける力もあるとされます。アリ・畑の菌・寄生菌に加えて、細菌が「3つ目の仲間」としてかかわるという話です。',
+  caveat:'これは模式図です。アリ・菌・細菌の数や動き、体のどこにいるかは単純化した絵で、実測ではありません。確認したのは論文の抄録までで、実験の方法・数字・サンプル数は未確認のため、動画には出していません。1999年の報告で、その後の研究(別の細菌や体の場所、ほかの共生者の存在)で見直された点があるかは未確認です。',
+  source:{short:'Currie et al. 1999, Nature',cite:'Currie, C. R., Scott, J. A., Summerbell, R. C., & Malloch, D. (1999). Fungus-growing ants use antibiotic-producing bacteria to control garden parasites. Nature, 398(6729), 701-704. doi:10.1038/19519',query:'Fungus-growing ants use antibiotic-producing bacteria to control garden parasites Currie 1999'},
+  init(W,H){const r=rng(2399);
+    const gard=Array.from({length:46},()=>({a:r()*TAU,d:Math.sqrt(r()),p:r()*6}));
+    const esc=Array.from({length:26},()=>({a:r()*TAU,d:0.15+0.85*r(),o:r(),p:r()*6}));
+    const bac=Array.from({length:14},()=>({u:r(),v:r()*2-1,p:r()*6}));
+    return{gard,esc,bac}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.52,h=bot-top;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    vgrad(c,0,top,W,h,[[0,'#1d1812'],[1,'#120f0b']]);
+    // 畑(右下)
+    const gx=W*0.66,gy=top+h*0.66,gr=h*0.27;
+    c.globalCompositeOperation='lighter';
+    glow(c,gx,gy,gr*1.7,'150,230,140',0.22);
+    s.gard.forEach(q=>{
+      const x=gx+Math.cos(q.a)*q.d*gr*1.25,y=gy+Math.sin(q.a)*q.d*gr*0.8;
+      glow(c,x,y,5+2*Math.sin(t*1.6+q.p),'190,240,150',0.7);
+    });
+    // 寄生菌(4秒から入り、12秒以降おさえられる)
+    const inv=sm(t,4,8),kill=sm(t,12.2,17);
+    s.esc.forEach(q=>{
+      if(q.o>inv)return;
+      const live=1-kill*(0.35+0.65*q.o);
+      if(live<=0.03)return;
+      const x=gx+Math.cos(q.a)*q.d*gr*1.1,y=gy+Math.sin(q.a)*q.d*gr*0.7;
+      glow(c,x,y,3.6*live+0.6,'255,90,70',0.95*live);
+    });
+    c.globalCompositeOperation='source-over';
+    txt(c,'菌の畑',gx,gy+gr*1.05,10.5,'rgba(215,240,205,.9)','center',600);
+    if(inv>0.4)txt(c,kill>0.6?'寄生菌が減る':'寄生菌',W-48,gy-gr*0.95,10,kill>0.6?'rgba(255,200,180,.95)':'rgba(255,130,110,.95)','center',600);
+    // アリ(左から畑へ)
+    const ax=mix(46,W*0.38,sm(t,7,11.5)),ay=top+h*0.36+Math.sin(t*5)*0.8*(t<11.5&&t>7?1:0);
+    c.save();c.translate(ax,ay);c.scale(1.6,1.6);
+    c.strokeStyle='rgb(200,120,70)';c.fillStyle='rgb(200,120,70)';c.lineWidth=1.3;c.lineCap='round';
+    for(let i=0;i<3;i++){const sw=Math.sin(t*9+i*2)*1.8;
+      c.beginPath();c.moveTo(-1+i*4-4,0);c.lineTo(-4+i*4-4+sw,-8);c.moveTo(-1+i*4-4,0);c.lineTo(-4+i*4-4-sw,8);c.stroke()}
+    c.beginPath();c.ellipse(-12,0,6,4.2,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(-3,0,3.4,2.6,0,0,TAU);c.fill();
+    c.beginPath();c.ellipse(6,0,4.4,3.4,0,0,TAU);c.fill();
+    c.restore();
+    // 体表の細菌(8秒から現れる)
+    const b0=sm(t,8,9.5);
+    c.globalCompositeOperation='lighter';
+    if(b0>0){
+      s.bac.forEach(q=>{
+        const lx=ax+(-24+q.u*30)*1.6/1.6*1.0,ly=ay+q.v*6*1.0;
+        glow(c,lx,ly,2.8+0.6*Math.sin(t*3+q.p),'120,220,255',0.9*b0);
+      });
+      glow(c,ax-8,ay,18,'120,220,255',0.18*b0);
+    }
+    // 抗生物質の波(12秒の瞬間から畑へ)
+    const w=t-12;
+    if(w>0&&w<6){
+      for(let k=0;k<3;k++){
+        const u=clamp(w/4-k*0.18);if(u<=0)continue;
+        const x=mix(ax+8,gx,u),y=mix(ay,gy,u),rr=10+u*gr*1.0;
+        c.strokeStyle='rgba(130,225,255,'+0.7*(1-u)+')';c.lineWidth=1.6;
+        c.beginPath();c.arc(x,y,rr*0.55,0,TAU);c.stroke();
+      }
+      glow(c,gx,gy,gr*1.4,'120,220,255',0.16*sm(w,0.5,3)*(1-sm(w,4,6)));
+    }
+    c.globalCompositeOperation='source-over';
+    if(b0>0.5)txt(c,'ストレプトマイセス(細菌)',ax-6,ay-26,9.5,'rgba(150,230,255,'+b0+')','center',600);
+    // 親→子へ(18秒から)
+    const f=sm(t,17.5,19.5);
+    if(f>0){
+      const y1=top+h*0.2,px=W*0.26,qx=W*0.66;
+      txt(c,'親の巣',px,y1,10,'rgba(235,235,240,'+f+')','center',600);
+      txt(c,'子の巣',qx,y1,10,'rgba(235,235,240,'+f+')','center',600);
+      c.strokeStyle='rgba(150,230,255,'+0.7*f+')';c.lineWidth=1.4;
+      c.beginPath();c.moveTo(px+28,y1);c.lineTo(qx-28,y1);c.stroke();
+      c.beginPath();c.moveTo(qx-34,y1-4);c.lineTo(qx-28,y1);c.lineTo(qx-34,y1+4);c.stroke();
+      c.globalCompositeOperation='lighter';
+      for(let k=0;k<3;k++){const u=((t*0.35+k/3)%1);glow(c,mix(px+28,qx-28,u),y1,3.2,'120,220,255',0.9*f)}
+      c.globalCompositeOperation='source-over';
+    }
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+  }
+});
+
+window.SCENES=[S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
