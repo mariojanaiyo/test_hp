@@ -2980,5 +2980,84 @@ S.push({
   }
 });
 
-window.SCENES=[S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+// 37 ─────────── 頂点の捕食者の消失(Estes 2011 総説) ───────────
+S.push({
+  id:'trophic',pin:{t:12,text:'人のそばまで！'},hook:['ライオンが消えると、','ヒヒが人に近づく？'],tag:'頂点の捕食者と連鎖',dur:24,
+  title:'頂点の捕食者がいなくなると、病気まで変わる(という総説)',
+  beats:[
+    {t:0,text:'ライオンやヒョウは、サバンナの<b>頂点の捕食者</b>'},
+    {t:5,text:'いなくなると、ヒヒが<b>ふえて</b>いった'},
+    {t:10,text:'ヒヒは人の暮らしの<b>近くまで</b>来るように'},
+    {t:15,text:'腸の<b>寄生虫</b>が、ヒヒにも近くの人にも<b>ふえた</b>と報告'},
+    {t:20,text:'総説は、火事や炭素の循環への<b>影響</b>も挙げる'}
+  ],
+  more:'2011年、Estes らは25人の共著による総説で、大型の頂点の捕食者が世界じゅうで減ったことの影響をまとめました。論文があげる一例が、サハラ以南のアフリカです。ライオンやヒョウが減ると、ヒヒがふえて行動も変わり、人との接触がふえ、ヒヒと近くの人で腸の寄生虫の感染率が上がった、と報告された研究を紹介しています(論文中の引用)。総説は、捕食者の損失が病気・火事・炭素の循環・外来種などにも広がりうると述べ、見落とされてきた影響の大きさを指摘しています。',
+  caveat:'これは模式図です。動物や人の数、動き、場所は単純化した絵で、実測ではありません。確認したのは総説(Review)の全文で、ヒヒと寄生虫の個別研究そのものは未確認です(総説の中の紹介のみ)。総説は影響の一部を「知られている、または疑われている」と書き、「捕食者の損失が大きな生態系の異変を引き起こした、または助けた」という点は著者らの提案としています。数字は動画に出していません。',
+  source:{short:'Estes et al. 2011, Science',cite:'Estes, J. A., Terborgh, J., Brashares, J. S., Power, M. E., Berger, J., Bond, W. J., … Wardle, D. A. (2011). Trophic downgrading of planet Earth. Science, 333, 301-306. doi:10.1126/science.1205106',query:'Trophic downgrading of planet Earth Estes 2011'},
+  init(W,H){const r=rng(3711);
+    const bab=Array.from({length:14},(_,i)=>({x0:W*(0.3+0.2*r()),x1:W*(0.44+0.15*r()),y:r(),o:i<4?0:0.15+0.85*(i-4)/9,p:r()*6,par:r()}));
+    const ppl=Array.from({length:4},(_,i)=>({x:W*(0.70+0.045*i)+r()*3,y:r(),par:0.2+0.8*r()}));
+    return{bab,ppl}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.52,h=bot-top,gy=top+h*0.8;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    vgrad(c,0,top,W,h,[[0,'#1b1710'],[1,'#0f0d08']]);
+    c.strokeStyle='rgba(190,170,110,.25)';c.lineWidth=1;c.beginPath();c.moveTo(0,gy);c.lineTo(W,gy);c.stroke();
+    c.save();c.translate(W/2,gy);c.scale(1.28,1.28);c.translate(-W/2,-gy);
+    // 村(右)
+    const vx=W*0.68;
+    c.fillStyle='rgba(120,100,80,.9)';c.fillRect(vx,gy-22,W*0.2,22);
+    c.fillStyle='rgba(90,70,55,.95)';c.beginPath();c.moveTo(vx-4,gy-22);c.lineTo(vx+W*0.1,gy-36);c.lineTo(vx+W*0.2+4,gy-22);c.fill();
+    txt(c,'人のくらし',vx+W*0.1,gy+14,10,'rgba(235,225,205,.9)','center',600);
+    // ライオン(0-5秒いる、5-8秒で消える)
+    const la=1-sm(t,5,8);
+    if(la>0.02){
+      const lx=84+Math.sin(t*0.8)*4,ly=gy-10;
+      c.globalAlpha=la;
+      c.fillStyle='rgb(215,170,90)';c.shadowColor='rgb(255,200,100)';c.shadowBlur=8;
+      c.beginPath();c.ellipse(lx,ly,15,7,0,0,TAU);c.fill();
+      [[-9,0],[-4,1.5],[6,3],[11,4.5]].forEach(l=>{const sw=Math.sin(t*3+l[1])*1.5;c.strokeStyle='rgb(215,170,90)';c.lineWidth=2;c.beginPath();c.moveTo(lx+l[0],ly+3);c.lineTo(lx+l[0]+sw,gy);c.stroke()});
+      c.beginPath();c.moveTo(lx-14,ly-2);c.quadraticCurveTo(lx-24,ly-8,lx-22,ly-16);c.stroke();
+      c.fillStyle='rgb(150,95,45)';c.beginPath();c.arc(lx+16,ly-6,7,0,TAU);c.fill();
+      c.fillStyle='rgb(230,185,105)';c.beginPath();c.arc(lx+19,ly-5,4,0,TAU);c.fill();
+      c.shadowBlur=0;c.globalAlpha=1;
+      txt(c,'ライオン',lx,ly-26,10,'rgba(255,225,160,'+la+')','center',600);
+    }
+    if(t>5.5&&t<9)txt(c,'いなくなる…',90,gy-48,10,'rgba(255,215,150,'+(1-sm(t,8,9.5))*sm(t,5.5,6.5)+')','center',600);
+    // ヒヒ
+    const spread=sm(t,9,12.5),par0=sm(t,14,17.5);
+    let shown=0;
+    c.globalCompositeOperation='source-over';
+    s.bab.forEach(b=>{
+      const vis=b.o===0?1:sm(t,5.5+b.o*5,6.5+b.o*5);
+      if(vis<0.02)return;shown++;
+      const x=mix(b.x0,b.x1,spread)+Math.sin(t*1.3+b.p)*3,y=gy-3-b.y*h*0.22+Math.abs(Math.sin(t*3+b.p))*(-1.5);
+      c.globalAlpha=vis;
+      c.fillStyle='rgb(160,120,80)';c.beginPath();c.ellipse(x,y-5,5.5,3.4,0,0,TAU);c.fill();
+      c.beginPath();c.arc(x+5.5,y-8,2.6,0,TAU);c.fill();
+      c.fillStyle='rgb(120,85,60)';c.fillRect(x-3,y-3,1.4,3.5);c.fillRect(x+2,y-3,1.4,3.5);
+      c.globalAlpha=1;
+      if(b.par<0.7&&par0>0){c.globalCompositeOperation='lighter';glow(c,x,y-5,4.5,'200,255,80',0.9*par0);c.globalCompositeOperation='source-over'}
+    });
+    if(t>7&&t<22)txt(c,'ヒヒ',W*0.46,gy-h*0.34,10.5,'rgba(235,205,160,'+sm(t,7,9)+')','center',600);
+    // 人
+    s.ppl.forEach(p=>{
+      const x=p.x,y=gy-2;
+      c.fillStyle='rgb(230,215,195)';c.beginPath();c.arc(x,y-14,2.6,0,TAU);c.fill();
+      c.strokeStyle='rgb(230,215,195)';c.lineWidth=2;c.beginPath();c.moveTo(x,y-11);c.lineTo(x,y-3);c.stroke();
+      if(p.par<0.8&&par0>0.2){c.globalCompositeOperation='lighter';glow(c,x,y-7,5,'200,255,80',0.9*sm(par0,0.2,1));c.globalCompositeOperation='source-over'}
+    });
+    c.restore();
+    if(par0>0.3)txt(c,'腸の寄生虫がふえた',W*0.5,top+h*0.28,12,'rgba(215,250,130,'+sm(par0,0.3,0.9)+')','center',700);
+    // 次のつながり(20秒から)
+    const f=sm(t,20,22);
+    if(f>0)['火事','炭素','病気'].forEach((k,i)=>{
+      const x=W*(0.25+0.28*i);
+      txt(c,'→ '+k,x,top+h*0.19,12,'rgba(255,215,170,'+f+')','center',700);
+    });
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+  }
+});
+
+window.SCENES=[S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
