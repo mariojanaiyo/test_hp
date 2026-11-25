@@ -3059,5 +3059,64 @@ S.push({
   }
 });
 
-window.SCENES=[S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'finch',pin:{t:12,text:'かたい種が残った！'},hook:['日照りの島で、','生き残ったのは？'],tag:'自然選択',dur:24,
+  title:'ひでりの年、大きなくちばしの鳥が生き残った(という報告)',
+  beats:[
+    {t:0,text:'ガラパゴスの小さな島、ダフネ・メジャー島'},
+    {t:5,text:'<b>日照り</b>で、小さくてやわらかい種が減っていく'},
+    {t:10,text:'のこったのは、大きくて<b>かたい種</b>'},
+    {t:15,text:'生き残りは<b>かたよっていた</b>。大きな鳥、とくに大きなくちばしのオス'},
+    {t:20,text:'論文は、これを脊椎動物で<b>最大級</b>の選択の強さと書く'}
+  ],
+  more:'この論文は、ガラパゴスのダフネ・メジャー島で、日照りのあいだにダーウィンフィンチの生き残りを調べました。生き残りはでたらめではなく、大きな鳥、とくに大きなくちばしのオスが有利でした。日照りで、大きくてかたい種が多くなったからです。選択の強さは、O\'Donald の方法で計算して、脊椎動物の集団でこれまでの記録のうち最大級だと抄録は述べています。',
+  caveat:'これは模式図です。鳥や種の数・動きは単純化した絵で、実測ではありません。確認できたのは論文の抄録(要約)までで、本文と具体的な数字(死んだ割合・くちばしの変化量など)は未入手のため、動画には出していません。1つの島・1回の日照りの観察です。著者名はページで確認できなかったため、動画には載せていません。',
+  source:{short:'Science 1981, 214:82-85',cite:'Intense Natural Selection in a Population of Darwin\'s Finches (Geospizinae) in the Galápagos. Science, 214(4516), 82-85 (1981). doi:10.1126/science.214.4516.82 (著者名は未確認)',query:'Intense Natural Selection in a Population of Darwin\'s Finches (Geospizinae) in the Galápagos'},
+  init(W,H){const r=rng(8121);
+    const seeds=Array.from({length:30},(_,i)=>{const big=i%3===0;return{x:W*(0.08+0.84*r()),big,o:big?0:r(),p:r()*6}});
+    const birds=Array.from({length:12},(_,i)=>({x:W*(0.1+0.8*r()),big:i<4,o:i<4?0:0.15+0.85*(i-4)/8,p:r()*6}));
+    return{seeds,birds}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.52,h=bot-top,gy=top+h*0.72;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    const dry=sm(t,3,9);
+    vgrad(c,0,top,W,h,[[0,lerpColor([22,36,40],[44,30,18],dry)],[1,lerpColor([14,26,22],[30,20,10],dry)]]);
+    c.fillStyle=lerpColor([40,70,40],[90,66,36],dry);c.fillRect(0,gy,W,top+h-gy);
+    // 日
+    c.globalCompositeOperation='lighter';glow(c,W*0.82,top+h*0.16,26+18*dry,'255,200,90',0.25+0.5*dry);c.globalCompositeOperation='source-over';
+    if(t>3&&t<14)txt(c,'日照り',W*0.82,top+h*0.34,11,'rgba(255,215,150,'+sm(t,3,5)*(1-sm(t,12,14))+')','center',700);
+    // 種
+    s.seeds.forEach(d=>{
+      const vis=d.big?1:1-sm(t,4+d.o*4,5.5+d.o*4);
+      if(vis<0.02)return;
+      const x=d.x,y=gy+8+((d.p*37)%1)*(top+h-gy-18),rad=d.big?5:2.2;
+      c.globalAlpha=vis;c.fillStyle=d.big?'rgb(150,100,55)':'rgb(190,200,110)';
+      c.beginPath();c.arc(x,y,rad,0,TAU);c.fill();
+      if(d.big){c.strokeStyle='rgba(60,35,15,.9)';c.lineWidth=1;c.beginPath();c.arc(x,y,rad,0,TAU);c.stroke()}
+      c.globalAlpha=1;
+    });
+    // 鳥
+    const sel=sm(t,8,13);
+    s.birds.forEach(b=>{
+      const vis=b.big?1:1-sm(sel,b.o*0.9,b.o*0.9+0.2);
+      if(vis<0.02)return;
+      const x=b.x,y=gy-9-Math.abs(Math.sin(t*2+b.p))*2,k=b.big?1.15:0.85;
+      c.globalAlpha=vis;
+      c.fillStyle='rgb(135,126,112)';c.beginPath();c.ellipse(x,y,9*k,6*k,0,0,TAU);c.fill();
+      c.beginPath();c.arc(x+8*k,y-3*k,4*k,0,TAU);c.fill();
+      c.fillStyle=b.big?'rgb(250,200,110)':'rgb(215,185,140)';
+      const bl=b.big?7:4,bw=b.big?3.6:2;
+      c.beginPath();c.moveTo(x+11*k,y-3*k-bw/2);c.lineTo(x+11*k+bl,y-3*k);c.lineTo(x+11*k,y-3*k+bw/2);c.closePath();c.fill();
+      c.strokeStyle='rgb(135,126,112)';c.lineWidth=1.2;c.beginPath();c.moveTo(x-1,y+5*k);c.lineTo(x-1,gy);c.moveTo(x+3,y+5*k);c.lineTo(x+3,gy);c.stroke();
+      c.globalAlpha=1;
+      if(b.big&&t>10&&t<24){c.globalCompositeOperation='lighter';glow(c,x+11*k+bl,y-3*k,9,'255,210,110',0.5*sm(t,10,12));c.globalCompositeOperation='source-over'}
+    });
+    if(t>1)txt(c,'小さい種',W*0.2,gy+h*0.24,10,'rgba(210,225,140,'+sm(t,1,2.5)*(1-sm(t,8,10))+')','center',600);
+    if(t>9)txt(c,'大きくてかたい種',W*0.28,gy+h*0.24,10.5,'rgba(255,215,150,'+sm(t,9,11)+')','center',700);
+    if(t>14)txt(c,'大きなくちばし',W*0.5,top+h*0.12,12,'rgba(255,225,160,'+sm(t,14,16)+')','center',700);
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+  }
+});
+
+window.SCENES=[S[37],S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
