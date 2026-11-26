@@ -3059,5 +3059,60 @@ S.push({
   }
 });
 
-window.SCENES=[S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'finch',pin:{t:12,text:'大きい鳥だけ！'},hook:['かんばつの島で、','生き残ったのは？'],tag:'気候と自然選択',dur:24,
+  title:'かんばつの年、くちばしの大きなフィンチが生き残った(という報告)',
+  beats:[
+    {t:0,text:'ガラパゴスの島に、<b>くちばしの大小</b>がまざったフィンチ'},
+    {t:5,text:'<b>かんばつ</b>。やわらかい小さな種が先になくなる'},
+    {t:9,text:'のこるのは、<b>大きくて硬い種</b>'},
+    {t:14,text:'生き残りは、<b>大きな鳥</b>、とくにくちばしの大きなオス'},
+    {t:19,text:'選択の強さは、脊椎動物で<b>最高の記録</b>'}
+  ],
+  more:'1981年、Boag と Grant は、ガラパゴスのダフネ島のダーウィンフィンチを調べ、かんばつのあいだの生き残り方が、でたらめではなかったと報告しました。抄録によると、大きな鳥、とくにくちばしの大きなオスが最もよく生き残りました。かんばつの間に多かった大きくて硬い種を割れたからです。選択の強さは、脊椎動物の集団でこれまで記録された中でもっとも高い、とされています。気候の変動が、島の鳥の姿かたちを一世代で動かしうることを示した研究です。',
+  caveat:'これは模式図です。鳥の数、くちばしの形、種の量や配置は単純化した絵で、実測ではありません。確認したのは Science 論文の抄録(要約サイト経由)で、本文は開けなかったため、数字は動画に出していません。著者名は、後年の Grant & Grant 2002(Science 296:707)の引用で照合しました。同じ著者らの2002年の論文は、選択の向きが年によって変わりうる(予測しにくい)ことも述べています。1回のかんばつの結果を、いつでも同じ向きに進化する話として受け取らないでください。',
+  source:{short:'Boag & Grant 1981, Science',cite:'Boag, P. T., & Grant, P. R. (1981). Intense natural selection in a population of Darwin\'s finches (Geospizinae) in the Galápagos. Science, 214(4516), 82-85. doi:10.1126/science.214.4516.82',query:'Intense natural selection in a population of Darwin\'s finches Galapagos Boag Grant 1981'},
+  init(W,H){const r=rng(8128);
+    const birds=Array.from({length:16},(_,i)=>{const beak=i<7?0.62+0.38*r():0.05+0.45*r();return{x:W*(0.12+0.76*r()),beak:beak,live:beak>0.55,die:9+r()*3.2,p:r()*6,k:r()}});
+    const small=Array.from({length:34},()=>({x:W*(0.06+0.88*r()),o:5+r()*3.5,p:r()*6}));
+    const big=Array.from({length:9},()=>({x:W*(0.1+0.8*r()),p:r()*6}));
+    return{birds,small,big}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.52,h=bot-top,gy=top+h*0.78;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    const dry=sm(t,4,8);
+    vgrad(c,0,top,W,h,[[0,lerpColor([34,52,78],[92,52,30],dry)],[1,lerpColor([22,36,40],[58,34,20],dry)]]);
+    c.globalCompositeOperation='lighter';glow(c,W*0.82,top+h*0.16,26+30*dry,'255,200,110',0.18+0.5*dry);c.globalCompositeOperation='source-over';
+    c.fillStyle=lerpColor([46,62,38],[88,62,36],dry);c.fillRect(0,gy,W,top+h-gy);
+    c.strokeStyle='rgba(220,190,130,.3)';c.lineWidth=1;c.beginPath();c.moveTo(0,gy);c.lineTo(W,gy);c.stroke();
+    // 小さい種(やわらかい)
+    s.small.forEach(d=>{const a=1-sm(t,d.o,d.o+1.5);if(a<0.02)return;c.fillStyle='rgba(235,205,120,'+a+')';c.beginPath();c.arc(d.x,gy+5+(d.p%1)*10,1.6,0,TAU);c.fill()});
+    // 大きい種(硬い)
+    s.big.forEach(d=>{c.fillStyle='rgb(110,70,40)';c.shadowColor='rgb(255,170,80)';c.shadowBlur=5*dry;c.beginPath();c.ellipse(d.x,gy+9+(d.p%1)*8,4.6,3.4,0,0,TAU);c.fill();c.shadowBlur=0});
+    // フィンチ
+    let alive=0;
+    s.birds.forEach(b=>{
+      const a=b.live?1:1-sm(t,b.die,b.die+1.8);
+      if(a<0.02)return;alive++;
+      const hop=Math.abs(Math.sin(t*2.4+b.p))*(3+2*b.k),x=b.x+Math.sin(t*0.5+b.p)*4,y=gy-6-hop;
+      const settle=b.live?sm(t,12,16):0,bx=mix(x,s.big[Math.floor(b.k*8.99)].x,settle*0.5);
+      c.globalAlpha=a;c.save();c.translate(bx,y);c.scale(1.7,1.7);c.translate(-bx,-y);
+      c.fillStyle='rgb(40,30,24)';c.beginPath();c.ellipse(bx,y,7,4.6,0,0,TAU);c.fill();
+      c.beginPath();c.arc(bx+6,y-3,3.6,0,TAU);c.fill();
+      c.fillStyle='rgb(255,205,110)';c.beginPath();c.moveTo(bx+8.6,y-5);c.lineTo(bx+8.6+3+7*b.beak,y-2.6);c.lineTo(bx+8.6,y-0.6+2*b.beak);c.closePath();c.fill();
+      c.restore();c.globalAlpha=1;
+      if(b.live&&t>14){c.globalCompositeOperation='lighter';glow(c,bx+14,y-5,13,'255,210,120',0.45*sm(t,14,16));c.globalCompositeOperation='source-over'}
+    });
+    // 注記
+    txt(c,'くちばしの大小がまざる',W*0.5,top+h*0.14,11.5,'rgba(240,235,220,'+(1-sm(t,5,6.5))+')','center',700);
+    if(t>4.5&&t<10)txt(c,'かんばつ',W*0.5,top+h*0.14,13,'rgba(255,200,130,'+sm(t,4.5,6)*(1-sm(t,9,10))+')','center',700);
+    if(t>9&&t<14)txt(c,'のこる種は、大きくて硬い',W*0.5,top+h*0.14,11.5,'rgba(255,215,160,'+sm(t,9,10)*(1-sm(t,13,14))+')','center',700);
+    if(t>14)txt(c,'くちばしの大きな鳥が多くのこる',W*0.5,top+h*0.14,11.5,'rgba(255,225,170,'+sm(t,14,15.5)+')','center',700);
+    txt(c,'小さい種',W*0.2,gy+h*0.2,9.5,'rgba(235,210,140,'+(1-sm(t,5,8))*0.85+')','center',600);
+    txt(c,'大きくて硬い種',W*0.7,gy+h*0.2,9.5,'rgba(255,190,120,.85)','center',600);
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+  }
+});
+
+window.SCENES=[S[37],S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
