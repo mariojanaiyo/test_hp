@@ -89,3 +89,5 @@
 
 - **salmon** (2026-11-21): 書誌(Helfield & Naiman / Ecology 82(9):2403-2409 / 2001)を著者掲載の本文PDF(https://www.biol.wwu.edu/hooper/Helfield&Naiman2001Ecol_Salmon-derivedN&ForestGrowth.pdf)で照合。主張確認済み=本文まで。葉の窒素の約24%(16-32)が海由来、川から25m以内のトウヒの年間幹断面積成長が3倍以上、直径50cmまで約86年と約307年。アラスカ・チチャゴフ島の2つの川(Kadashan, Indian)の比較で、観察でありサケを操作した実験ではない。動画はヒグマには触れていない。
   Artifact: https://claude.ai/artifact/PaR8zdthFT3aQhU8cUY1eq 録画: shorts_video/salmon.webm YouTube: 未投稿(2026-11-21、toriaezu_test にログインしたブラウザが無かった。Browser 1=UChixX3…、2=UCsgINq9…、4=UCa8oi4… は別チャンネル、3 は Studio に入れず)
+
+- **meltdown** (2026-11-25): 書誌(Terborgh ほか11名 / Science 294(5548):1923-1926 / DOI 10.1126/science.1064397 / 2001-11-30)と抄録を Crossref(https://api.crossref.org/works/10.1126/science.1064397)で確認。主張確認済み=抄録まで。ベネズエラのダム湖の小島(0.25〜0.9ha)で捕食者がおらず、ホエザル・イグアナ・ハキリアリ・ネズミの密度が本土の10〜100倍、林冠木の芽生え・若木が大きく減少、と著者は栄養カスケードの証拠とする。本文・追試は未確認。島と本土の比較で事前データなしと caveat に記載。

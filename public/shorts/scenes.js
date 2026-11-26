@@ -2540,5 +2540,67 @@ S.push({
   }
 });
 
-window.SCENES=[S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'meltdown',pin:{t:12,text:'10〜100倍！'},hook:['捕食者のいない島では、','森はどうなる？'],tag:'生態系',dur:24,
+  title:'ベネズエラの湖に浮かぶ、捕食者のいない島の森はどうなったのか？',
+  beats:[
+    {t:0,text:'ダム湖ができて、丘の頂が<b>小さな島</b>になった'},
+    {t:5,text:'ジャガーなどの<b>捕食者</b>は、島にいない'},
+    {t:9,text:'サルやイグアナ、ハキリアリが<b>増えた</b>'},
+    {t:12,text:'密度は本土の<b>10〜100倍</b>'},
+    {t:19,text:'若い木が<b>消えた</b>島の森は？'}
+  ],
+  more:'ベネズエラで水力発電のダムができ、丘の頂が0.25〜0.9ヘクタールの小さな島になりました。島には大型の捕食者がおらず、ホエザル・イグアナ・ハキリアリ・ネズミの密度は、近くの本土の10〜100倍でした。そうした島では、林冠をつくる木の芽生えと若木が大きく減り、著者は、上から抑える力を失ったときに起こる栄養カスケードの証拠だとしています。',
+  caveat:'これは模式図です。動物や木の数・動きは実際のデータではありません。島と本土を比べた自然の実験で、ダムができる前の森は測っていません。島の数も限られ、面積が小さいことなど捕食者以外の違いも効いている可能性があります。私が確認できたのは抄録までで、本文と、その後の追試は未確認です。',
+  source:{short:'Terborgh et al. 2001, Science',cite:'Terborgh, J., Lopez, L., Nuñez, P., Rao, M., Shahabuddin, G., Orihuela, G., Riveros, M., Ascanio, R., Adler, G.H., Lambert, T.D. & Balbas, L. (2001). Ecological meltdown in predator-free forest fragments. Science, 294(5548), 1923-1926. doi:10.1126/science.1064397',query:'Ecological meltdown in predator-free forest fragments Terborgh'},
+  init(W,H){const r=rng(1923);
+    const an=Array.from({length:30},()=>({x:r(),y:r(),p:r()*6,sp:0.6+r()*0.8}));
+    const sd=Array.from({length:12},()=>({x:r(),d:r()}));
+    return{an,sd}},
+  draw(c,t,W,H,s){
+    const top=H*0.12,gy=H*0.38,bot=H*0.56,mid=W/2;
+    c.fillStyle='#06100c';c.fillRect(0,0,W,H);
+    vgrad(c,0,top,W,gy-top,[[0,'#0a1a2a'],[1,'#143024']]);
+    c.fillStyle='#1c2a1a';c.fillRect(0,gy,mid,bot-gy);
+    c.fillStyle='#1c2a1a';c.fillRect(mid+10,gy,mid-10,bot-gy);
+    c.fillStyle='#0f3a52';c.fillRect(mid-10,gy+12,20,bot-gy-12);
+    c.fillStyle='rgba(255,255,255,0.12)';c.fillRect(mid-0.5,top,1,bot-top);
+    // 親の木(左右)
+    const tr=(x,h)=>{c.fillStyle='#4a3420';c.fillRect(x-1.5,gy-h*0.3,3,h*0.3+2);c.fillStyle='#1f5a32';
+      for(let k=0;k<3;k++){const yy=gy-h*0.3-k*h*0.2,ww=h*0.3*(1-k*0.2);c.beginPath();c.moveTo(x-ww,yy);c.lineTo(x,yy-h*0.3);c.lineTo(x+ww,yy);c.fill()}};
+    [0.2,0.5,0.8].forEach(f=>{tr(mid*f,46);tr(mid+10+(mid-10)*f,46)});
+    // 若木: 左は残り、右は食べられて消える
+    const eat=sm(t,9,16);
+    s.sd.forEach((q,i)=>{const lx=q.x*(mid-12)+6,rx=mid+16+q.x*(mid-26),h=7+q.d*4;
+      c.fillStyle='#3fae5c';c.fillRect(lx-1,gy+2,2,h);
+      if(i/12>=eat){c.fillRect(rx-1,gy+2,2,h)}});
+    // 動物(右の島で増える)
+    const n=Math.floor(3+sm(t,6,11)*27);
+    s.an.forEach((q,i)=>{if(i>=n)return;
+      const x=mid+16+((q.x+Math.sin(t*q.sp+q.p)*0.05+1)%1)*(mid-26),y=gy+6+q.y*(bot-gy-14);
+      c.globalCompositeOperation='lighter';glow(c,x,y,4,'255,170,110',0.8);c.globalCompositeOperation='source-over'});
+    // 本土は少数
+    for(let i=0;i<3;i++){const x=mid*(0.2+0.3*i)+Math.sin(t*0.8+i)*6,y=gy+14+i*8;
+      c.globalCompositeOperation='lighter';glow(c,x,y,4,'255,170,110',0.8);c.globalCompositeOperation='source-over'}
+    // 本土の捕食者
+    const pa=0.5+0.5*Math.sin(t*1.2);
+    c.globalCompositeOperation='lighter';glow(c,mid*0.5+Math.sin(t*0.5)*30,gy+30,6,'255,230,120',0.5+0.4*pa);c.globalCompositeOperation='source-over';
+    txt(c,'本土(捕食者あり)',mid*0.5,top+14,11,'rgba(200,215,200,0.9)','center');
+    txt(c,'島(捕食者なし)',mid*1.5+5,top+14,11,'rgba(255,200,170,0.95)','center');
+    const cp=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,bot+60,12,'rgba(240,248,255,'+q+')','center')};
+    cp(0,5,'ダム湖で、丘の頂が小さな島になった');
+    cp(5,9,'島には、大きな捕食者がいない');
+    cp(9,12,'草食の動物が、増えた');
+    const na=sm(t,12,13.5);
+    if(na>0){txt(c,'動物の密度 10〜100倍',mid*1.5+5,bot+14,13,'rgba(255,225,160,'+na+')','center');
+      txt(c,'若い木 大きく減少',mid*1.5+5,bot+32,11,'rgba(180,255,210,'+na+')','center')}
+    if(t>=13.5&&t<19)cp(13.5,19.01,'木の芽生えと若木が、食べられた');
+    if(t>=19){const b=sm(t,19,20.5);
+      txt(c,'上から抑える力が消えると、森は？',W/2,bot+60,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'動物や木は模式。島と本土を比べた観察',W/2,bot+76,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
+
+
+window.SCENES=[S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
