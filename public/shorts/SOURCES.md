@@ -91,3 +91,4 @@
   Artifact: https://claude.ai/artifact/PaR8zdthFT3aQhU8cUY1eq 録画: shorts_video/salmon.webm YouTube: 未投稿(2026-11-21、toriaezu_test にログインしたブラウザが無かった。Browser 1=UChixX3…、2=UCsgINq9…、4=UCa8oi4… は別チャンネル、3 は Studio に入れず)
 
 - **meltdown** (2026-11-25): 書誌(Terborgh ほか11名 / Science 294(5548):1923-1926 / DOI 10.1126/science.1064397 / 2001-11-30)と抄録を Crossref(https://api.crossref.org/works/10.1126/science.1064397)で確認。主張確認済み=抄録まで。ベネズエラのダム湖の小島(0.25〜0.9ha)で捕食者がおらず、ホエザル・イグアナ・ハキリアリ・ネズミの密度が本土の10〜100倍、林冠木の芽生え・若木が大きく減少、と著者は栄養カスケードの証拠とする。本文・追試は未確認。島と本土の比較で事前データなしと caveat に記載。
+  2026-11-26 に Crossref の抄録を再照合(一致)。Artifact: https://claude.ai/artifact/56KEEeP5nBbY2kUHcnNLu7 録画: shorts_video/meltdown.webm(2026-11-26撮り直し) YouTube: 未投稿(2026-11-26、toriaezu_test にログインしたブラウザが無かった。Browser 1=UChixX3…、2=UCa8oi4…、3=UCsgINq9… は別チャンネル、4 は Studio に入れず)
