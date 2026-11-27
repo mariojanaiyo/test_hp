@@ -3114,5 +3114,67 @@ S.push({
   }
 });
 
-window.SCENES=[S[37],S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'dust',pin:{t:12,text:'砂が森へ！'},hook:['サハラの砂が、','アマゾンを肥やす？'],tag:'風が運ぶ養分',dur:24,
+  title:'サハラの砂が、アマゾンの森に養分を運ぶ(と推定)',
+  beats:[
+    {t:0,text:'サハラの砂は、風にのって<b>大西洋</b>をこえる'},
+    {t:5,text:'行き先は、アマゾンの<b>熱帯雨林</b>'},
+    {t:10,text:'衛星の観測から、年に約<b>2800万トン</b>と推定'},
+    {t:15,text:'砂にふくまれる<b>リン</b>は、年に約2.2万トン'},
+    {t:20,text:'雨で流れ出るリンと<b>同じくらい</b>、と著者は見積もる'}
+  ],
+  more:'2015年、Yu らは、衛星のレーザー観測(CALIOP)の2007〜2013年の7年分から、アフリカ(おもにサハラ)の砂がアマゾン盆地にどれだけ降るかを、はじめて複数年で見積もりました。7年平均は年に約2800万トン(幅は800万〜4800万トン)。砂にはリンがふくまれ、年に約2.2万トンのリンが森に届くと計算しています。熱帯雨林は養分、とくにリンが成長の足かせになりやすく、このリンの量は、雨や川で流れ出るリンの量と同じくらいです。著者らは、砂が数十年〜数百年のあいだリンの枯渇を防ぐ助けになっているかもしれない、と書いています。砂の量は年によって変わり、前の年のサヘルの雨が少ないほど多く運ばれる傾向がありました。',
+  caveat:'これは模式図です。砂の粒の動きや量、地形は単純化した絵で、実測ではありません。数字は著者の見積もりで、衛星データの不確かさは約±70%と著者自身が述べています(幅は800万〜4800万トン)。期間は7年だけで、森の成長にどれだけ必要かは、論文でも「まだ分からない」とされています。森に落ちるリンの大部分は、森の中での落ち葉の再循環(砂のリンの数十倍以上)で、砂のリンはその一部を補う位置づけです。以前の別の見積もりより小さい値で、研究どうしで推定が分かれています。確認したのは論文の全文(著者所属機関で公開されているPDF)です。',
+  source:{short:'Yu et al. 2015, GRL',cite:'Yu, H., Chin, M., Yuan, T., Bian, H., Remer, L. A., Prospero, J. M., Omar, A., Winker, D., Yang, Y., Zhang, Y., Zhang, Z., & Zhao, C. (2015). The fertilizing role of African dust in the Amazon rainforest: A first multiyear assessment based on data from Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observations. Geophysical Research Letters, 42(6), 1984-1991. doi:10.1002/2015GL063040',query:'The fertilizing role of African dust in the Amazon rainforest Yu 2015 CALIPSO'},
+  init(W,H){const r=rng(5521);
+    const dust=Array.from({length:110},()=>({o:4+r()*8,sp:5+r()*2.5,y:r(),p:r()*6,k:r()}));
+    const trees=Array.from({length:26},()=>({x:W*(0.7+0.26*r()),y:r(),z:0.7+0.6*r(),p:r()*6}));
+    return{dust,trees}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.52,h=bot-top;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    const x1=W*0.27,x2=W*0.67;
+    // 海
+    vgrad(c,x1,top,x2-x1,h,[[0,'#0d2236'],[1,'#08141f']]);
+    // サハラ
+    vgrad(c,0,top,x1,h,[[0,'#6b5128'],[1,'#3d2e16']]);
+    // アマゾン
+    const rain=sm(t,11,18);
+    vgrad(c,x2,top,W-x2,h,[[0,lerpColor([16,52,30],[22,78,40],rain)],[1,lerpColor([8,30,18],[12,48,26],rain)]]);
+    // 森の木
+    s.trees.forEach(tr=>{const x=tr.x,y=top+h*(0.3+0.62*tr.y);c.fillStyle=lerpColor([40,110,60],[110,210,100],rain);c.beginPath();c.arc(x,y,4.2*tr.z,0,TAU);c.fill()});
+    // 砂の粒
+    let arrived=0;
+    c.globalCompositeOperation='lighter';
+    s.dust.forEach(d=>{
+      const u=(t-d.o)/d.sp;if(u<0)return;
+      const uu=clamp(u),x=mix(W*0.08,W*0.86,uu),yb=top+h*(0.25+0.55*d.y);
+      const lift=Math.sin(Math.PI*uu)*h*0.16;
+      const y=uu<1?yb-lift+Math.sin(t*2+d.p)*3:yb+Math.min(1,(u-1)*0.5)*h*0.08;
+      let a=0.85;
+      if(u>1){arrived++;a=0.85*(1-sm(u,1,1.9))}
+      if(a<0.02)return;
+      glow(c,x,y,uu<1?5:4,uu<0.5?'235,190,110':'255,225,150',a);
+    });
+    c.globalCompositeOperation='source-over';
+    // 森のかがやき
+    if(rain>0){c.globalCompositeOperation='lighter';glow(c,W*0.84,top+h*0.62,64,'140,255,130',0.28*rain);c.globalCompositeOperation='source-over'}
+    // 地名
+    const lab=1-sm(t,6,8)*0.35;
+    txt(c,'サハラ',x1/2,top+h*0.2,11,'rgba(255,225,170,'+lab+')','center',700);
+    txt(c,'大西洋',(x1+x2)/2,top+h*0.2,11,'rgba(190,220,250,'+lab+')','center',700);
+    txt(c,'アマゾン',(x2+W)/2,top+h*0.2,11,'rgba(200,250,190,'+lab+')','center',700);
+    // 注記
+    const f1=sm(t,10,11.5)*(1-sm(t,14,15));
+    if(f1>0)txt(c,'年に約2800万トン(推定)',W*0.5,top+h*0.93,12,'rgba(255,235,180,'+f1+')','center',700);
+    const f2=sm(t,15,16.5)*(1-sm(t,19.5,20.5));
+    if(f2>0)txt(c,'リン 年に約2.2万トン',W*0.5,top+h*0.93,12,'rgba(190,255,170,'+f2+')','center',700);
+    const f3=sm(t,20.5,22);
+    if(f3>0)txt(c,'流れ出るリンと同じくらい',W*0.5,top+h*0.93,12,'rgba(210,255,190,'+f3+')','center',700);
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+  }
+});
+
+window.SCENES=[S[38],S[37],S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
