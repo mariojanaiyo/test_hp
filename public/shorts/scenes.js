@@ -2601,6 +2601,90 @@ S.push({
   }
 });
 
+S.push({
+  id:'taxi',pin:{t:12,text:'後ろ側が大きい！'},hook:['街の地図を覚えると、','脳の形は変わる？'],tag:'脳',dur:24,
+  title:'ロンドンのタクシー運転手の海馬は、ふつうの人と違うのか？',
+  beats:[
+    {t:0,text:'ロンドンのタクシー運転手は、街の道を<b>約2年</b>かけて覚える'},
+    {t:5,text:'運転手16人と、運転しない男性50人の<b>脳</b>を比べた'},
+    {t:9,text:'見たのは、場所の記憶にかかわる<b>海馬</b>'},
+    {t:12,text:'運転手は、海馬の<b>後ろ側</b>が大きかった'},
+    {t:16,text:'運転歴が長いほど後ろ側は大きく、<b>前側は小さい</b>'},
+    {t:20,text:'大人の脳も、使い方で<b>形を変える</b>？'}
+  ],
+  more:'ロンドンのタクシー運転手は、免許を取るために街の道を平均約2年かけて覚えます。運転手16人と運転しない男性50人の脳をMRIで比べると、運転手は海馬の後ろ側が大きく、前側は小さめでした。運転していた年数が長いほど、右の海馬の後ろ側は大きく、前側は小さい傾向がありました。海馬全体の大きさは同じで、中の配分が違っていました。',
+  caveat:'これは模式図です。脳の形や大きさの変化は誇張して描いています。2000年の論文は、ある時点で人を比べた研究(横断研究)で、元から海馬の形が違う人が運転手になった可能性も残ります。そこは、同じ人を4年間追った2011年の研究(Woollett & Maguire, Curr Biol 21:2109)が、試験に受かった人だけ海馬の後ろ側の灰白質が増えたと報告して補っています(抄録で確認)。対象は右利きの男性のみで、16人と小さな研究です。',
+  source:{short:'Maguire et al. 2000, PNAS',cite:'Maguire, E.A., Gadian, D.G., Johnsrude, I.S., Good, C.D., Ashburner, J., Frackowiak, R.S.J. & Frith, C.D. (2000). Navigation-related structural change in the hippocampi of taxi drivers. PNAS, 97(8), 4398-4403. doi:10.1073/pnas.070039597 / 追跡研究: Woollett, K. & Maguire, E.A. (2011). Acquiring "the Knowledge" of London\'s layout drives structural brain changes. Current Biology, 21(24), 2109-2114. doi:10.1016/j.cub.2011.11.018',query:'Navigation-related structural change in the hippocampi of taxi drivers'},
+  init(W,H){const r=rng(4398);
+    const cols=8,rows=4,nodes=[];
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)nodes.push([(i+0.5)/cols+(r()-0.5)*0.07,(j+0.5)/rows+(r()-0.5)*0.12]);
+    const edges=[];
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const k=j*cols+i;
+      if(i<cols-1)edges.push([k,k+1,r()]);if(j<rows-1)edges.push([k,k+cols,r()]);
+      if(i<cols-1&&j<rows-1&&r()<0.35)edges.push([k,k+cols+1,r()])}
+    const route=[0,1,9,10,11,19,20,28,29,21,22,14,15,23,31];
+    return{nodes,edges,route}},
+  draw(c,t,W,H,s){
+    const top=H*0.12,cy0=top+24,ch=H*0.17,bot=H*0.56,mid=W/2;
+    c.fillStyle='#070912';c.fillRect(0,0,W,H);
+    // ── 街(上) ──
+    const P=n=>[16+s.nodes[n][0]*(W-32),cy0+s.nodes[n][1]*ch];
+    const lit=sm(t,0.5,9);
+    c.lineCap='round';
+    s.edges.forEach(e=>{const a=P(e[0]),b=P(e[1]),on=e[2]<lit;
+      c.strokeStyle=on?'rgba(255,205,110,0.75)':'rgba(120,140,170,0.25)';c.lineWidth=on?1.6:1;
+      c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke()});
+    c.fillStyle='rgba(60,110,170,0.35)';c.beginPath();c.moveTo(0,cy0+ch*0.52);
+    for(let x=0;x<=W;x+=12)c.lineTo(x,cy0+ch*0.52+Math.sin(x*0.03)*6);
+    for(let x=W;x>=0;x-=12)c.lineTo(x,cy0+ch*0.52+Math.sin(x*0.03)*6+5);c.fill();
+    const rp=s.route.map(P),u=(t*0.09)%1,tp=polyAt(rp,u);
+    c.globalCompositeOperation='lighter';glow(c,tp[0],tp[1],9,'255,230,120',0.9);c.globalCompositeOperation='source-over';
+    c.fillStyle='#ffe27a';c.beginPath();c.arc(tp[0],tp[1],2.6,0,TAU);c.fill();
+    txt(c,'ロンドンの道',W-16,top+8,11,'rgba(220,225,240,0.85)','right');
+    // ── 脳(下) ──
+    const bx=mid,by=H*0.485,bw=118,bh=56;
+    c.strokeStyle='rgba(200,180,230,0.55)';c.lineWidth=1.5;
+    c.beginPath();c.ellipse(bx,by,bw,bh,0,0,TAU);c.stroke();
+    c.strokeStyle='rgba(200,180,230,0.18)';c.lineWidth=1;
+    for(let k=0;k<7;k++){c.beginPath();c.arc(bx-78+k*26,by-24+(k%2)*8,15,Math.PI+0.4,TAU-0.4);c.stroke()}
+    // 街から脳へ流れる光
+    const fl=sm(t,6,9)*(1-sm(t,11,12.5));
+    if(fl>0){c.globalCompositeOperation='lighter';
+      for(let i=0;i<10;i++){const q=((t*0.6+i/10)%1),x=mix(mid+(i-5)*14,bx+10,q),y=mix(cy0+ch,by+10,q);glow(c,x,y,5,'255,215,130',0.6*fl)}
+      c.globalCompositeOperation='source-over'}
+    // 海馬: 前(左)→後ろ(右)の弧
+    const g=sm(t,10.5,13),hv=sm(t,8.5,10);
+    const N=11;
+    for(let i=0;i<N;i++){const f=i/(N-1),a=mix(Math.PI*0.95,Math.PI*0.15,f);
+      const x=bx+Math.cos(a)*64,y=by+16-Math.sin(a)*20;
+      const base=7-1.6*f;
+      // 比較用: 対照群の大きさ(点線)
+      if(g>0){c.setLineDash([2,2]);c.strokeStyle='rgba(180,200,230,'+0.6*g+')';c.lineWidth=1;c.beginPath();c.arc(x,y,base,0,TAU);c.stroke();c.setLineDash([])}
+      const k=f>0.55?1+0.6*g*(f-0.55)/0.45:(f<0.4?1-0.25*g*(0.4-f)/0.4:1);
+      const rr=base*k,warm=f>0.55?g:0;
+      c.globalCompositeOperation='lighter';glow(c,x,y,rr*2.6,warm>0?'255,190,110':'150,170,255',(0.25+0.35*warm)*hv);c.globalCompositeOperation='source-over';
+      c.fillStyle='rgba('+Math.round(mix(150,255,warm))+','+Math.round(mix(160,200,warm))+','+Math.round(mix(240,120,warm))+','+0.85*hv+')';
+      c.beginPath();c.arc(x,y,rr,0,TAU);c.fill()}
+    if(hv>0){txt(c,'前',bx-80,by+30,11,'rgba(200,210,240,'+hv+')','center');
+      txt(c,'後ろ',bx+80,by+30,11,'rgba(255,215,160,'+hv+')','center');
+      txt(c,'海馬',bx-bw+4,by-bh+2,12,'rgba(230,220,255,'+hv+')','center')}
+    if(g>0)txt(c,'点線 = 運転しない人',bx,by+bh+12,10,'rgba(190,205,230,'+0.9*g+')','center');
+    // 運転歴メーター
+    const yr=sm(t,15.5,19);
+    if(yr>0){const n=Math.round(1.5+yr*26.5);
+      txt(c,'運転歴 '+n+'年',W-16,by-bh+2,12,'rgba(255,225,160,'+sm(t,15.5,16.3)+')','right')}
+    const cp=(a,b,s1)=>{const q=sm(t,a,a+0.8)*(1-sm(t,b-0.8,b));if(q>0)txt(c,s1,W/2,bot+60,12,'rgba(240,248,255,'+q+')','center')};
+    cp(0,5,'道を覚えるほど、地図が光る');
+    cp(5,9,'運転手16人 と 運転しない50人');
+    cp(9,12.5,'場所の記憶にかかわる、海馬');
+    cp(12.5,16,'後ろ側が大きく、前側は小さめ');
+    cp(16,20,'年数が長いほど、差が大きい');
+    if(t>=20){const b=sm(t,20,21.5);
+      txt(c,'大人の脳も、使い方で変わる？',W/2,bot+60,12,'rgba(255,235,190,'+b+')','center');
+      txt(c,'形は誇張した模式。全体の大きさは同じ',W/2,bot+76,10.5,'rgba(200,210,220,'+b+')','center')}
+  }
+});
 
-window.SCENES=[S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+
+window.SCENES=[S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
