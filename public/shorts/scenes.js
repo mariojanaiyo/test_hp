@@ -3176,5 +3176,85 @@ S.push({
   }
 });
 
-window.SCENES=[S[38],S[37],S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
+S.push({
+  id:'gnu',pin:{t:12,text:'川に沈んだ！'},hook:['ヌーの溺死が、','川を肥やす？'],tag:'川にとどく養分',dur:24,
+  title:'ヌーの大移動で溺れた体が、マラ川の養分になる(と推定)',
+  beats:[
+    {t:0,text:'ヌーの大移動。約<b>120万頭</b>が、マラ川をわたる'},
+    {t:5,text:'わたる途中で、<b>溺れる</b>群れがある'},
+    {t:10,text:'平均で年に約<b>6250頭</b>、重さは約1100トン'},
+    {t:15,text:'体は川の<b>養分</b>に。窒素は年に約25トン、リンは約13トン'},
+    {t:20,text:'骨は約<b>7年</b>かけて分解'}
+  ],
+  more:'2017年、Subalusky らは、タンザニアとケニアのあいだを流れるマラ川で、ヌーの大移動のときに起こる集団溺死(100頭以上)を調べました。この15年のうち少なくとも13年で起きていて、2011〜2015年の観察では、年に平均約4.6回、約6250頭(±3000)が溺れたと見積もっています。重さは年に約1100トン(乾燥重量で約300トン)。炭素約107トン、窒素約25トン、リン約13トンが川に入る計算です。やわらかい部分は数週間で分解し、骨は約7年かけて分解します。リンの約95%は骨にふくまれます。ヌーが渡る時期の約28日間は、上流から流れてくる全リンの31〜451%に当たる量が、死体から加わりました。',
+  caveat:'これは模式図です。ヌーの数、川の形、溺れる場所、養分の動きは単純化した絵で、実測ではありません。数字は著者の見積もりで、予測しにくい出来事を機会的に調べたため、データが少ない部分があると著者自身が述べています(養分の取り込みは1回の溺死のみ、流れの測定は3回のみ)。死体のうち、炭素と窒素は約半分、リンは約94%の行方が追えていて、残りは川の動物に食べられたか、大気に出た可能性があります。確認したのは論文の本文(PMC)です。',
+  source:{short:'Subalusky et al. 2017, PNAS',cite:'Subalusky, A. L., Dutton, C. L., Rosi, E. J., & Post, D. M. (2017). Annual mass drownings of the Serengeti wildebeest migration influence nutrient cycling and storage in the Mara River. Proceedings of the National Academy of Sciences, 114(29), 7647-7652. doi:10.1073/pnas.1614778114',query:'Annual mass drownings of the Serengeti wildebeest migration influence nutrient cycling and storage in the Mara River'},
+  init(W,H){const r=rng(7731);
+    const gnu=Array.from({length:64},(_,i)=>({x:W*(0.06+0.88*r()),o:r()*5.5,sp:3.2+r()*1.4,p:r()*6,drown:i%5===0,sink:6+r()*3.5}));
+    const bits=Array.from({length:70},()=>({x:0,k:r(),o:11+r()*7,p:r()*6,sp:14+r()*10}));
+    return{gnu,bits}},
+  draw(c,t,W,H,s){
+    const top=H*0.08,bot=H*0.52,h=bot-top;
+    const y1=top+h*0.36,y2=top+h*0.66,ym=(y1+y2)/2;
+    c.fillStyle='#000';c.fillRect(0,0,W,H);
+    // 岸(上は乾いた草原、下は緑)
+    vgrad(c,0,top,W,y1-top,[[0,'#6f5a2c'],[1,'#8a7138']]);
+    vgrad(c,0,y2,W,top+h-y2,[[0,'#4f6a30'],[1,'#33481f']]);
+    // 川(養分で少し明るくなる)
+    const rich=sm(t,13,18);
+    vgrad(c,0,y1,W,y2-y1,[[0,lerpColor([16,52,70],[22,84,84],rich)],[1,lerpColor([10,34,48],[14,60,60],rich)]]);
+    c.strokeStyle='rgba(180,220,235,.12)';c.lineWidth=1;
+    for(let i=0;i<5;i++){const yy=y1+(y2-y1)*(0.15+0.18*i);c.beginPath();for(let x=0;x<=W;x+=12){const y=yy+Math.sin(x*0.05+t*1.2+i)*1.6;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
+    // 骨(のこる)
+    const boneA=sm(t,16,19);
+    // ヌー
+    s.gnu.forEach(g=>{
+      const u=(t-g.o)/g.sp;if(u<0)return;
+      const uu=clamp(u);
+      let y=mix(top+h*0.12,top+h*0.9,uu),x=g.x+Math.sin(t*1.4+g.p)*2;
+      let a=1,col='46,32,24';
+      if(g.drown){
+        const sk=sm(t,g.sink,g.sink+1.6);
+        y=mix(y,ym+((g.p%1)-0.5)*(y2-y1)*0.4,sk*(uu>0.3?1:0));
+        if(uu<0.45&&t<g.sink)y=mix(top+h*0.12,ym,uu/0.45);
+        else if(t>=g.sink)y=ym+((g.p%1)-0.5)*(y2-y1)*0.4;
+        x+=(t>g.sink?(t-g.sink)*1.2:0);
+        a=1-0.55*sk;
+      }
+      c.globalAlpha=a;c.fillStyle='rgb('+col+')';
+      c.beginPath();c.ellipse(x,y,5.2,3.2,0,0,TAU);c.fill();
+      c.beginPath();c.arc(x+4.6,y-1.6,2.2,0,TAU);c.fill();
+      c.globalAlpha=1;
+      if(g.drown&&t>g.sink+1){
+        const gl=sm(t,g.sink+1,g.sink+3)*(1-0.4*boneA);
+        c.globalCompositeOperation='lighter';glow(c,x,y,15,'255,190,110',0.5*gl);c.globalCompositeOperation='source-over';
+        if(boneA>0){c.fillStyle='rgba(240,236,220,'+0.8*boneA+')';c.fillRect(x-4,y-0.6,8,1.4);c.fillRect(x-1,y-3,1.4,6)}
+      }
+    });
+    // 養分(川下へ流れる)
+    c.globalCompositeOperation='lighter';
+    const carc=s.gnu.filter(g=>g.drown);
+    s.bits.forEach((b,i)=>{
+      const g=carc[i%carc.length];const u=(t-b.o)/12;if(u<0)return;
+      const x=g.x+(t-g.sink)*1.2+u*b.sp*3,y=ym+((g.p%1)-0.5)*(y2-y1)*0.4+Math.sin(t*1.6+b.p)*5+u*6;
+      if(x>W+6)return;
+      const a=0.8*(1-sm(u,0.6,1));if(a<0.02)return;
+      glow(c,x,y,5,i%3===0?'255,225,150':'150,255,170',a);
+    });
+    c.globalCompositeOperation='source-over';
+    // 注記
+    txt(c,'マラ川',W*0.9,y1-7,10.5,'rgba(190,225,245,.85)','center',700);
+    const f1=sm(t,0.3,1.5)*(1-sm(t,4.5,5.5));
+    if(f1>0)txt(c,'約120万頭のヌーが川をわたる',W*0.5,top+h*0.27,11.5,'rgba(255,240,200,'+f1+')','center',700);
+    const f2=sm(t,10,11.5)*(1-sm(t,14,15));
+    if(f2>0)txt(c,'年に約6250頭(見積もり)',W*0.5,top+h*0.97,12,'rgba(255,225,170,'+f2+')','center',700);
+    const f3=sm(t,15,16.5)*(1-sm(t,19.5,20.5));
+    if(f3>0)txt(c,'窒素 約25トン・リン 約13トン',W*0.5,top+h*0.97,12,'rgba(190,255,190,'+f3+')','center',700);
+    const f4=sm(t,20.5,22);
+    if(f4>0)txt(c,'骨は約7年かけて分解',W*0.5,top+h*0.97,12,'rgba(240,236,220,'+f4+')','center',700);
+    txt(c,'模式図',W-12,top+h+12,10,'rgba(225,238,250,.8)','right');
+  }
+});
+
+window.SCENES=[S[39],S[38],S[37],S[36],S[35],S[34],S[33],S[32],S[31],S[30],S[29],S[28],S[27],S[26],S[25],S[24],S[23],S[22],S[21],S[20],S[19],S[18],S[17],S[16],S[15],S[14],S[13],S[12],S[10],S[0],S[1],S[2],S[3],S[4],S[5],S[6],S[7],S[8],S[11],S[9]];
 })();
